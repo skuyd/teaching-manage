@@ -47,7 +47,11 @@
       "Bash(npm run build:*)",
       "Bash(npx vite:*)",
       "Skill(superpowers:finishing-a-development-branch)",
-      "Bash(git init:*)"
+      "Bash(git init:*)",
+      "Bash(git commit:*)",
+      "Bash(timeout 30 mvn spring-boot:run:*)",
+      "Bash(timeout 20 mvn spring-boot:run)",
+      "Bash(timeout 20 npm run dev:*)"
     ]
   }
 }
