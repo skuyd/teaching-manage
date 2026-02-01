@@ -2,10 +2,16 @@
   <div class="subject-detail">
     <div class="header">
       <h2>{{ subject?.name || '课程管理' }}</h2>
-      <el-button type="primary" @click="showCreateDialog">
-        <el-icon><Plus /></el-icon>
-        新增课程
-      </el-button>
+      <div class="header-actions">
+        <el-button v-if="subject?.isGrouped" @click="goToGroups">
+          <el-icon><User /></el-icon>
+          小组管理
+        </el-button>
+        <el-button type="primary" @click="showCreateDialog">
+          <el-icon><Plus /></el-icon>
+          新增课程
+        </el-button>
+      </div>
     </div>
 
     <el-card>
@@ -144,14 +150,15 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search } from '@element-plus/icons-vue'
+import { Plus, Search, User } from '@element-plus/icons-vue'
 import { listLessons, deleteLesson, type LessonDTO } from '@/api/lesson'
 import { getSubjectById, type SubjectDTO } from '@/api/subject'
 import LessonForm from './LessonForm.vue'
 
 const route = useRoute()
+const router = useRouter()
 const subjectId = Number(route.params.id)
 
 const activeTab = ref('list')
@@ -367,6 +374,10 @@ const showDayLessons = (day: typeof calendarDays.value[0]) => {
   // TODO: 显示该天的课程列表
 }
 
+const goToGroups = () => {
+  router.push(`/subjects/${subjectId}/groups`)
+}
+
 onMounted(() => {
   loadSubject()
   loadLessons()
@@ -383,6 +394,11 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
+
+  .header-actions {
+    display: flex;
+    gap: 10px;
+  }
 }
 
 .search-bar {

@@ -26,6 +26,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, roles: ['ADMIN', 'TEACHER'] }
   },
   {
+    path: '/subjects/:id/groups',
+    name: 'GroupManagement',
+    component: () => import('@/views/groups/GroupManagement.vue'),
+    meta: { requiresAuth: true }
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
     component: () => import('@/views/NotFound.vue')
