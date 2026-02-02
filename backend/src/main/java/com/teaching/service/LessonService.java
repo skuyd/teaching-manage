@@ -66,4 +66,13 @@ public interface LessonService extends IService<Lesson> {
      * @return 课程列表
      */
     List<Lesson> getLessonsBySubjectId(Long subjectId);
+
+    /**
+     * 调整课程时间
+     *
+     * @param id         课程ID
+     * @param lessonTime 新的上课时间
+     * @return 更新后的课程
+     */
+    Lesson updateLessonTime(Long id, LocalDateTime lessonTime);
 }

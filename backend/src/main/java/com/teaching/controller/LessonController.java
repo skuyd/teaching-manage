@@ -6,6 +6,7 @@ import com.teaching.dto.PageResponse;
 import com.teaching.dto.CreateLessonRequest;
 import com.teaching.dto.LessonDTO;
 import com.teaching.dto.UpdateLessonRequest;
+import com.teaching.dto.UpdateLessonTimeRequest;
 import com.teaching.entity.Lesson;
 import com.teaching.service.LessonService;
 import jakarta.validation.Valid;
@@ -119,5 +120,22 @@ public class LessonController {
         lessonService.deleteLesson(id);
         log.info("删除课程: id={}", id);
         return Result.success();
+    }
+
+    /**
+     * 调整课程时间（拖拽）
+     *
+     * @param id      课程ID
+     * @param request 时间调整请求
+     * @return 更新后的课程
+     */
+    @PutMapping("/{id}/time")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public Result<LessonDTO> updateLessonTime(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateLessonTimeRequest request) {
+        Lesson lesson = lessonService.updateLessonTime(id, request.getLessonTime());
+        log.info("调整课程时间: id={}, newTime={}", id, request.getLessonTime());
+        return Result.success(LessonDTO.fromEntity(lesson));
     }
 }
