@@ -99,3 +99,24 @@ export function updateLesson(id: number, data: UpdateLessonRequest): Promise<Res
 export function deleteLesson(id: number): Promise<Result<void>> {
   return request.delete(`/lessons/${id}`)
 }
+
+/**
+ * 根据学科ID获取所有课程（不分页）
+ */
+export function getLessonsBySubject(subjectId: number): Promise<Result<LessonDTO[]>> {
+  return request.get('/lessons/subject/' + subjectId)
+}
+
+/**
+ * 获取所有课程（不分页）
+ */
+export function getLessons(): Promise<Result<LessonDTO[]>> {
+  return request.get('/lessons/all')
+}
+
+/**
+ * 调整课程时间（拖拽）
+ */
+export function updateLessonTime(id: number, lessonTime: string): Promise<Result<LessonDTO>> {
+  return request.put(`/lessons/${id}/time`, { lessonTime })
+}
