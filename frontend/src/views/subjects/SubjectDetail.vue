@@ -14,7 +14,7 @@
             <el-icon><User /></el-icon>
             小组管理
           </el-button>
-          <el-button type="primary" @click="showCreateDialog">
+          <el-button v-if="isTeacherOrAdmin" type="primary" @click="showCreateDialog">
             <el-icon><Plus /></el-icon>
             新增课程
           </el-button>
@@ -23,86 +23,7 @@
 
       <el-card class="dark-card">
       <el-tabs v-model="activeTab">
-        <el-tab-pane label="列表视图" name="list">
-          <div class="search-bar">
-            <el-input
-              v-model="searchKeyword"
-              placeholder="搜索课程标题或内容"
-              clearable
-              style="width: 300px"
-              @clear="loadLessons"
-              @keyup.enter="loadLessons"
-            >
-              <template #append>
-                <el-button :icon="Search" @click="loadLessons" />
-              </template>
-            </el-input>
-
-            <el-date-picker
-              v-model="dateRange"
-              type="daterange"
-              range-separator="至"
-              start-placeholder="开始日期"
-              end-placeholder="结束日期"
-              value-format="YYYY-MM-DD"
-              @change="loadLessons"
-              style="margin-left: 10px"
-            />
-          </div>
-
-          <el-table :data="lessons" v-loading="loading" stripe>
-            <el-table-column prop="title" label="课程标题" min-width="200" />
-            <el-table-column prop="lessonTime" label="上课时间" width="180">
-              <template #default="{ row }">
-                {{ formatDateTime(row.lessonTime) }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="submitType" label="提交类型" width="100">
-              <template #default="{ row }">
-                <el-tag :type="row.submitType === 'PERSONAL' ? 'primary' : 'success'">
-                  {{ row.submitType === 'PERSONAL' ? '个人' : '小组' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column prop="deadline" label="截止时间" width="180">
-              <template #default="{ row }">
-                {{ row.deadline ? formatDateTime(row.deadline) : '-' }}
-              </template>
-            </el-table-column>
-            <el-table-column prop="allowLate" label="允许补交" width="100">
-              <template #default="{ row }">
-                <el-tag :type="row.allowLate ? 'success' : 'info'">
-                  {{ row.allowLate ? '是' : '否' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="操作" width="180" fixed="right">
-              <template #default="{ row }">
-                <el-button link type="primary" size="small" @click="viewLesson(row)">
-                  查看
-                </el-button>
-                <el-button link type="primary" size="small" @click="editLesson(row)">
-                  编辑
-                </el-button>
-                <el-button link type="danger" size="small" @click="handleDelete(row)">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-
-          <el-pagination
-            v-model:current-page="pagination.page"
-            v-model:page-size="pagination.size"
-            :total="pagination.total"
-            :page-sizes="[10, 20, 50, 100]"
-            layout="total, sizes, prev, pager, next, jumper"
-            @size-change="loadLessons"
-            @current-change="loadLessons"
-          />
-        </el-tab-pane>
-
-        <el-tab-pane label="日历视图" name="calendar">
+        <el-tab-pane label="月视图" name="calendar">
           <div class="calendar-toolbar">
             <el-button-group>
               <el-button @click="changeMonth(-1)">上一月</el-button>
@@ -123,7 +44,7 @@
                 'other-month': day.isOtherMonth,
                 'today': day.isToday
               }]"
-              @click="day.lessons.length > 0 && showDayLessons(day)"
+              @click="handleDayClick(day)"
               @dragover.prevent
               @drop="handleMonthViewDrop($event, day)"
             >
@@ -133,9 +54,9 @@
                   v-for="lesson in day.lessons.slice(0, 3)"
                   :key="lesson.id"
                   class="lesson-item"
-                  draggable="true"
+                  :draggable="isTeacherOrAdmin"
                   @click.stop="viewLesson(lesson)"
-                  @dragstart="handleDragStart($event, lesson)"
+                  @dragstart="isTeacherOrAdmin && handleDragStart($event, lesson)"
                   @dragend="handleDragEnd"
                 >
                   {{ formatTime(lesson.lessonTime) }} {{ lesson.title }}
@@ -181,6 +102,7 @@
                 :class="{ 'is-today': day.isToday }"
                 :data-hour="hour"
                 :data-date="day.dateStr"
+                @click="handleTimeSlotClick(day.dateStr, hour)"
                 @dragover.prevent
                 @drop="handleWeekViewDrop($event, day.dateStr, hour)"
               >
@@ -189,8 +111,8 @@
                   v-for="lesson in getLessonsAtTime(day.date, hour)"
                   :key="lesson.id"
                   class="week-lesson-item"
-                  draggable="true"
-                  @dragstart="handleDragStart($event, lesson)"
+                  :draggable="isTeacherOrAdmin"
+                  @dragstart="isTeacherOrAdmin && handleDragStart($event, lesson)"
                   @dragend="handleDragEnd"
                   @click="viewLesson(lesson)"
                 >
@@ -201,6 +123,29 @@
             </template>
           </div>
         </el-tab-pane>
+
+        <el-tab-pane v-if="isTeacherOrAdmin" label="学生管理" name="students">
+          <div class="students-toolbar">
+            <el-button type="primary" @click="showAddStudentDialog">
+              <el-icon><Plus /></el-icon>
+              添加学生
+            </el-button>
+            <span class="student-count">共 {{ subjectStudents.length }} 名学生</span>
+          </div>
+
+          <el-table :data="subjectStudents" v-loading="studentsLoading" class="students-table">
+            <el-table-column prop="name" label="姓名" min-width="120" />
+            <el-table-column prop="username" label="用户名" min-width="120" />
+            <el-table-column prop="email" label="邮箱" min-width="180" />
+            <el-table-column label="操作" width="100" fixed="right">
+              <template #default="{ row }">
+                <el-button type="danger" size="small" text @click="handleRemoveStudent(row)">
+                  移除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
     </el-card>
 
@@ -209,41 +154,83 @@
         v-model="dialogVisible"
         :lesson="currentLesson"
         :subject-id="subjectId"
+        :default-date="defaultLessonDate"
         @success="handleFormSuccess"
       />
+
+      <!-- 添加学生对话框 -->
+      <el-dialog
+        v-model="addStudentDialogVisible"
+        title="添加学生"
+        width="500px"
+        destroy-on-close
+      >
+        <el-form>
+          <el-form-item label="选择学生">
+            <el-select
+              v-model="selectedStudentIds"
+              multiple
+              filterable
+              placeholder="搜索并选择学生"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="student in availableStudents"
+                :key="student.id"
+                :label="`${student.name} (${student.username})`"
+                :value="student.id"
+              />
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <template #footer>
+          <el-button @click="addStudentDialogVisible = false">取消</el-button>
+          <el-button type="primary" @click="handleAddStudents" :loading="addingStudents">
+            确定添加
+          </el-button>
+        </template>
+      </el-dialog>
     </div>
   </MainLayout>
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { Plus, Search, User, ArrowLeft } from '@element-plus/icons-vue'
-import { listLessons, deleteLesson, updateLessonTime, type LessonDTO } from '@/api/lesson'
-import { getSubjectById, type SubjectDTO } from '@/api/subject'
+import { Plus, User, ArrowLeft } from '@element-plus/icons-vue'
+import { getLessonsBySubject, deleteLesson, getLessonDeleteStats, updateLessonTime, type LessonDTO } from '@/api/lesson'
+import { getSubjectById, getSubjectStudents, addStudentToSubject, removeStudentFromSubject, type SubjectDTO, type StudentDTO } from '@/api/subject'
+import { listStudents } from '@/api/user'
+import type { UserDTO } from '@/api/types'
 import LessonForm from './LessonForm.vue'
 import MainLayout from '@/components/MainLayout.vue'
+import { useUserStore } from '@/stores/user'
 
 const route = useRoute()
 const router = useRouter()
+const userStore = useUserStore()
 const subjectId = Number(route.params.id)
 
-const activeTab = ref('list')
-const searchKeyword = ref('')
-const dateRange = ref<[string, string] | null>(null)
+// 权限控制
+const isTeacherOrAdmin = computed(() => userStore.isTeacher || userStore.isAdmin)
+
+const activeTab = ref('calendar')
 const loading = ref(false)
 const lessons = ref<LessonDTO[]>([])
 const subject = ref<SubjectDTO | null>(null)
 
-const pagination = reactive({
-  page: 1,
-  size: 10,
-  total: 0
-})
-
 const dialogVisible = ref(false)
 const currentLesson = ref<LessonDTO | null>(null)
+const defaultLessonDate = ref<string | null>(null)
+
+// 学生管理相关
+const subjectStudents = ref<StudentDTO[]>([])
+const allStudents = ref<UserDTO[]>([])
+const studentsLoading = ref(false)
+const addStudentDialogVisible = ref(false)
+const selectedStudentIds = ref<number[]>([])
+const addingStudents = ref(false)
 
 // 日历相关
 const currentDate = ref(new Date())
@@ -433,18 +420,11 @@ const loadSubject = async () => {
 const loadLessons = async () => {
   loading.value = true
   try {
-    const res = await listLessons(
-      pagination.page,
-      pagination.size,
-      subjectId,
-      searchKeyword.value || undefined,
-      dateRange.value?.[0] ? `${dateRange.value[0]}T00:00:00` : undefined,
-      dateRange.value?.[1] ? `${dateRange.value[1]}T23:59:59` : undefined
-    )
+    // 使用不分页API获取学科下所有课程，确保日历视图能显示完整课程
+    const res = await getLessonsBySubject(subjectId)
 
     if (res.success) {
-      lessons.value = res.data.list
-      pagination.total = res.data.total
+      lessons.value = res.data
     }
   } catch (error) {
     ElMessage.error('加载课程列表失败')
@@ -456,28 +436,56 @@ const loadLessons = async () => {
 
 const showCreateDialog = () => {
   currentLesson.value = null
+  defaultLessonDate.value = null  // 从按钮新增时不预填日期
   dialogVisible.value = true
 }
 
 const editLesson = (lesson: LessonDTO) => {
   currentLesson.value = lesson
+  defaultLessonDate.value = null  // 编辑时使用课程原有时间
   dialogVisible.value = true
 }
 
 const viewLesson = (lesson: LessonDTO) => {
-  // TODO: 跳转到课程详情页
-  console.log('查看课程:', lesson)
+  if (userStore.isTeacher || userStore.isAdmin) {
+    // 教员/管理员可以编辑
+    editLesson(lesson)
+  } else {
+    // 学员只能查看课程信息（显示简单提示）
+    ElMessage.info(`课程：${lesson.title}\n时间：${formatDateTime(lesson.lessonTime)}`)
+  }
 }
 
 const handleDelete = async (lesson: LessonDTO) => {
   try {
+    // 先获取删除统计信息
+    const statsRes = await getLessonDeleteStats(lesson.id)
+    const stats = statsRes.data
+
+    // 构建确认消息
+    let message = `确定要删除课程「${lesson.title}」吗？`
+
+    if (stats.submissionCount > 0) {
+      message = `<div style="text-align: left; line-height: 1.8;">
+        <p style="color: #E6A23C; margin-bottom: 8px;">⚠️ 该课程包含以下关联数据，删除后将无法恢复：</p>
+        <ul style="margin: 0; padding-left: 20px; color: #606266;">
+          <li>作业提交：<strong>${stats.submissionCount}</strong> 份</li>
+          <li>评分记录：<strong>${stats.gradeCount}</strong> 条</li>
+          <li>代码评论：<strong>${stats.commentCount}</strong> 条</li>
+        </ul>
+        <p style="margin-top: 12px; color: #F56C6C;">确定要删除课程「${lesson.title}」及所有关联数据吗？</p>
+      </div>`
+    }
+
     await ElMessageBox.confirm(
-      `确定要删除课程"${lesson.title}"吗？`,
-      '提示',
+      message,
+      '删除确认',
       {
-        confirmButtonText: '确定',
+        type: 'warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定删除',
         cancelButtonText: '取消',
-        type: 'warning'
+        confirmButtonClass: 'el-button--danger'
       }
     )
 
@@ -486,8 +494,8 @@ const handleDelete = async (lesson: LessonDTO) => {
       ElMessage.success('删除成功')
       loadLessons()
     }
-  } catch (error) {
-    if (error !== 'cancel') {
+  } catch (error: any) {
+    if (error !== 'cancel' && error?.message !== 'cancel') {
       ElMessage.error('删除失败')
       console.error(error)
     }
@@ -509,9 +517,37 @@ const goToday = () => {
   currentDate.value = new Date()
 }
 
-const showDayLessons = (day: typeof calendarDays.value[0]) => {
-  console.log('该天课程:', day.lessons)
-  // TODO: 显示该天的课程列表
+// 点击月视图日期 - 打开新增课程对话框（仅教员/管理员）
+const handleDayClick = (day: typeof calendarDays.value[0]) => {
+  if (day.isOtherMonth) return
+  if (!userStore.isTeacher && !userStore.isAdmin) return // 学员不能创建课程
+  // 如果点击的是课程条目，不打开对话框（由课程条目的 @click.stop 处理）
+  const date = new Date(day.date)
+  date.setHours(9, 0, 0, 0) // 默认 9:00
+  defaultLessonDate.value = formatDateTimeForForm(date)
+  currentLesson.value = null
+  dialogVisible.value = true
+}
+
+// 点击周视图时间槽 - 打开新增课程对话框（仅教员/管理员）
+const handleTimeSlotClick = (dateStr: string, hour: number) => {
+  if (!userStore.isTeacher && !userStore.isAdmin) return // 学员不能创建课程
+  const date = new Date(dateStr)
+  date.setHours(hour, 0, 0, 0)
+  defaultLessonDate.value = formatDateTimeForForm(date)
+  currentLesson.value = null
+  dialogVisible.value = true
+}
+
+// 格式化日期时间为表单所需格式
+const formatDateTimeForForm = (date: Date): string => {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`
 }
 
 // 拖拽处理函数
@@ -595,9 +631,92 @@ const goBack = () => {
   router.push('/subjects')
 }
 
+// 学生管理相关方法
+const availableStudents = computed(() => {
+  const existingIds = new Set(subjectStudents.value.map(s => s.id))
+  return allStudents.value.filter(s => !existingIds.has(s.id))
+})
+
+const loadSubjectStudents = async () => {
+  studentsLoading.value = true
+  try {
+    const res = await getSubjectStudents(subjectId)
+    if (res.success) {
+      subjectStudents.value = res.data
+    }
+  } catch (error) {
+    console.error('加载学生列表失败:', error)
+  } finally {
+    studentsLoading.value = false
+  }
+}
+
+const loadAllStudents = async () => {
+  try {
+    const res = await listStudents()
+    if (res.success) {
+      allStudents.value = res.data
+    }
+  } catch (error) {
+    console.error('加载所有学生失败:', error)
+  }
+}
+
+const showAddStudentDialog = () => {
+  selectedStudentIds.value = []
+  addStudentDialogVisible.value = true
+}
+
+const handleAddStudents = async () => {
+  if (selectedStudentIds.value.length === 0) {
+    ElMessage.warning('请选择要添加的学生')
+    return
+  }
+
+  addingStudents.value = true
+  try {
+    for (const studentId of selectedStudentIds.value) {
+      await addStudentToSubject(subjectId, studentId)
+    }
+    ElMessage.success(`成功添加 ${selectedStudentIds.value.length} 名学生`)
+    addStudentDialogVisible.value = false
+    loadSubjectStudents()
+  } catch (error) {
+    ElMessage.error('添加学生失败')
+    console.error(error)
+  } finally {
+    addingStudents.value = false
+  }
+}
+
+const handleRemoveStudent = async (student: StudentDTO) => {
+  try {
+    await ElMessageBox.confirm(
+      `确定要将学生"${student.name}"从该学科移除吗？`,
+      '提示',
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    )
+
+    await removeStudentFromSubject(subjectId, student.id)
+    ElMessage.success('移除成功')
+    loadSubjectStudents()
+  } catch (error) {
+    if (error !== 'cancel') {
+      ElMessage.error('移除失败')
+      console.error(error)
+    }
+  }
+}
+
 onMounted(() => {
   loadSubject()
   loadLessons()
+  loadSubjectStudents()
+  loadAllStudents()
 })
 </script>
 
@@ -896,6 +1015,27 @@ onMounted(() => {
   .calendar-day {
     &:hover {
       background: rgba(255, 92, 0, 0.1);
+    }
+  }
+
+  // 学生管理样式
+  .students-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .student-count {
+      color: #ADADB0;
+      font-size: 14px;
+    }
+  }
+
+  .students-table {
+    :deep(.el-table__header) {
+      th {
+        background: rgba(255, 255, 255, 0.05) !important;
+      }
     }
   }
 }

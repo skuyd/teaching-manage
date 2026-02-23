@@ -6,8 +6,7 @@ import com.teaching.dto.CreateSubjectRequest;
 import com.teaching.dto.UpdateSubjectRequest;
 import com.teaching.entity.Subject;
 import com.teaching.entity.SubjectStudent;
-import com.teaching.mapper.SubjectMapper;
-import com.teaching.mapper.SubjectStudentMapper;
+import com.teaching.mapper.*;
 import com.teaching.service.impl.SubjectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -32,11 +31,36 @@ class SubjectServiceTest {
     @Mock
     private SubjectStudentMapper subjectStudentMapper;
 
+    @Mock
+    private UserMapper userMapper;
+
+    @Mock
+    private LessonMapper lessonMapper;
+
+    @Mock
+    private SubmissionMapper submissionMapper;
+
+    @Mock
+    private GradeMapper gradeMapper;
+
+    @Mock
+    private CodeCommentMapper codeCommentMapper;
+
+    @Mock
+    private GroupMapper groupMapper;
+
+    @Mock
+    private GroupMemberMapper groupMemberMapper;
+
     private SubjectServiceImpl subjectService;
 
     @BeforeEach
     void setUp() {
-        subjectService = new SubjectServiceImpl(subjectMapper, subjectStudentMapper);
+        subjectService = new SubjectServiceImpl(
+                subjectMapper, subjectStudentMapper, userMapper,
+                lessonMapper, submissionMapper, gradeMapper,
+                codeCommentMapper, groupMapper, groupMemberMapper
+        );
     }
 
     @Test

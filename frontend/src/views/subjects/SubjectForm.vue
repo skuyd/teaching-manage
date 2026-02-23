@@ -117,6 +117,15 @@ const rules: FormRules = {
   ]
 }
 
+const resetForm = () => {
+  form.name = ''
+  form.description = ''
+  form.isGrouped = false
+  form.minMembers = 1
+  form.maxMembers = 1
+  dateRange.value = null
+}
+
 watch(() => props.subject, (subject) => {
   if (subject) {
     form.name = subject.name
@@ -133,15 +142,6 @@ watch(() => props.subject, (subject) => {
     resetForm()
   }
 }, { immediate: true })
-
-const resetForm = () => {
-  form.name = ''
-  form.description = ''
-  form.isGrouped = false
-  form.minMembers = 1
-  form.maxMembers = 1
-  dateRange.value = null
-}
 
 const handleClose = () => {
   emit('update:modelValue', false)
@@ -175,6 +175,7 @@ const handleSubmit = async () => {
       }
 
       emit('success')
+      emit('update:modelValue', false)
     } finally {
       loading.value = false
     }

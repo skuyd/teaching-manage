@@ -167,6 +167,8 @@ CREATE INDEX IF NOT EXISTS idx_group_member_group_id ON t_group_member(group_id)
 CREATE INDEX IF NOT EXISTS idx_group_member_user_id ON t_group_member(user_id);
 CREATE INDEX IF NOT EXISTS idx_submission_lesson_id ON t_submission(lesson_id);
 CREATE INDEX IF NOT EXISTS idx_grade_submission_id ON t_grade(submission_id);
+CREATE INDEX IF NOT EXISTS idx_code_comment_submission_id ON t_code_comment(submission_id);
+CREATE INDEX IF NOT EXISTS idx_code_comment_file_path ON t_code_comment(submission_id, file_path);
 CREATE INDEX IF NOT EXISTS idx_notification_user_id ON t_notification(user_id);
 CREATE INDEX IF NOT EXISTS idx_subject_student_subject_id ON t_subject_student(subject_id);
 CREATE INDEX IF NOT EXISTS idx_subject_student_student_id ON t_subject_student(student_id);

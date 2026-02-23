@@ -1,0 +1,458 @@
+// Dark Theme Variables
+:root {
+  --dark-bg-primary: #0A0A0B;
+  --dark-bg-secondary: #111113;
+  --dark-bg-card: rgba(255, 255, 255, 0.05);
+  --dark-bg-card-hover: rgba(255, 255, 255, 0.08);
+  --dark-border: #2A2A2E;
+  --dark-border-light: #1F1F23;
+  --dark-text-primary: #FFFFFF;
+  --dark-text-secondary: #ADADB0;
+  --dark-text-muted: #6B6B6F;
+  --dark-accent: #FF5C00;
+  --dark-accent-light: rgba(255, 92, 0, 0.1);
+  --dark-success: #10B981;
+  --dark-warning: #F59E0B;
+  --dark-danger: #EF4444;
+  --dark-info: #3B82F6;
+}
+
+// Dark Page Container
+.dark-page {
+  background: var(--dark-bg-primary);
+  min-height: 100%;
+  padding: 20px;
+  color: var(--dark-text-primary);
+
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--dark-text-primary);
+  }
+
+  p, span {
+    color: var(--dark-text-secondary);
+  }
+}
+
+// Dark Card
+.dark-card {
+  background: var(--dark-bg-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    background: var(--dark-bg-card-hover);
+  }
+
+  // Override Element Plus card styles
+  &.el-card {
+    background: var(--dark-bg-card);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+
+    .el-card__header {
+      border-bottom-color: var(--dark-border);
+      color: var(--dark-text-primary);
+    }
+
+    .el-card__body {
+      color: var(--dark-text-secondary);
+    }
+  }
+}
+
+// Dark Table
+.dark-table {
+  // Override Element Plus table styles
+  &.el-table {
+    background-color: transparent;
+    color: var(--dark-text-primary);
+
+    tr {
+      background-color: transparent;
+    }
+
+    th.el-table__cell {
+      background-color: var(--dark-bg-secondary);
+      color: var(--dark-text-primary);
+      border-bottom-color: var(--dark-border);
+    }
+
+    td.el-table__cell {
+      border-bottom-color: var(--dark-border-light);
+    }
+
+    .el-table__row {
+      background-color: transparent;
+
+      &:hover > td.el-table__cell {
+        background-color: var(--dark-bg-card-hover);
+      }
+    }
+
+    .el-table__empty-block {
+      background-color: transparent;
+    }
+
+    .el-table__body-wrapper {
+      background-color: transparent;
+    }
+
+    &--border .el-table__cell {
+      border-color: var(--dark-border);
+    }
+  }
+}
+
+// Dark Statistics
+.dark-statistics {
+  background: var(--dark-bg-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 20px;
+
+  .el-statistic {
+    .el-statistic__head {
+      color: var(--dark-text-muted);
+    }
+
+    .el-statistic__content {
+      color: var(--dark-text-primary);
+    }
+  }
+}
+
+// Dark Select
+.dark-select {
+  .el-select__wrapper {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+
+    &:hover {
+      border-color: var(--dark-accent);
+    }
+  }
+}
+
+// Dark Form Elements
+.dark-form {
+  .el-input__wrapper {
+    background-color: var(--dark-bg-secondary);
+    box-shadow: 0 0 0 1px var(--dark-border) inset;
+
+    &:hover {
+      box-shadow: 0 0 0 1px var(--dark-accent) inset;
+    }
+
+    &.is-focus {
+      box-shadow: 0 0 0 1px var(--dark-accent) inset;
+    }
+  }
+
+  .el-input__inner {
+    color: var(--dark-text-primary);
+
+    &::placeholder {
+      color: var(--dark-text-muted);
+    }
+  }
+
+  .el-textarea__inner {
+    background-color: var(--dark-bg-secondary);
+    border-color: var(--dark-border);
+    color: var(--dark-text-primary);
+
+    &::placeholder {
+      color: var(--dark-text-muted);
+    }
+  }
+}
+
+// Dark Button
+.dark-button {
+  &.el-button--primary {
+    background: linear-gradient(135deg, var(--dark-accent) 0%, #FF7A00 100%);
+    border-color: var(--dark-accent);
+
+    &:hover {
+      background: linear-gradient(135deg, #FF7A00 0%, var(--dark-accent) 100%);
+    }
+  }
+}
+
+// Dark Dialog
+.dark-dialog {
+  .el-dialog {
+    background: var(--dark-bg-secondary);
+    border: 1px solid var(--dark-border);
+
+    .el-dialog__header {
+      border-bottom: 1px solid var(--dark-border);
+    }
+
+    .el-dialog__title {
+      color: var(--dark-text-primary);
+    }
+
+    .el-dialog__body {
+      color: var(--dark-text-secondary);
+    }
+  }
+}
+
+// Dark Header
+.dark-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--dark-text-primary);
+  }
+}
+
+// Dark Filters
+.dark-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+// Dark Grade Distribution
+.dark-grade-distribution {
+  background: var(--dark-bg-card);
+  border: 1px solid var(--dark-border);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+
+  h3 {
+    color: var(--dark-text-primary);
+    margin-bottom: 16px;
+    font-size: 16px;
+  }
+
+  .grade-bar {
+    margin-bottom: 12px;
+
+    .grade-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      color: var(--dark-text-secondary);
+      font-size: 14px;
+
+      .grade-name {
+        font-weight: 600;
+        color: var(--dark-text-primary);
+      }
+    }
+
+    .bar-container {
+      height: 8px;
+      background: var(--dark-border);
+      border-radius: 4px;
+      overflow: hidden;
+
+      .bar-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 0.3s ease;
+
+        &.grade-a { background: linear-gradient(90deg, #10B981, #34D399); }
+        &.grade-b { background: linear-gradient(90deg, #3B82F6, #60A5FA); }
+        &.grade-c { background: linear-gradient(90deg, #F59E0B, #FBBF24); }
+        &.grade-d { background: linear-gradient(90deg, #EF4444, #F87171); }
+      }
+    }
+  }
+}
+
+// Dark Empty State
+.dark-empty {
+  .el-empty__description {
+    color: var(--dark-text-muted);
+  }
+}
+
+// Dark Tags
+.dark-tags {
+  .el-tag {
+    &--success {
+      background-color: rgba(16, 185, 129, 0.1);
+      border-color: rgba(16, 185, 129, 0.2);
+      color: #10B981;
+    }
+
+    &--primary {
+      background-color: rgba(59, 130, 246, 0.1);
+      border-color: rgba(59, 130, 246, 0.2);
+      color: #3B82F6;
+    }
+
+    &--warning {
+      background-color: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+    }
+
+    &--danger {
+      background-color: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.2);
+      color: #EF4444;
+    }
+
+    &--info {
+      background-color: rgba(107, 114, 128, 0.1);
+      border-color: rgba(107, 114, 128, 0.2);
+      color: #9CA3AF;
+    }
+  }
+}
+
+// Dark Board (for SubmissionBoard)
+.dark-board {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  overflow-x: auto;
+  min-height: 400px;
+
+  .dark-column {
+    flex: 1;
+    min-width: 280px;
+    max-width: 320px;
+    background: var(--dark-bg-card);
+    border: 1px solid var(--dark-border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+
+    .column-header {
+      padding: 16px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--dark-border);
+      color: var(--dark-text-primary);
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+
+        &.warning { background-color: var(--dark-warning); }
+        &.info { background-color: var(--dark-info); }
+        &.success { background-color: var(--dark-success); }
+      }
+    }
+
+    .column-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+  }
+
+  .dark-board-card {
+    background: var(--dark-bg-secondary);
+    border: 1px solid var(--dark-border-light);
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+
+    &.clickable {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--dark-bg-card-hover);
+        border-color: var(--dark-accent);
+      }
+    }
+
+    .card-info {
+      flex: 1;
+      min-width: 0;
+
+      .card-name {
+        font-weight: 500;
+        color: var(--dark-text-primary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .card-time {
+        font-size: 12px;
+        color: var(--dark-text-muted);
+        margin-top: 4px;
+      }
+    }
+  }
+}
+
+// Dark Descriptions
+.dark-descriptions {
+  .el-descriptions {
+    background-color: transparent;
+
+    .el-descriptions__label {
+      background-color: var(--dark-bg-secondary);
+      color: var(--dark-text-muted);
+    }
+
+    .el-descriptions__content {
+      background-color: var(--dark-bg-card);
+      color: var(--dark-text-primary);
+    }
+
+    .el-descriptions__cell {
+      border-color: var(--dark-border);
+    }
+  }
+}
+
+// Dark Page Header
+.dark-page-header {
+  .el-page-header__title {
+    color: var(--dark-text-primary);
+  }
+
+  .el-page-header__content {
+    color: var(--dark-text-primary);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .dark-page {
+    padding: 12px;
+  }
+
+  .dark-header {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .dark-filters {
+    width: 100%;
+    flex-direction: column;
+
+    .el-select {
+      width: 100% !important;
+    }
+  }
+}

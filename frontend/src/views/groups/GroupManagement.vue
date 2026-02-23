@@ -1,4 +1,5 @@
 <template>
+  <MainLayout>
   <div class="group-management">
     <div class="header">
       <h2>小组管理 - {{ subject?.name || '加载中...' }}</h2>
@@ -159,10 +160,12 @@
       </template>
     </el-dialog>
   </div>
+  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
+import MainLayout from '@/components/MainLayout.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search } from '@element-plus/icons-vue'

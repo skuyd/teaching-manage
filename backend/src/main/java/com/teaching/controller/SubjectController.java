@@ -5,6 +5,7 @@ import com.teaching.common.Result;
 import com.teaching.dto.*;
 import com.teaching.entity.Subject;
 import com.teaching.service.SubjectService;
+import com.teaching.util.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,8 +70,15 @@ public class SubjectController {
         return Result.success();
     }
 
+    @GetMapping("/{id}/delete-stats")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public Result<SubjectDeleteStatsDTO> getDeleteStats(@PathVariable Long id) {
+        SubjectDeleteStatsDTO stats = subjectService.getDeleteStats(id);
+        return Result.success(stats);
+    }
+
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public Result<Void> deleteSubject(@PathVariable Long id) {
         subjectService.deleteSubject(id);
         log.info("删除学科: id={}", id);
@@ -99,8 +107,19 @@ public class SubjectController {
 
     @GetMapping("/{subjectId}/students")
     @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
-    public Result<List<Long>> getSubjectStudents(@PathVariable Long subjectId) {
-        List<Long> studentIds = subjectService.getStudentIdsBySubjectId(subjectId);
-        return Result.success(studentIds);
+    public Result<List<UserDTO>> getSubjectStudents(@PathVariable Long subjectId) {
+        List<UserDTO> students = subjectService.getStudentsBySubjectId(subjectId);
+        return Result.success(students);
+    }
+
+    @GetMapping("/my")
+    @PreAuthorize("hasRole('STUDENT')")
+    public Result<List<SubjectDTO>> getMySubjects() {
+        Long studentId = SecurityUtils.getCurrentUserId();
+        List<Subject> subjects = subjectService.getSubjectsByStudentId(studentId);
+        List<SubjectDTO> subjectDTOs = subjects.stream()
+                .map(SubjectDTO::fromEntity)
+                .toList();
+        return Result.success(subjectDTOs);
     }
 }

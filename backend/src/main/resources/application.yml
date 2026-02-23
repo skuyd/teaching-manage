@@ -11,6 +11,15 @@ spring:
     init:
       mode: always
       schema-locations: classpath:schema.sql
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 mybatis-plus:
   configuration:

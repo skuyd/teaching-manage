@@ -6,12 +6,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.github.junrar.Junrar;
+import com.github.junrar.exception.RarException;
+
 import java.io.*;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * 文件服务
@@ -21,7 +25,7 @@ import java.util.zip.ZipInputStream;
 @Service
 public class FileService {
 
-    @Value("${file.upload.base-dir:./uploads}")
+    @Value("${file.upload-dir:./uploads}")
     private String baseUploadDir;
 
     /**
@@ -34,17 +38,24 @@ public class FileService {
      * @return 文件存储路径
      */
     public String uploadFile(MultipartFile file, Long lessonId, Long targetId, boolean isGroupSubmission) throws IOException {
+        log.info("开始上传文件: lessonId={}, targetId={}, isGroup={}", lessonId, targetId, isGroupSubmission);
+
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("文件不能为空");
         }
 
+        log.info("文件信息: name={}, size={}, contentType={}",
+            file.getOriginalFilename(), file.getSize(), file.getContentType());
+
         // 构建存储路径: /uploads/课程ID/小组或学员ID/
         String relativePath = String.format("%d/%s", lessonId, targetId);
-        Path uploadPath = Paths.get(baseUploadDir, relativePath);
+        Path uploadPath = Paths.get(baseUploadDir, relativePath).toAbsolutePath();
+        log.info("上传目录: {}", uploadPath);
 
         // 创建目录
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
+            log.info("创建目录成功: {}", uploadPath);
         }
 
         // 保存文件
@@ -54,16 +65,25 @@ public class FileService {
         }
 
         Path filePath = uploadPath.resolve(originalFilename);
-        file.transferTo(filePath.toFile());
+        log.info("保存文件到: {}", filePath);
+
+        // 使用 Files.copy 替代 transferTo，避免路径问题
+        try (InputStream is = file.getInputStream()) {
+            Files.copy(is, filePath, REPLACE_EXISTING);
+        }
 
         log.info("文件上传成功: {}", filePath);
 
-        // 如果是ZIP文件，自动解压
-        if (originalFilename.toLowerCase().endsWith(".zip")) {
+        // 如果是压缩文件，自动解压
+        String lowerFilename = originalFilename.toLowerCase();
+        if (lowerFilename.endsWith(".zip")) {
             unzipFile(filePath.toString(), uploadPath.toString());
-            // 删除原始ZIP文件
             Files.deleteIfExists(filePath);
             log.info("ZIP文件解压完成: {}", uploadPath);
+        } else if (lowerFilename.endsWith(".rar")) {
+            unrarFile(filePath.toString(), uploadPath.toString());
+            Files.deleteIfExists(filePath);
+            log.info("RAR文件解压完成: {}", uploadPath);
         }
 
         return uploadPath.toString();
@@ -118,6 +138,25 @@ public class FileService {
             }
 
             zis.closeEntry();
+        }
+    }
+
+    /**
+     * 解压RAR文件
+     *
+     * @param rarFilePath RAR文件路径
+     * @param destDir 目标目录
+     */
+    public void unrarFile(String rarFilePath, String destDir) throws IOException {
+        File dir = new File(destDir);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        try {
+            Junrar.extract(new File(rarFilePath), dir);
+        } catch (RarException e) {
+            throw new IOException("解压RAR文件失败: " + e.getMessage(), e);
         }
     }
 
@@ -208,5 +247,54 @@ public class FileService {
             throw new FileNotFoundException("文件不存在或是目录: " + filePath);
         }
         return Files.readString(path);
+    }
+
+    /**
+     * 上传用户头像
+     *
+     * @param file 头像文件
+     * @param userId 用户ID
+     * @return 头像访问URL
+     */
+    public String uploadAvatar(MultipartFile file, Long userId) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("文件不能为空");
+        }
+
+        // 验证文件类型
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("只允许上传图片文件");
+        }
+
+        // 验证文件大小（最大2MB）
+        if (file.getSize() > 2 * 1024 * 1024) {
+            throw new IllegalArgumentException("文件大小不能超过2MB");
+        }
+
+        // 获取文件扩展名
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+
+        // 生成唯一文件名
+        String filename = "avatar_" + userId + "_" + System.currentTimeMillis() + extension;
+
+        // 创建头像目录
+        Path avatarDir = Paths.get(baseUploadDir, "avatars");
+        if (!Files.exists(avatarDir)) {
+            Files.createDirectories(avatarDir);
+        }
+
+        // 保存文件
+        Path filePath = avatarDir.resolve(filename);
+        file.transferTo(filePath.toFile());
+
+        log.info("头像上传成功: userId={}, path={}", userId, filePath);
+
+        // 返回访问URL
+        return "/uploads/avatars/" + filename;
     }
 }

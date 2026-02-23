@@ -85,6 +85,7 @@ const props = defineProps<{
   modelValue: boolean
   lesson: LessonDTO | null
   subjectId: number
+  defaultDate?: string | null
 }>()
 
 const emit = defineEmits<{
@@ -119,20 +120,6 @@ const rules: FormRules = {
   ]
 }
 
-watch(() => props.lesson, (lesson) => {
-  if (lesson) {
-    form.title = lesson.title
-    form.content = lesson.content || ''
-    form.lessonTime = lesson.lessonTime
-    form.homeworkDesc = lesson.homeworkDesc || ''
-    form.submitType = lesson.submitType
-    form.deadline = lesson.deadline || ''
-    form.allowLate = lesson.allowLate
-  } else {
-    resetForm()
-  }
-}, { immediate: true })
-
 const resetForm = () => {
   form.title = ''
   form.content = ''
@@ -142,6 +129,31 @@ const resetForm = () => {
   form.deadline = ''
   form.allowLate = false
 }
+
+watch(
+  () => [props.lesson, props.defaultDate, props.modelValue] as const,
+  ([lesson, defaultDate, visible]) => {
+    if (!visible) return
+    if (lesson) {
+      // 编辑模式：填充原有数据
+      form.title = lesson.title
+      form.content = lesson.content || ''
+      form.lessonTime = lesson.lessonTime
+      form.homeworkDesc = lesson.homeworkDesc || ''
+      form.submitType = lesson.submitType
+      form.deadline = lesson.deadline || ''
+      form.allowLate = lesson.allowLate
+    } else {
+      // 新增模式：重置表单
+      resetForm()
+      // 如果有默认日期（从日历点击），使用默认日期
+      if (defaultDate) {
+        form.lessonTime = defaultDate
+      }
+    }
+  },
+  { immediate: true }
+)
 
 const handleClose = () => {
   emit('update:modelValue', false)

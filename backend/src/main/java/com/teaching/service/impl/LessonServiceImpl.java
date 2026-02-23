@@ -5,17 +5,17 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.teaching.dto.CreateLessonRequest;
+import com.teaching.dto.LessonDeleteStatsDTO;
 import com.teaching.dto.UpdateLessonRequest;
 import com.teaching.entity.Lesson;
 import com.teaching.entity.NotificationType;
 import com.teaching.entity.Subject;
-import com.teaching.mapper.LessonMapper;
-import com.teaching.mapper.SubjectMapper;
-import com.teaching.mapper.SubjectStudentMapper;
+import com.teaching.mapper.*;
 import com.teaching.service.LessonService;
 import com.teaching.exception.BusinessException;
 import com.teaching.service.NotificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * 课程服务实现
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> implements LessonService {
@@ -35,6 +36,9 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
     private final SubjectMapper subjectMapper;
     private final SubjectStudentMapper subjectStudentMapper;
     private final NotificationService notificationService;
+    private final SubmissionMapper submissionMapper;
+    private final GradeMapper gradeMapper;
+    private final CodeCommentMapper codeCommentMapper;
 
     @Override
     public Lesson createLesson(CreateLessonRequest request) {
@@ -102,8 +106,29 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
     }
 
     @Override
+    @Transactional
     public void deleteLesson(Long id) {
-        lessonMapper.deleteById(id);
+        Lesson lesson = getLessonById(id);
+        if (lesson == null) {
+            throw new BusinessException(404, "课程不存在");
+        }
+        log.info("开始物理删除课程: id={}, title={}", id, lesson.getTitle());
+
+        // 1. 删除代码评论（最底层）
+        int commentCount = codeCommentMapper.physicalDeleteByLessonId(id);
+        log.info("删除代码评论: {} 条", commentCount);
+
+        // 2. 删除评分
+        int gradeCount = gradeMapper.physicalDeleteByLessonId(id);
+        log.info("删除评分: {} 条", gradeCount);
+
+        // 3. 删除作业提交
+        int submissionCount = submissionMapper.physicalDeleteByLessonId(id);
+        log.info("删除作业提交: {} 条", submissionCount);
+
+        // 4. 删除课程本身
+        lessonMapper.physicalDeleteById(id);
+        log.info("课程物理删除完成: id={}", id);
     }
 
     @Override
@@ -123,5 +148,29 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
         updateById(lesson);
 
         return lesson;
+    }
+
+    @Override
+    public LessonDeleteStatsDTO getDeleteStats(Long id) {
+        Lesson lesson = getLessonById(id);
+        if (lesson == null) {
+            throw new BusinessException(404, "课程不存在");
+        }
+
+        Subject subject = subjectMapper.selectById(lesson.getSubjectId());
+        String subjectName = subject != null ? subject.getName() : "未知学科";
+
+        int submissionCount = submissionMapper.countByLessonId(id);
+        int gradeCount = gradeMapper.countByLessonId(id);
+        int commentCount = codeCommentMapper.countByLessonId(id);
+
+        return LessonDeleteStatsDTO.builder()
+                .lessonId(id)
+                .lessonTitle(lesson.getTitle())
+                .subjectName(subjectName)
+                .submissionCount(submissionCount)
+                .gradeCount(gradeCount)
+                .commentCount(commentCount)
+                .build();
     }
 }

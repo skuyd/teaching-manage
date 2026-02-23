@@ -9,6 +9,7 @@ import com.teaching.exception.BusinessException;
 import com.teaching.mapper.GroupMapper;
 import com.teaching.mapper.GroupMemberMapper;
 import com.teaching.mapper.SubjectMapper;
+import com.teaching.mapper.UserMapper;
 import com.teaching.service.impl.GroupServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -33,11 +34,17 @@ class GroupServiceTest {
     @Mock
     private SubjectMapper subjectMapper;
 
+    @Mock
+    private UserMapper userMapper;
+
+    @Mock
+    private NotificationService notificationService;
+
     private GroupServiceImpl groupService;
 
     @BeforeEach
     void setUp() {
-        groupService = new GroupServiceImpl(groupMapper, groupMemberMapper, subjectMapper);
+        groupService = new GroupServiceImpl(groupMapper, groupMemberMapper, subjectMapper, userMapper, notificationService);
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.teaching.util;
 
+import com.teaching.enums.UserRole;
 import com.teaching.security.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -46,6 +47,14 @@ public class SecurityUtils {
             return userDetails;
         }
         throw new RuntimeException("未找到当前登录用户详情");
+    }
+
+    /**
+     * 获取当前登录用户角色
+     */
+    public static UserRole getCurrentUserRole() {
+        UserDetailsImpl userDetails = getCurrentUserDetails();
+        return userDetails.getRole();
     }
 
     /**

@@ -100,6 +100,22 @@ export function deleteLesson(id: number): Promise<Result<void>> {
   return request.delete(`/lessons/${id}`)
 }
 
+export interface LessonDeleteStatsDTO {
+  lessonId: number
+  lessonTitle: string
+  subjectName: string
+  submissionCount: number
+  gradeCount: number
+  commentCount: number
+}
+
+/**
+ * 获取课程删除统计信息
+ */
+export function getLessonDeleteStats(id: number): Promise<Result<LessonDeleteStatsDTO>> {
+  return request.get(`/lessons/${id}/delete-stats`)
+}
+
 /**
  * 根据学科ID获取所有课程（不分页）
  */

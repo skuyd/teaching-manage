@@ -5,9 +5,13 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.teaching.dto.UpdateUserRequest;
 import com.teaching.entity.User;
 
+import java.util.List;
+
 public interface UserService extends IService<User> {
 
     User findByUsername(String username);
+
+    List<User> listStudents();
 
     void createUser(User user);
 
@@ -20,4 +24,8 @@ public interface UserService extends IService<User> {
     void updateUser(Long id, UpdateUserRequest request);
 
     void deleteUser(Long id);
+
+    void updateUserAvatar(Long id, String avatarUrl);
+
+    List<User> listAllUsers(String keyword);
 }

@@ -6,19 +6,20 @@ import com.teaching.common.ResultCode;
 import com.teaching.dto.CreateGroupRequest;
 import com.teaching.dto.GroupDTO;
 import com.teaching.dto.GroupMemberDTO;
-import com.teaching.entity.Group;
-import com.teaching.entity.GroupMember;
-import com.teaching.entity.Subject;
+import com.teaching.entity.*;
 import com.teaching.enums.MemberStatus;
 import com.teaching.exception.BusinessException;
 import com.teaching.mapper.GroupMapper;
 import com.teaching.mapper.GroupMemberMapper;
 import com.teaching.mapper.SubjectMapper;
+import com.teaching.mapper.UserMapper;
 import com.teaching.service.GroupService;
+import com.teaching.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -28,6 +29,8 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
     private final GroupMapper groupMapper;
     private final GroupMemberMapper groupMemberMapper;
     private final SubjectMapper subjectMapper;
+    private final UserMapper userMapper;
+    private final NotificationService notificationService;
 
     @Override
     @Transactional
@@ -101,6 +104,17 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         member.setUserId(userId);
         member.setStatus(MemberStatus.PENDING);
         groupMemberMapper.insert(member);
+
+        // 发送小组申请通知给组长
+        User applicant = userMapper.selectById(userId);
+        String title = "新的小组申请";
+        String content = String.format("学员《%s》申请加入小组《%s》", applicant.getName(), group.getName());
+        notificationService.createNotifications(
+                Collections.singletonList(group.getLeaderId()),
+                title,
+                content,
+                NotificationType.GROUP_APPLICATION
+        );
     }
 
     @Override
@@ -141,6 +155,16 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
 
         member.setStatus(MemberStatus.APPROVED);
         groupMemberMapper.updateById(member);
+
+        // 发送审批通过通知给申请人
+        String title = "小组申请已通过";
+        String content = String.format("您加入小组《%s》的申请已通过", group.getName());
+        notificationService.createNotifications(
+                Collections.singletonList(member.getUserId()),
+                title,
+                content,
+                NotificationType.GROUP_APPROVAL
+        );
     }
 
     @Override
@@ -154,6 +178,16 @@ public class GroupServiceImpl extends ServiceImpl<GroupMapper, Group> implements
         GroupMember member = groupMemberMapper.selectById(memberId);
         member.setStatus(MemberStatus.REJECTED);
         groupMemberMapper.updateById(member);
+
+        // 发送审批拒绝通知给申请人
+        String title = "小组申请已拒绝";
+        String content = String.format("您加入小组《%s》的申请已被拒绝", group.getName());
+        notificationService.createNotifications(
+                Collections.singletonList(member.getUserId()),
+                title,
+                content,
+                NotificationType.GROUP_APPROVAL
+        );
     }
 
     @Override

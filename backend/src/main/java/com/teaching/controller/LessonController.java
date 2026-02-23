@@ -2,11 +2,7 @@ package com.teaching.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.teaching.common.Result;
-import com.teaching.dto.PageResponse;
-import com.teaching.dto.CreateLessonRequest;
-import com.teaching.dto.LessonDTO;
-import com.teaching.dto.UpdateLessonRequest;
-import com.teaching.dto.UpdateLessonTimeRequest;
+import com.teaching.dto.*;
 import com.teaching.entity.Lesson;
 import com.teaching.service.LessonService;
 import jakarta.validation.Valid;
@@ -63,6 +59,35 @@ public class LessonController {
     }
 
     /**
+     * 获取所有课程（不分页）
+     *
+     * @return 课程列表
+     */
+    @GetMapping("/all")
+    public Result<List<LessonDTO>> getAllLessons() {
+        List<Lesson> lessons = lessonService.list();
+        List<LessonDTO> lessonDTOs = lessons.stream()
+                .map(LessonDTO::fromEntity)
+                .toList();
+        return Result.success(lessonDTOs);
+    }
+
+    /**
+     * 根据学科ID获取所有课程（不分页）
+     *
+     * @param subjectId 学科ID
+     * @return 课程列表
+     */
+    @GetMapping("/subject/{subjectId}")
+    public Result<List<LessonDTO>> getLessonsBySubject(@PathVariable Long subjectId) {
+        List<Lesson> lessons = lessonService.getLessonsBySubjectId(subjectId);
+        List<LessonDTO> lessonDTOs = lessons.stream()
+                .map(LessonDTO::fromEntity)
+                .toList();
+        return Result.success(lessonDTOs);
+    }
+
+    /**
      * 根据ID查询课程
      *
      * @param id 课程ID
@@ -109,13 +134,26 @@ public class LessonController {
     }
 
     /**
+     * 获取课程删除统计信息
+     *
+     * @param id 课程ID
+     * @return 删除统计信息
+     */
+    @GetMapping("/{id}/delete-stats")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    public Result<LessonDeleteStatsDTO> getDeleteStats(@PathVariable Long id) {
+        LessonDeleteStatsDTO stats = lessonService.getDeleteStats(id);
+        return Result.success(stats);
+    }
+
+    /**
      * 删除课程
      *
      * @param id 课程ID
      * @return 删除结果
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
     public Result<Void> deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);
         log.info("删除课程: id={}", id);

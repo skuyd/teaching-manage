@@ -1,7 +1,5 @@
 package com.teaching.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.teaching.common.BaseEntity;
 import lombok.Data;
@@ -16,9 +14,6 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @TableName("t_submission")
 public class Submission extends BaseEntity {
-
-    @TableId(type = IdType.AUTO)
-    private Long id;
 
     /**
      * 课程ID

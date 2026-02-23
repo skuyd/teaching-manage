@@ -43,3 +43,22 @@ export interface UserDTO {
   avatar: string
   createTime: string
 }
+
+export type NotificationType = 'LESSON_PUBLISHED' | 'DEADLINE_REMINDER' | 'GRADE_COMPLETED' | 'GROUP_APPLICATION' | 'GROUP_APPROVAL'
+
+export interface NotificationDTO {
+  id: number
+  userId: number
+  title: string
+  content: string
+  type: NotificationType
+  isRead: boolean
+  createTime: string
+}
+
+export interface UserImportResult {
+  totalCount: number
+  successCount: number
+  failCount: number
+  errors: string[]
+}

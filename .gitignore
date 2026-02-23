@@ -37,3 +37,26 @@ logs/
 # Environment
 .env
 .env.local
+
+_bmad
+_bmad-output
+.agent
+.claude
+.opencode
+.playwright-mcp
+
+# Temp files
+NUL
+nul
+backend/NUL
+frontend/nul
+
+# Uploads (user data)
+backend/uploads/
+
+# Testing and scripts
+testing/
+scripts/
+
+# Compressed archives
+*.zip

@@ -93,6 +93,13 @@
             <version>5.2.5</version>
         </dependency>
 
+        <!-- RAR Archive Support -->
+        <dependency>
+            <groupId>com.github.junrar</groupId>
+            <artifactId>junrar</artifactId>
+            <version>7.5.5</version>
+        </dependency>
+
         <!-- Test Dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

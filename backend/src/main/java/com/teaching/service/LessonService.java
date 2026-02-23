@@ -3,6 +3,7 @@ package com.teaching.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.teaching.dto.CreateLessonRequest;
+import com.teaching.dto.LessonDeleteStatsDTO;
 import com.teaching.dto.UpdateLessonRequest;
 import com.teaching.entity.Lesson;
 
@@ -75,4 +76,12 @@ public interface LessonService extends IService<Lesson> {
      * @return 更新后的课程
      */
     Lesson updateLessonTime(Long id, LocalDateTime lessonTime);
+
+    /**
+     * 获取课程删除统计信息
+     *
+     * @param id 课程ID
+     * @return 删除统计信息
+     */
+    LessonDeleteStatsDTO getDeleteStats(Long id);
 }

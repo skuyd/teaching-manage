@@ -1,14 +1,15 @@
 <template>
-  <div class="subject-list">
-    <div class="header">
-      <h2>学科管理</h2>
-      <el-button type="primary" @click="showCreateDialog">
-        <el-icon><Plus /></el-icon>
-        新增学科
-      </el-button>
-    </div>
+  <MainLayout>
+    <div class="subject-list">
+      <div class="header">
+        <h2>学科管理</h2>
+        <el-button type="primary" @click="showCreateDialog">
+          <el-icon><Plus /></el-icon>
+          新增学科
+        </el-button>
+      </div>
 
-    <el-card>
+      <el-card class="dark-card">
       <div class="search-bar">
         <el-input
           v-model="searchKeyword"
@@ -25,33 +26,31 @@
         </el-input>
       </div>
 
-      <el-table :data="subjects" v-loading="loading" stripe>
-        <el-table-column prop="name" label="学科名称" min-width="150" />
-        <el-table-column prop="description" label="描述" min-width="200" show-overflow-tooltip />
-        <el-table-column label="分组设置" width="150">
-          <template #default="{ row }">
-            <el-tag v-if="row.isGrouped" type="success">
-              分组 ({{ row.minMembers }}-{{ row.maxMembers }}人)
+      <div class="subject-cards" v-loading="loading">
+        <div
+          v-for="subject in subjects"
+          :key="subject.id"
+          class="subject-card"
+          @click="goToDetail(subject.id)"
+        >
+          <div class="card-header">
+            <h3>{{ subject.name }}</h3>
+            <el-tag :type="subject.isGrouped ? 'success' : 'info'" size="small">
+              {{ subject.isGrouped ? `分组(${subject.minMembers}-${subject.maxMembers}人)` : '不分组' }}
             </el-tag>
-            <el-tag v-else type="info">不分组</el-tag>
-          </template>
-        </el-table-column>
-        <el-table-column label="时间范围" width="200">
-          <template #default="{ row }">
-            <span v-if="row.startDate && row.endDate">
-              {{ row.startDate }} ~ {{ row.endDate }}
-            </span>
-            <span v-else class="text-muted">未设置</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="200" fixed="right">
-          <template #default="{ row }">
-            <el-button type="primary" link @click="showEditDialog(row)">编辑</el-button>
-            <el-button type="primary" link @click="goToDetail(row.id)">详情</el-button>
-            <el-button type="danger" link @click="handleDelete(row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+          </div>
+          <p class="card-desc">{{ subject.description || '暂无描述' }}</p>
+          <div class="card-meta">
+            <span v-if="subject.startDate">{{ subject.startDate }} ~ {{ subject.endDate }}</span>
+            <span v-else>未设置时间</span>
+          </div>
+          <div class="card-footer" @click.stop>
+            <el-button type="primary" link @click="showEditDialog(subject)">编辑</el-button>
+            <el-button type="danger" link @click="handleDelete(subject)">删除</el-button>
+          </div>
+        </div>
+      </div>
+      <el-empty v-if="!loading && subjects.length === 0" description="暂无学科" />
 
       <div class="pagination">
         <el-pagination
@@ -66,13 +65,14 @@
       </div>
     </el-card>
 
-    <!-- 新增/编辑对话框 -->
-    <SubjectForm
-      v-model="dialogVisible"
-      :subject="currentSubject"
-      @success="handleFormSuccess"
-    />
-  </div>
+      <!-- 新增/编辑对话框 -->
+      <SubjectForm
+        v-model="dialogVisible"
+        :subject="currentSubject"
+        @success="handleFormSuccess"
+      />
+    </div>
+  </MainLayout>
 </template>
 
 <script setup lang="ts">
@@ -80,8 +80,9 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search } from '@element-plus/icons-vue'
-import { listSubjects, deleteSubject, type SubjectDTO } from '@/api/subject'
+import { listSubjects, deleteSubject, getSubjectDeleteStats, type SubjectDTO } from '@/api/subject'
 import SubjectForm from './SubjectForm.vue'
+import MainLayout from '@/components/MainLayout.vue'
 
 const router = useRouter()
 
@@ -129,16 +130,48 @@ const goToDetail = (id: number) => {
 
 const handleDelete = async (subject: SubjectDTO) => {
   try {
+    // 先获取删除统计信息
+    const statsRes = await getSubjectDeleteStats(subject.id)
+    const stats = statsRes.data
+
+    // 构建确认消息
+    let message = `确定要删除学科「${subject.name}」吗？`
+
+    if (stats.lessonCount > 0 || stats.submissionCount > 0 || stats.studentCount > 0 || stats.groupCount > 0) {
+      message = `<div style="text-align: left; line-height: 1.8;">
+        <p style="color: #E6A23C; margin-bottom: 8px;">⚠️ 该学科包含以下关联数据，删除后将无法恢复：</p>
+        <ul style="margin: 0; padding-left: 20px; color: #606266;">
+          <li>课程：<strong>${stats.lessonCount}</strong> 个</li>
+          <li>作业提交：<strong>${stats.submissionCount}</strong> 份</li>
+          <li>评分记录：<strong>${stats.gradeCount}</strong> 条</li>
+          <li>代码评论：<strong>${stats.commentCount}</strong> 条</li>
+          <li>已加入学员：<strong>${stats.studentCount}</strong> 人</li>
+          <li>小组：<strong>${stats.groupCount}</strong> 个</li>
+        </ul>
+        <p style="margin-top: 12px; color: #F56C6C;">确定要删除学科「${subject.name}」及所有关联数据吗？</p>
+      </div>`
+    }
+
     await ElMessageBox.confirm(
-      `确定要删除学科「${subject.name}」吗？`,
-      '提示',
-      { type: 'warning' }
+      message,
+      '删除确认',
+      {
+        type: 'warning',
+        dangerouslyUseHTMLString: true,
+        confirmButtonText: '确定删除',
+        cancelButtonText: '取消',
+        confirmButtonClass: 'el-button--danger'
+      }
     )
+
     await deleteSubject(subject.id)
     ElMessage.success('删除成功')
     loadSubjects()
-  } catch (error) {
-    // 用户取消或删除失败
+  } catch (error: any) {
+    if (error !== 'cancel' && error?.message !== 'cancel') {
+      // 实际错误，而非用户取消
+      console.error('删除学科失败', error)
+    }
   }
 }
 
@@ -158,15 +191,91 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
 
     h2 {
       margin: 0;
+      color: #FFFFFF;
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .dark-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid #2A2A2E;
+
+    :deep(.el-card__body) {
+      padding: 24px;
     }
   }
 
   .search-bar {
     margin-bottom: 20px;
+  }
+
+  .subject-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+    min-height: 200px;
+  }
+
+  .subject-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #2A2A2E;
+    border-radius: 12px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #FF5C00;
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(255, 92, 0, 0.15);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+
+      h3 {
+        margin: 0;
+        color: #FFFFFF;
+        font-size: 18px;
+        font-weight: 600;
+        flex: 1;
+        margin-right: 12px;
+      }
+    }
+
+    .card-desc {
+      color: #ADADB0;
+      font-size: 14px;
+      line-height: 1.5;
+      margin: 0 0 16px 0;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      min-height: 42px;
+    }
+
+    .card-meta {
+      color: #6B6B70;
+      font-size: 13px;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #2A2A2E;
+    }
+
+    .card-footer {
+      display: flex;
+      gap: 16px;
+    }
   }
 
   .pagination {
@@ -176,7 +285,7 @@ onMounted(() => {
   }
 
   .text-muted {
-    color: #909399;
+    color: #6B6B70;
   }
 }
 </style>
