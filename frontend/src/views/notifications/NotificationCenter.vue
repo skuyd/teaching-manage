@@ -200,27 +200,27 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .notification-center {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #0A0A0B;
-  padding: 24px;
+  background: var(--bg-primary);
+  padding: var(--spacing-lg);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
-}
+  margin-bottom: var(--spacing-lg);
 
-.header h2 {
-  color: #FFFFFF;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0;
+  h2 {
+    color: var(--text-primary);
+    font-size: var(--text-2xl);
+    font-weight: var(--font-weight-semibold);
+    margin: 0;
+  }
 }
 
 .notification-tabs {
@@ -230,10 +230,10 @@ onMounted(async () => {
 }
 
 :deep(.el-tabs__header) {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: 8px;
-  margin-bottom: 24px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
 }
 
 :deep(.el-tabs__nav-wrap::after) {
@@ -241,16 +241,16 @@ onMounted(async () => {
 }
 
 :deep(.el-tabs__item) {
-  color: #ADADB0;
-  font-size: 14px;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
 }
 
 :deep(.el-tabs__item.is-active) {
-  color: #FF5C00;
+  color: var(--color-primary);
 }
 
 :deep(.el-tabs__active-bar) {
-  background-color: #FF5C00;
+  background-color: var(--color-primary);
 }
 
 :deep(.el-tabs__content) {
@@ -261,94 +261,95 @@ onMounted(async () => {
 .notification-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: var(--spacing-md);
 }
 
 .notification-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #2A2A2E;
-}
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
 
-.notification-card.unread {
-  background: rgba(255, 92, 0, 0.05);
-  border-color: rgba(255, 92, 0, 0.3);
-}
+  &.unread {
+    background: color-mix(in srgb, var(--color-primary) 5%, var(--bg-card));
+    border-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+  }
 
-.notification-card.read {
-  opacity: 0.7;
-}
+  &.read {
+    opacity: 0.7;
+  }
 
-:deep(.el-card__body) {
-  padding: 20px;
+  :deep(.el-card__body) {
+    padding: var(--spacing-lg);
+  }
 }
 
 .notification-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: var(--spacing-sm);
 }
 
 .type-tag {
   display: inline-block;
-  padding: 4px 12px;
-  font-size: 12px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ADADB0;
-}
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
 
-.type-tag.type-LESSON_PUBLISHED {
-  background: rgba(52, 152, 219, 0.2);
-  color: #3498DB;
-}
+  &.type-LESSON_PUBLISHED {
+    background: color-mix(in srgb, var(--color-info) 20%, transparent);
+    color: var(--color-info);
+  }
 
-.type-tag.type-DEADLINE_REMINDER {
-  background: rgba(231, 76, 60, 0.2);
-  color: #E74C3C;
-}
+  &.type-DEADLINE_REMINDER {
+    background: color-mix(in srgb, var(--color-danger) 20%, transparent);
+    color: var(--color-danger);
+  }
 
-.type-tag.type-GRADE_COMPLETED {
-  background: rgba(46, 204, 113, 0.2);
-  color: #2ECC71;
-}
+  &.type-GRADE_COMPLETED {
+    background: color-mix(in srgb, var(--color-success) 20%, transparent);
+    color: var(--color-success);
+  }
 
-.type-tag.type-GROUP_APPLICATION,
-.type-tag.type-GROUP_APPROVAL {
-  background: rgba(155, 89, 182, 0.2);
-  color: #9B59B6;
+  &.type-GROUP_APPLICATION,
+  &.type-GROUP_APPROVAL {
+    background: color-mix(in srgb, #9B59B6 20%, transparent);
+    color: #9B59B6;
+  }
 }
 
 .time {
-  font-size: 12px;
-  color: #6B6B70;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
 }
 
 .notification-title {
-  color: #FFFFFF;
-  font-size: 16px;
-  font-weight: 500;
-  margin: 0 0 8px 0;
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  margin: 0 0 var(--spacing-sm) 0;
 }
 
 .notification-content {
-  color: #ADADB0;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 0 0 16px 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--spacing-md) 0;
 }
 
 .notification-actions {
   display: flex;
-  gap: 16px;
-}
+  gap: var(--spacing-md);
 
-.notification-actions .el-button {
-  color: #FF5C00;
-  padding: 0;
-}
+  .el-button {
+    color: var(--color-primary);
+    padding: 0;
 
-.notification-actions .el-button:hover {
-  color: #FF8A4C;
+    &:hover {
+      color: var(--color-primary-light);
+    }
+  }
 }
 </style>

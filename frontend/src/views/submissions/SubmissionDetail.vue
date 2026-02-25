@@ -372,32 +372,46 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .submission-detail {
-  padding: 20px;
+  padding: var(--spacing-lg);
 
   .page-title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
   }
 
   .detail-card {
-    margin-top: 20px;
+    margin-top: var(--spacing-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+
+    :deep(.el-card__body) {
+      padding: var(--spacing-lg);
+    }
 
     .submission-info {
       .info-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 16px;
+        margin-bottom: var(--spacing-md);
 
         h3 {
           margin: 0;
-          font-size: 20px;
-          font-weight: 600;
+          font-size: var(--text-xl);
+          font-weight: var(--font-weight-semibold);
+          color: var(--text-primary);
         }
       }
 
       .markdown-content {
-        line-height: 1.6;
+        line-height: var(--line-height-normal);
+        color: var(--text-secondary);
+      }
+
+      :deep(.el-descriptions) {
+        --el-descriptions-item-bordered-label-background: var(--bg-secondary);
       }
     }
 
@@ -405,30 +419,32 @@ onBeforeUnmount(() => {
       .viewer-layout {
         display: flex;
         height: 600px;
-        border: 1px solid var(--el-border-color);
-        border-radius: 4px;
+        border: 1px solid var(--border-default);
+        border-radius: var(--radius-md);
         overflow: hidden;
 
         .file-tree-panel {
           width: 280px;
-          border-right: 1px solid var(--el-border-color);
+          border-right: 1px solid var(--border-default);
           display: flex;
           flex-direction: column;
+          background: var(--bg-secondary);
 
           .panel-header {
-            padding: 12px 16px;
-            background-color: var(--el-fill-color-light);
-            border-bottom: 1px solid var(--el-border-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-default);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
+            gap: var(--spacing-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
           }
 
           .panel-content {
             flex: 1;
             overflow-y: auto;
-            padding: 8px;
+            padding: var(--spacing-sm);
           }
         }
 
@@ -436,15 +452,17 @@ onBeforeUnmount(() => {
           flex: 1;
           display: flex;
           flex-direction: column;
+          background: var(--bg-secondary);
 
           .panel-header {
-            padding: 12px 16px;
-            background-color: var(--el-fill-color-light);
-            border-bottom: 1px solid var(--el-border-color);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background-color: var(--bg-tertiary);
+            border-bottom: 1px solid var(--border-default);
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
+            gap: var(--spacing-sm);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
           }
 
           .panel-content {

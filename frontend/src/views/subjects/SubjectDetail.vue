@@ -680,62 +680,63 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-lg);
 
     .header-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: var(--spacing-md);
 
       .back-btn {
-        color: #ADADB0;
+        color: var(--text-secondary);
 
         &:hover {
-          color: #FF5C00;
+          color: var(--color-primary);
         }
       }
 
       h2 {
         margin: 0;
-        color: #FFFFFF;
-        font-size: 24px;
-        font-weight: 600;
+        color: var(--text-primary);
+        font-size: var(--text-2xl);
+        font-weight: var(--font-weight-semibold);
       }
     }
 
     .header-actions {
       display: flex;
-      gap: 10px;
+      gap: var(--spacing-sm);
     }
   }
 
   .dark-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #2A2A2E;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
 
     :deep(.el-card__body) {
-      padding: 24px;
+      padding: var(--spacing-lg);
     }
 
     :deep(.el-tabs__nav-wrap::after) {
-      background-color: #2A2A2E;
+      background-color: var(--border-default);
     }
 
     :deep(.el-tabs__item) {
-      color: #ADADB0;
+      color: var(--text-secondary);
     }
 
     :deep(.el-tabs__item.is-active) {
-      color: #FF5C00;
+      color: var(--color-primary);
     }
 
     :deep(.el-tabs__active-bar) {
-      background-color: #FF5C00;
+      background-color: var(--color-primary);
     }
   }
 
   .search-bar {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
     display: flex;
     align-items: center;
   }
@@ -743,15 +744,15 @@ onMounted(() => {
   :deep(.el-table) {
     --el-table-bg-color: transparent;
     --el-table-tr-bg-color: transparent;
-    --el-table-header-bg-color: rgba(255, 255, 255, 0.05);
-    --el-table-row-hover-bg-color: rgba(255, 92, 0, 0.1);
-    --el-table-text-color: #ADADB0;
-    --el-table-header-text-color: #FFFFFF;
-    --el-table-border-color: #2A2A2E;
+    --el-table-header-bg-color: var(--bg-secondary);
+    --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    --el-table-text-color: var(--text-secondary);
+    --el-table-header-text-color: var(--text-primary);
+    --el-table-border-color: var(--border-default);
   }
 
   .el-pagination {
-    margin-top: 20px;
+    margin-top: var(--spacing-md);
     display: flex;
     justify-content: flex-end;
   }
@@ -760,88 +761,88 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
   }
 
   .current-month {
-    font-size: 18px;
-    font-weight: bold;
-    color: #FFFFFF;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
   }
 
   .calendar-grid {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 1px;
-    background: #2A2A2E;
-    border: 1px solid #2A2A2E;
-    border-radius: 8px;
+    background: var(--border-default);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
 
   .calendar-header {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
+    background: var(--bg-secondary);
+    padding: var(--spacing-sm);
     text-align: center;
-    font-weight: bold;
-    color: #FFFFFF;
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
   }
 
   .calendar-day {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-card);
     min-height: 100px;
-    padding: 8px;
+    padding: var(--spacing-sm);
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color var(--transition-fast);
   }
 
   .calendar-day:hover {
-    background: rgba(255, 92, 0, 0.1);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   }
 
   .calendar-day.other-month {
-    background: rgba(0, 0, 0, 0.2);
-    color: #6B6B70;
+    background: var(--bg-secondary);
+    color: var(--text-muted);
   }
 
   .calendar-day.today {
-    background: rgba(255, 92, 0, 0.15);
+    background: color-mix(in srgb, var(--color-primary) 15%, transparent);
   }
 
   .day-number {
-    font-size: 14px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: #FFFFFF;
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
   }
 
   .calendar-day.other-month .day-number {
-    color: #6B6B70;
+    color: var(--text-muted);
   }
 
   .day-lessons {
-    font-size: 12px;
+    font-size: var(--text-xs);
   }
 
   .lesson-item {
-    background: rgba(255, 92, 0, 0.2);
-    color: #FF8A4C;
-    padding: 2px 6px;
+    background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+    color: var(--color-primary-light);
+    padding: 2px var(--spacing-xs);
     margin: 2px 0;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
     cursor: pointer;
-    border-left: 2px solid #FF5C00;
+    border-left: 2px solid var(--color-primary);
   }
 
   .lesson-item:hover {
-    background: rgba(255, 92, 0, 0.3);
+    background: color-mix(in srgb, var(--color-primary) 30%, transparent);
   }
 
   .more-lessons {
-    color: #6B6B70;
+    color: var(--text-muted);
     font-size: 11px;
     margin-top: 3px;
   }
@@ -851,89 +852,89 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
   }
 
   .current-week {
-    font-size: 18px;
-    font-weight: bold;
-    color: #FFFFFF;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--text-primary);
   }
 
   .week-grid {
     display: grid;
     grid-template-columns: 60px repeat(7, 1fr);
     gap: 1px;
-    background: #2A2A2E;
-    border: 1px solid #2A2A2E;
-    border-radius: 8px;
+    background: var(--border-default);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-md);
     overflow: hidden;
     max-height: calc(100vh - 300px);
     overflow-y: auto;
   }
 
   .week-time-header {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 12px 8px;
+    background: var(--bg-secondary);
+    padding: var(--spacing-sm) var(--spacing-sm);
   }
 
   .week-day-header {
-    background: rgba(255, 255, 255, 0.05);
-    padding: 12px;
+    background: var(--bg-secondary);
+    padding: var(--spacing-sm);
     text-align: center;
 
     &.is-today {
-      background: rgba(255, 92, 0, 0.2);
+      background: color-mix(in srgb, var(--color-primary) 20%, transparent);
     }
 
     .week-day-name {
-      font-weight: bold;
-      color: #FFFFFF;
-      margin-bottom: 4px;
+      font-weight: var(--font-weight-bold);
+      color: var(--text-primary);
+      margin-bottom: var(--spacing-xs);
     }
 
     .week-day-date {
-      font-size: 12px;
-      color: #ADADB0;
+      font-size: var(--text-xs);
+      color: var(--text-secondary);
     }
   }
 
   .week-time-label {
-    background: rgba(255, 255, 255, 0.02);
-    padding: 8px;
+    background: var(--bg-card);
+    padding: var(--spacing-sm);
     text-align: right;
-    font-size: 12px;
-    color: #6B6B70;
-    border-top: 1px solid #2A2A2E;
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+    border-top: 1px solid var(--border-default);
   }
 
   .week-time-slot {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-card);
     min-height: 60px;
-    padding: 4px;
-    border-top: 1px solid #2A2A2E;
+    padding: var(--spacing-xs);
+    border-top: 1px solid var(--border-default);
     position: relative;
 
     &.is-today {
-      background: rgba(255, 92, 0, 0.05);
+      background: color-mix(in srgb, var(--color-primary) 5%, transparent);
     }
 
     &:hover {
-      background: rgba(255, 92, 0, 0.1);
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
   }
 
   .week-lesson-item {
-    background: rgba(255, 92, 0, 0.2);
-    border-left: 3px solid #FF5C00;
-    border-radius: 4px;
-    padding: 4px 8px;
+    background: color-mix(in srgb, var(--color-primary) 20%, transparent);
+    border-left: 3px solid var(--color-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--spacing-xs) var(--spacing-sm);
     margin-bottom: 2px;
     cursor: grab;
-    transition: all 0.2s;
+    transition: all var(--transition-fast);
 
     &:hover {
-      background: rgba(255, 92, 0, 0.3);
+      background: color-mix(in srgb, var(--color-primary) 30%, transparent);
       transform: scale(1.02);
     }
 
@@ -944,12 +945,12 @@ onMounted(() => {
 
     .lesson-time {
       font-size: 11px;
-      color: #ADADB0;
+      color: var(--text-secondary);
     }
 
     .lesson-title {
-      font-size: 12px;
-      color: #FFFFFF;
+      font-size: var(--text-xs);
+      color: var(--text-primary);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -968,7 +969,7 @@ onMounted(() => {
 
   .calendar-day {
     &:hover {
-      background: rgba(255, 92, 0, 0.1);
+      background: color-mix(in srgb, var(--color-primary) 10%, transparent);
     }
   }
 
@@ -977,18 +978,18 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
 
     .student-count {
-      color: #ADADB0;
-      font-size: 14px;
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
     }
   }
 
   .students-table {
     :deep(.el-table__header) {
       th {
-        background: rgba(255, 255, 255, 0.05) !important;
+        background: var(--bg-secondary) !important;
       }
     }
   }

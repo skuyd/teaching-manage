@@ -293,7 +293,22 @@ const handleDialogClose = () => {
 
 <style scoped lang="scss">
 .grade-management {
-  padding: 20px;
+  padding: var(--spacing-lg);
+
+  .dark-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+
+    :deep(.el-card__header) {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    :deep(.el-card__body) {
+      padding: var(--spacing-lg);
+    }
+  }
 
   .header {
     display: flex;
@@ -302,50 +317,73 @@ const handleDialogClose = () => {
 
     h2 {
       margin: 0;
+      color: var(--text-primary);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-semibold);
     }
   }
 
-  .statistics {
-    margin-top: 20px;
-    padding: 20px;
-    background: var(--el-fill-color-light);
-    border-radius: 4px;
+  .dark-statistics {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-default);
+
+    :deep(.el-statistic__head) {
+      color: var(--text-muted);
+    }
+
+    :deep(.el-statistic__content) {
+      color: var(--text-primary);
+    }
 
     .grade-distribution {
       .title {
-        font-size: 14px;
-        color: var(--el-text-color-secondary);
-        margin-bottom: 8px;
+        font-size: var(--text-sm);
+        color: var(--text-muted);
+        margin-bottom: var(--spacing-sm);
       }
 
       .distribution-items {
         display: flex;
         flex-direction: column;
-        gap: 4px;
-        font-size: 20px;
-        font-weight: 600;
+        gap: var(--spacing-xs);
+        font-size: var(--text-xl);
+        font-weight: var(--font-weight-semibold);
 
         span {
-          font-size: 16px;
+          font-size: var(--text-base);
+          color: var(--text-primary);
         }
       }
     }
+  }
+
+  .dark-table {
+    --el-table-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-table-header-bg-color: var(--bg-secondary);
+    --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    --el-table-text-color: var(--text-secondary);
+    --el-table-header-text-color: var(--text-primary);
+    --el-table-border-color: var(--border-default);
   }
 }
 
 @media (max-width: 768px) {
   .grade-management {
-    padding: 10px;
+    padding: var(--spacing-sm);
 
     .header {
       flex-direction: column;
-      gap: 15px;
+      gap: var(--spacing-md);
       align-items: flex-start;
     }
 
-    .statistics {
+    .dark-statistics {
       :deep(.el-col) {
-        margin-bottom: 15px;
+        margin-bottom: var(--spacing-md);
       }
     }
   }

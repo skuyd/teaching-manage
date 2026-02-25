@@ -345,64 +345,65 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-lg);
 
     h2 {
       margin: 0;
-      color: #FFFFFF;
-      font-size: 24px;
-      font-weight: 600;
+      color: var(--text-primary);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-semibold);
     }
 
     .header-actions {
       display: flex;
-      gap: 12px;
+      gap: var(--spacing-sm);
       align-items: center;
     }
   }
 
   .dark-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #2A2A2E;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
 
     :deep(.el-card__body) {
-      padding: 24px;
+      padding: var(--spacing-lg);
     }
   }
 
   .search-bar {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
   }
 
   .dark-table {
     --el-table-bg-color: transparent;
     --el-table-tr-bg-color: transparent;
-    --el-table-header-bg-color: rgba(255, 255, 255, 0.05);
-    --el-table-row-hover-bg-color: rgba(255, 92, 0, 0.1);
-    --el-table-text-color: #ADADB0;
-    --el-table-header-text-color: #FFFFFF;
-    --el-table-border-color: #2A2A2E;
+    --el-table-header-bg-color: var(--bg-secondary);
+    --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    --el-table-text-color: var(--text-secondary);
+    --el-table-header-text-color: var(--text-primary);
+    --el-table-border-color: var(--border-default);
   }
 
   .pagination {
-    margin-top: 20px;
+    margin-top: var(--spacing-md);
     display: flex;
     justify-content: flex-end;
   }
 
   .import-result {
-    margin-top: 16px;
+    margin-top: var(--spacing-md);
 
     .error-list {
-      margin-top: 12px;
-      background: rgba(0, 0, 0, 0.02);
-      border-radius: 4px;
-      padding: 12px;
+      margin-top: var(--spacing-sm);
+      background: var(--bg-secondary);
+      border-radius: var(--radius-sm);
+      padding: var(--spacing-sm);
 
       .error-title {
-        font-weight: 500;
-        margin-bottom: 8px;
-        color: #E6A23C;
+        font-weight: var(--font-weight-medium);
+        margin-bottom: var(--spacing-sm);
+        color: var(--color-warning);
       }
 
       .error-scroll {
@@ -411,10 +412,10 @@ onMounted(() => {
       }
 
       .error-item {
-        padding: 4px 0;
-        font-size: 13px;
-        color: #909399;
-        border-bottom: 1px dashed #EBEEF5;
+        padding: var(--spacing-xs) 0;
+        font-size: var(--text-sm);
+        color: var(--text-secondary);
+        border-bottom: 1px dashed var(--border-light);
 
         &:last-child {
           border-bottom: none;

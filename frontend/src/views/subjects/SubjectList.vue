@@ -191,71 +191,72 @@ onMounted(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: var(--spacing-lg);
 
     h2 {
       margin: 0;
-      color: #FFFFFF;
-      font-size: 24px;
-      font-weight: 600;
+      color: var(--text-primary);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-semibold);
     }
   }
 
   .dark-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid #2A2A2E;
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
 
     :deep(.el-card__body) {
-      padding: 24px;
+      padding: var(--spacing-lg);
     }
   }
 
   .search-bar {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-md);
   }
 
   .subject-cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 20px;
+    gap: var(--spacing-md);
     min-height: 200px;
   }
 
   .subject-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid #2A2A2E;
-    border-radius: 12px;
-    padding: 20px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md);
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all var(--transition-normal);
 
     &:hover {
-      border-color: #FF5C00;
+      border-color: var(--color-primary);
       transform: translateY(-4px);
-      box-shadow: 0 8px 24px rgba(255, 92, 0, 0.15);
+      box-shadow: 0 8px 24px var(--btn-shadow-primary);
     }
 
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 12px;
+      margin-bottom: var(--spacing-sm);
 
       h3 {
         margin: 0;
-        color: #FFFFFF;
-        font-size: 18px;
-        font-weight: 600;
+        color: var(--text-primary);
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
         flex: 1;
-        margin-right: 12px;
+        margin-right: var(--spacing-sm);
       }
     }
 
     .card-desc {
-      color: #ADADB0;
-      font-size: 14px;
-      line-height: 1.5;
-      margin: 0 0 16px 0;
+      color: var(--text-secondary);
+      font-size: var(--text-sm);
+      line-height: var(--line-height-normal);
+      margin: 0 0 var(--spacing-md) 0;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -265,27 +266,27 @@ onMounted(() => {
     }
 
     .card-meta {
-      color: #6B6B70;
-      font-size: 13px;
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #2A2A2E;
+      color: var(--text-muted);
+      font-size: var(--text-sm);
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-md);
+      border-bottom: 1px solid var(--border-default);
     }
 
     .card-footer {
       display: flex;
-      gap: 16px;
+      gap: var(--spacing-md);
     }
   }
 
   .pagination {
-    margin-top: 20px;
+    margin-top: var(--spacing-md);
     display: flex;
     justify-content: flex-end;
   }
 
   .text-muted {
-    color: #6B6B70;
+    color: var(--text-muted);
   }
 }
 </style>

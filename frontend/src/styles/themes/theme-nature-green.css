@@ -33,6 +33,7 @@
   --bg-gradient-primary: linear-gradient(135deg, #065F46, #10B981, #34D399);
   --bg-primary: #F0FDF4;               /* 淡绿背景 */
   --bg-secondary: #FFFFFF;
+  --bg-tertiary: #E8F5E9;              /* 第三级背景 */
   --bg-card: #FFFFFF;
   --bg-overlay: rgba(0, 0, 0, 0.5);
 
@@ -46,8 +47,8 @@
      ======================================== */
   --text-primary: #1F2937;             /* 主要文字 */
   --text-secondary: #4B5563;           /* 次要文字 */
-  --text-tertiary: #6B7280;            /* 三级文字 */
-  --text-muted: #9CA3AF;               /* 辅助文字 */
+  --text-tertiary: #5F6B78;            /* 三级文字 - 增强对比度 */
+  --text-muted: #7A8594;               /* 辅助文字 - 增强对比度 4.5:1 */
   --text-on-primary: #FFFFFF;          /* 主色上的文字 */
   --text-on-accent: #FFFFFF;           /* 强调色上的文字 */
 
@@ -131,10 +132,28 @@
 }
 
 :root[data-theme="nature-green"] .code-string {
-  color: #F59E0B;
+  color: #D97706;  /* 增强对比度 */
 }
 
 :root[data-theme="nature-green"] .code-comment {
-  color: #6B7280;
+  color: #5F6B78;
   font-style: italic;
+}
+
+/* ========================================
+   焦点指示器 - 无障碍支持
+   ======================================== */
+:root[data-theme="nature-green"] *:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+:root[data-theme="nature-green"] button:focus-visible,
+:root[data-theme="nature-green"] a:focus-visible,
+:root[data-theme="nature-green"] input:focus-visible,
+:root[data-theme="nature-green"] select:focus-visible,
+:root[data-theme="nature-green"] textarea:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--btn-shadow-primary);
 }

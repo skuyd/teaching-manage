@@ -16,18 +16,26 @@ const goHome = () => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .not-found {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  gap: 16px;
-}
+  gap: var(--spacing-md);
+  background: var(--bg-primary);
 
-.not-found h1 {
-  font-size: 72px;
-  color: #409eff;
+  h1 {
+    font-size: 72px;
+    color: var(--color-primary);
+    margin: 0;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: var(--text-lg);
+    margin: 0;
+  }
 }
 </style>

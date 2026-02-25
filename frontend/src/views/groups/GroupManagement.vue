@@ -418,27 +418,37 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .group-management {
-  padding: 20px;
+  padding: var(--spacing-lg);
 
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-lg);
 
     h2 {
       margin: 0;
-      font-size: 24px;
+      font-size: var(--text-2xl);
+      color: var(--text-primary);
+      font-weight: var(--font-weight-semibold);
     }
 
     .actions {
       display: flex;
-      gap: 10px;
+      gap: var(--spacing-sm);
     }
   }
 
   .my-group-card {
-    margin-bottom: 20px;
+    margin-bottom: var(--spacing-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+
+    :deep(.el-card__header) {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-default);
+    }
 
     .card-header {
       display: flex;
@@ -446,55 +456,86 @@ onMounted(() => {
       align-items: center;
 
       .title {
-        font-size: 16px;
-        font-weight: 600;
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
       }
     }
 
     .group-info {
       .info-row {
         display: flex;
-        margin-bottom: 12px;
+        margin-bottom: var(--spacing-sm);
 
         .label {
           width: 100px;
-          color: #909399;
+          color: var(--text-muted);
         }
 
         .value {
           flex: 1;
-          color: #303133;
-          font-weight: 500;
+          color: var(--text-primary);
+          font-weight: var(--font-weight-medium);
         }
       }
     }
 
     .members-section {
       .section-title {
-        font-size: 14px;
-        font-weight: 600;
-        margin-bottom: 10px;
-        color: #303133;
+        font-size: var(--text-sm);
+        font-weight: var(--font-weight-semibold);
+        margin-bottom: var(--spacing-sm);
+        color: var(--text-primary);
+      }
+
+      :deep(.el-table) {
+        --el-table-bg-color: transparent;
+        --el-table-tr-bg-color: transparent;
+        --el-table-header-bg-color: var(--bg-secondary);
+        --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+        --el-table-text-color: var(--text-secondary);
+        --el-table-header-text-color: var(--text-primary);
+        --el-table-border-color: var(--border-default);
       }
     }
 
     .group-actions {
       display: flex;
       justify-content: flex-end;
-      gap: 10px;
+      gap: var(--spacing-sm);
     }
   }
 
   .groups-list-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+
+    :deep(.el-card__header) {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-default);
+    }
+
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
 
       .title {
-        font-size: 16px;
-        font-weight: 600;
+        font-size: var(--text-lg);
+        font-weight: var(--font-weight-semibold);
+        color: var(--text-primary);
       }
+    }
+
+    :deep(.el-table) {
+      --el-table-bg-color: transparent;
+      --el-table-tr-bg-color: transparent;
+      --el-table-header-bg-color: var(--bg-secondary);
+      --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+      --el-table-text-color: var(--text-secondary);
+      --el-table-header-text-color: var(--text-primary);
+      --el-table-border-color: var(--border-default);
     }
   }
 }

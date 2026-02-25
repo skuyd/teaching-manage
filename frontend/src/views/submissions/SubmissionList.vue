@@ -443,15 +443,37 @@ onMounted(() => {
 
 <style scoped lang="scss">
 .submission-list {
-  padding: 20px;
+  padding: var(--spacing-lg);
+
+  .dark-page-header {
+    :deep(.el-page-header__left) {
+      color: var(--text-primary);
+    }
+  }
 
   .page-title {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: var(--text-lg);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
+  }
+
+  .dark-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+
+    :deep(.el-card__header) {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    :deep(.el-card__body) {
+      padding: var(--spacing-lg);
+    }
   }
 
   .search-card {
-    margin-top: 20px;
+    margin-top: var(--spacing-lg);
 
     .search-bar {
       display: flex;
@@ -460,23 +482,34 @@ onMounted(() => {
 
       .filters {
         display: flex;
-        gap: 12px;
+        gap: var(--spacing-sm);
       }
     }
   }
 
   .list-card {
-    margin-top: 20px;
+    margin-top: var(--spacing-lg);
 
     .card-header {
-      font-weight: 600;
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
     }
 
     .submission-actions {
-      margin-top: 16px;
+      margin-top: var(--spacing-md);
       display: flex;
-      gap: 12px;
+      gap: var(--spacing-sm);
     }
+  }
+
+  .dark-table {
+    --el-table-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-table-header-bg-color: var(--bg-secondary);
+    --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    --el-table-text-color: var(--text-secondary);
+    --el-table-header-text-color: var(--text-primary);
+    --el-table-border-color: var(--border-default);
   }
 }
 </style>

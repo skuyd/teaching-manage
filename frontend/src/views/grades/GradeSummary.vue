@@ -363,7 +363,22 @@ const handleExport = async () => {
 
 <style scoped lang="scss">
 .grade-summary {
-  padding: 20px;
+  padding: var(--spacing-lg);
+
+  .dark-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+
+    :deep(.el-card__header) {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-default);
+    }
+
+    :deep(.el-card__body) {
+      padding: var(--spacing-lg);
+    }
+  }
 
   .header {
     display: flex;
@@ -372,80 +387,94 @@ const handleExport = async () => {
 
     h2 {
       margin: 0;
+      color: var(--text-primary);
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-semibold);
     }
 
     .filters {
       display: flex;
-      gap: 12px;
+      gap: var(--spacing-sm);
     }
   }
 
-  .statistics {
-    margin: 20px 0;
-    padding: 20px;
-    background: var(--el-fill-color-light);
-    border-radius: 4px;
+  .dark-statistics {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-default);
 
     .statistic-suffix {
-      font-size: 14px;
-      margin-left: 4px;
+      font-size: var(--text-sm);
+      margin-left: var(--spacing-xs);
+    }
+
+    :deep(.el-statistic__head) {
+      color: var(--text-muted);
+    }
+
+    :deep(.el-statistic__content) {
+      color: var(--text-primary);
     }
   }
 
   .grade-distribution {
-    margin: 30px 0;
+    margin: var(--spacing-xl) 0;
 
     h3 {
-      margin-bottom: 20px;
-      font-size: 16px;
-      font-weight: 600;
+      margin-bottom: var(--spacing-lg);
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
     }
 
     .distribution-chart {
       .grade-bar {
-        margin-bottom: 16px;
+        margin-bottom: var(--spacing-md);
 
         .grade-label {
           display: flex;
           justify-content: space-between;
-          margin-bottom: 8px;
-          font-size: 14px;
+          margin-bottom: var(--spacing-sm);
+          font-size: var(--text-sm);
 
           .grade-name {
-            font-weight: 600;
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
           }
 
           .grade-count {
-            color: var(--el-text-color-secondary);
+            color: var(--text-muted);
           }
         }
 
         .bar-container {
           width: 100%;
           height: 24px;
-          background: var(--el-fill-color-light);
-          border-radius: 4px;
+          background: var(--bg-tertiary);
+          border-radius: var(--radius-sm);
           overflow: hidden;
 
           .bar-fill {
             height: 100%;
-            transition: width 0.3s ease;
-            border-radius: 4px;
+            transition: width var(--transition-normal);
+            border-radius: var(--radius-sm);
 
             &.grade-a {
-              background: linear-gradient(90deg, #67c23a, #85ce61);
+              background: linear-gradient(90deg, var(--color-success), color-mix(in srgb, var(--color-success) 70%, white));
             }
 
             &.grade-b {
-              background: linear-gradient(90deg, #409eff, #66b1ff);
+              background: linear-gradient(90deg, var(--color-info), color-mix(in srgb, var(--color-info) 70%, white));
             }
 
             &.grade-c {
-              background: linear-gradient(90deg, #e6a23c, #ebb563);
+              background: linear-gradient(90deg, var(--color-warning), color-mix(in srgb, var(--color-warning) 70%, white));
             }
 
             &.grade-d {
-              background: linear-gradient(90deg, #f56c6c, #f78989);
+              background: linear-gradient(90deg, var(--color-danger), color-mix(in srgb, var(--color-danger) 70%, white));
             }
           }
         }
@@ -454,23 +483,34 @@ const handleExport = async () => {
   }
 
   .data-table {
-    margin-top: 30px;
+    margin-top: var(--spacing-xl);
 
     h3 {
-      margin-bottom: 16px;
-      font-size: 16px;
-      font-weight: 600;
+      margin-bottom: var(--spacing-md);
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-primary);
     }
+  }
+
+  .dark-table {
+    --el-table-bg-color: transparent;
+    --el-table-tr-bg-color: transparent;
+    --el-table-header-bg-color: var(--bg-secondary);
+    --el-table-row-hover-bg-color: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    --el-table-text-color: var(--text-secondary);
+    --el-table-header-text-color: var(--text-primary);
+    --el-table-border-color: var(--border-default);
   }
 }
 
 @media (max-width: 768px) {
   .grade-summary {
-    padding: 10px;
+    padding: var(--spacing-sm);
 
     .header {
       flex-direction: column;
-      gap: 15px;
+      gap: var(--spacing-md);
       align-items: flex-start;
 
       .filters {
@@ -483,9 +523,9 @@ const handleExport = async () => {
       }
     }
 
-    .statistics {
+    .dark-statistics {
       :deep(.el-col) {
-        margin-bottom: 15px;
+        margin-bottom: var(--spacing-md);
       }
     }
   }

@@ -289,39 +289,41 @@ onMounted(async () => {
 
 <style scoped lang="scss">
 .submission-board {
-  padding: 20px;
+  padding: var(--spacing-lg);
   height: 100%;
   display: flex;
   flex-direction: column;
+  background: var(--bg-primary);
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: var(--spacing-lg);
 
   h2 {
     margin: 0;
-    font-size: 20px;
-    font-weight: 600;
+    font-size: var(--text-xl);
+    font-weight: var(--font-weight-semibold);
+    color: var(--text-primary);
   }
 
   .filters {
     display: flex;
-    gap: 20px;
+    gap: var(--spacing-lg);
   }
 
   .filter-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-sm);
   }
 
   .filter-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--el-text-color-regular);
+    font-size: var(--text-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--text-secondary);
     white-space: nowrap;
   }
 
@@ -332,7 +334,7 @@ onMounted(async () => {
 
 .board {
   display: flex;
-  gap: 20px;
+  gap: var(--spacing-lg);
   flex: 1;
   overflow-x: auto;
   min-height: 400px;
@@ -342,59 +344,60 @@ onMounted(async () => {
   flex: 1;
   min-width: 280px;
   max-width: 320px;
-  background: var(--el-bg-color-page);
-  border-radius: 8px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
-  border: 1px solid var(--el-border-color-light);
+  border: 1px solid var(--border-default);
 }
 
 .column-header {
-  padding: 16px;
-  font-weight: 600;
+  padding: var(--spacing-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
   display: flex;
   align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid var(--el-border-color-light);
-  background: var(--el-bg-color);
-  border-radius: 8px 8px 0 0;
+  gap: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-default);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 
   .status-dot {
     width: 10px;
     height: 10px;
     border-radius: 50%;
 
-    &.warning { background-color: var(--el-color-warning); }
-    &.info { background-color: var(--el-color-info); }
-    &.success { background-color: var(--el-color-success); }
+    &.warning { background-color: var(--color-warning); }
+    &.info { background-color: var(--color-info); }
+    &.success { background-color: var(--color-success); }
   }
 }
 
 .column-content {
   flex: 1;
   overflow-y: auto;
-  padding: 12px;
+  padding: var(--spacing-sm);
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: var(--spacing-sm);
 }
 
 .card {
-  background: var(--el-bg-color);
-  border: 1px solid var(--el-border-color-light);
-  border-radius: 6px;
-  padding: 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-sm);
 
   &.clickable {
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all var(--transition-normal);
 
     &:hover {
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
-      border-color: var(--el-color-primary-light-5);
+      box-shadow: 0 2px 12px var(--btn-shadow-primary);
+      border-color: var(--color-primary);
     }
   }
 }
@@ -405,24 +408,25 @@ onMounted(async () => {
 }
 
 .card-name {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .card-time {
-  font-size: 12px;
-  color: var(--el-text-color-secondary);
-  margin-top: 4px;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: var(--spacing-xs);
 }
 
 .card-grade {
-  margin-top: 4px;
+  margin-top: var(--spacing-xs);
 }
 
 .card-type {
-  margin-top: 4px;
+  margin-top: var(--spacing-xs);
 }
 
 .empty-hint {

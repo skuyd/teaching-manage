@@ -33,6 +33,7 @@
   --bg-gradient-primary: linear-gradient(135deg, #1E3A8A, #3B82F6, #60A5FA);
   --bg-primary: #0F172A;               /* 深色背景 */
   --bg-secondary: #1E293B;
+  --bg-tertiary: #334155;              /* 第三级背景 */
   --bg-card: #1E293B;
   --bg-overlay: rgba(0, 0, 0, 0.7);
 
@@ -46,8 +47,8 @@
      ======================================== */
   --text-primary: #F1F5F9;             /* 主要文字 */
   --text-secondary: #CBD5E1;           /* 次要文字 */
-  --text-tertiary: #94A3B8;            /* 三级文字 */
-  --text-muted: #64748B;               /* 辅助文字 */
+  --text-tertiary: #A8B5C4;            /* 三级文字 - 增强对比度 */
+  --text-muted: #8695A8;               /* 辅助文字 - 增强对比度 4.5:1 */
   --text-on-primary: #FFFFFF;          /* 主色上的文字 */
   --text-on-accent: #FFFFFF;           /* 强调色上的文字 */
 
@@ -125,6 +126,24 @@
 }
 
 :root[data-theme="tech-blue"] .code-comment {
-  color: #64748B;
+  color: #8CA3B5;
   font-style: italic;
+}
+
+/* ========================================
+   焦点指示器 - 无障碍支持
+   ======================================== */
+:root[data-theme="tech-blue"] *:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 2px;
+}
+
+:root[data-theme="tech-blue"] button:focus-visible,
+:root[data-theme="tech-blue"] a:focus-visible,
+:root[data-theme="tech-blue"] input:focus-visible,
+:root[data-theme="tech-blue"] select:focus-visible,
+:root[data-theme="tech-blue"] textarea:focus-visible {
+  outline: 3px solid var(--color-primary-light);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px var(--btn-shadow-primary);
 }

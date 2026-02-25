@@ -17,6 +17,7 @@ import { defineComponent, nextTick } from 'vue'
 import { useTheme, useThemeAutoInit, useThemeWatcher } from './useTheme'
 import { useThemeStore, type ThemeName, DEFAULT_THEME } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
+// Don't import getUserPreferences and updateUserPreferences here - they're mocked
 
 // Mock user store
 vi.mock('@/stores/user', () => ({
@@ -24,6 +25,39 @@ vi.mock('@/stores/user', () => ({
     isLoggedIn: false
   }))
 }))
+
+// Create mock functions that can be referenced and configured
+const mockGetUserPreferences = vi.fn()
+const mockUpdateUserPreferences = vi.fn()
+
+// Mock request utility
+vi.mock('@/utils/request', () => ({
+  default: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn()
+  },
+  request: {
+    get: vi.fn(),
+    post: vi.fn(),
+    put: vi.fn(),
+    patch: vi.fn(),
+    delete: vi.fn()
+  },
+  getToken: vi.fn(),
+  setToken: vi.fn(),
+  removeToken: vi.fn()
+}))
+
+// Mock user API - return the mock functions directly, not wrapper functions
+vi.mock('@/api/user', async () => {
+  return {
+    getUserPreferences: mockGetUserPreferences,
+    updateUserPreferences: mockUpdateUserPreferences
+  }
+})
 
 describe('useTheme Composable', () => {
   beforeEach(() => {
@@ -35,6 +69,25 @@ describe('useTheme Composable', () => {
     vi.mocked(useUserStore).mockReturnValue({
       isLoggedIn: false
     } as any)
+
+    // 清除并配置 API mocks
+    mockGetUserPreferences.mockClear()
+    mockUpdateUserPreferences.mockClear()
+
+    // 配置 API mocks 的默认实现
+    mockGetUserPreferences.mockResolvedValue({
+      code: 200,
+      success: true,
+      data: { theme: 'tech-blue' },
+      message: 'Success'
+    })
+
+    mockUpdateUserPreferences.mockResolvedValue({
+      code: 200,
+      success: true,
+      data: { theme: 'tech-blue' },
+      message: 'Success'
+    })
 
     vi.spyOn(console, 'log').mockImplementation(() => {})
     vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -197,10 +250,8 @@ describe('useTheme Composable', () => {
 
       await result.setTheme('chinese-red', { sync: true })
 
-      // 由于后端同步未实现，应该调用 console.log
-      expect(console.log).toHaveBeenCalledWith(
-        expect.stringContaining('not implemented')
-      )
+      // 应该成功同步并调用 updateUserPreferences
+      expect(mockUpdateUserPreferences).toHaveBeenCalledWith({ theme: 'chinese-red' })
     })
 
     it('should throw error on failure', async () => {
@@ -257,9 +308,8 @@ describe('useTheme Composable', () => {
 
       await result.cycleTheme({ sync: true })
 
-      expect(console.log).toHaveBeenCalledWith(
-        expect.stringContaining('not implemented')
-      )
+      // 应该成功同步 - cycleTheme 会切换到下一个主题 (chinese-red)
+      expect(mockUpdateUserPreferences).toHaveBeenCalledWith({ theme: 'chinese-red' })
     })
 
     it('should throw error on failure', async () => {
@@ -349,10 +399,8 @@ describe('useTheme Composable', () => {
 
       await result.autoInitTheme()
 
-      // 由于后端未实现，应该记录日志
-      expect(console.log).toHaveBeenCalledWith(
-        expect.stringContaining('not implemented')
-      )
+      // 应该调用 getUserPreferences 从后端加载主题
+      expect(mockGetUserPreferences).toHaveBeenCalled()
     })
 
     it('should gracefully handle backend load error (no throw)', async () => {
@@ -361,10 +409,9 @@ describe('useTheme Composable', () => {
       } as any)
 
       const { result } = withSetup(() => useTheme())
-      const store = useThemeStore()
 
-      // 模拟 loadFromBackend 抛出错误
-      vi.spyOn(store, 'loadFromBackend').mockRejectedValue(new Error('Backend error'))
+      // 模拟 getUserPreferences 抛出错误
+      mockGetUserPreferences.mockRejectedValueOnce(new Error('Backend error'))
 
       // 不应抛出错误 - loadThemeFromBackend 内部捕获错误
       await expect(result.autoInitTheme()).resolves.toBeUndefined()
@@ -431,9 +478,9 @@ describe('useTheme Composable', () => {
       } as any)
 
       const { result } = withSetup(() => useTheme())
-      const store = useThemeStore()
 
-      vi.spyOn(store, 'syncToBackend').mockRejectedValue(new Error('Sync failed'))
+      // 模拟 updateUserPreferences 抛出错误
+      mockUpdateUserPreferences.mockRejectedValueOnce(new Error('Sync failed'))
 
       await expect(result.syncThemeToBackend()).rejects.toThrow('Sync failed')
       expect(result.syncError.value).toBe('Sync failed')
@@ -461,9 +508,9 @@ describe('useTheme Composable', () => {
       } as any)
 
       const { result } = withSetup(() => useTheme())
-      const store = useThemeStore()
 
-      vi.spyOn(store, 'loadFromBackend').mockRejectedValue(new Error('Load failed'))
+      // 模拟 getUserPreferences 抛出错误
+      mockGetUserPreferences.mockRejectedValueOnce(new Error('Load failed'))
 
       // 不应该抛出错误
       await expect(result.loadThemeFromBackend()).resolves.toBeUndefined()
