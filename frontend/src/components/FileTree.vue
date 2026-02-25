@@ -1,111 +1,183 @@
 <template>
   <div class="file-tree">
-    <div
-      v-for="node in nodes"
-      :key="node.path"
-      class="tree-node"
-    >
-      <div
-        class="node-content"
-        :class="{ 'is-directory': node.isDirectory, 'is-active': selectedPath === node.path }"
-        @click="handleNodeClick(node)"
-      >
-        <el-icon class="node-icon">
-          <Folder v-if="node.isDirectory && !expandedPaths.has(node.path)" />
-          <FolderOpened v-else-if="node.isDirectory && expandedPaths.has(node.path)" />
-          <Document v-else />
-        </el-icon>
-        <span class="node-label">{{ node.name }}</span>
-      </div>
-      <div
-        v-if="node.isDirectory && node.children && expandedPaths.has(node.path)"
-        class="node-children"
-      >
-        <FileTree
-          :nodes="node.children"
+    <!-- Search bar -->
+    <div v-if="searchable" class="file-tree__search">
+      <el-input
+        v-model="searchQuery"
+        placeholder="搜索文件..."
+        :prefix-icon="Search"
+        clearable
+        size="small"
+      />
+    </div>
+
+    <!-- Tree content -->
+    <div class="file-tree__content">
+      <template v-if="filteredNodes.length > 0">
+        <FileTreeNode
+          v-for="node in filteredNodes"
+          :key="node.path"
+          :node="node"
           :selected-path="selectedPath"
-          :expanded-paths="expandedPaths"
+          :expanded-paths="expandedPathsSet"
+          :search-query="searchQuery"
+          :depth="0"
           @select="handleSelect"
+          @toggle="handleToggle"
         />
+      </template>
+      <div v-else class="file-tree__empty">
+        <el-icon :size="32"><FolderDelete /></el-icon>
+        <p>{{ searchQuery ? '未找到匹配的文件' : '暂无文件' }}</p>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Folder, FolderOpened, Document } from '@element-plus/icons-vue'
-import type { FileTreeNode } from '@/api/submission'
+import { ref, computed, watch, onMounted, defineAsyncComponent } from 'vue'
+import { Search, FolderDelete } from '@element-plus/icons-vue'
+import type { FileTreeNode as FileTreeNodeType } from '@/api/submission'
 
+// Recursive component
+const FileTreeNode = defineAsyncComponent(() => import('./FileTreeNode.vue'))
+
+// Props
 interface Props {
-  nodes: FileTreeNode[]
+  files: FileTreeNodeType[]
   selectedPath?: string
-  expandedPaths?: Set<string>
-}
-
-interface Emits {
-  (e: 'select', node: FileTreeNode): void
+  searchable?: boolean
+  persistKey?: string  // Key for sessionStorage persistence
 }
 
 const props = withDefaults(defineProps<Props>(), {
   selectedPath: '',
-  expandedPaths: () => new Set()
+  searchable: false,
+  persistKey: ''
 })
 
-const emit = defineEmits<Emits>()
+// Emits
+const emit = defineEmits<{
+  select: [node: FileTreeNodeType]
+}>()
 
-const handleNodeClick = (node: FileTreeNode) => {
-  if (node.isDirectory) {
-    if (props.expandedPaths.has(node.path)) {
-      props.expandedPaths.delete(node.path)
-    } else {
-      props.expandedPaths.add(node.path)
+// State
+const searchQuery = ref('')
+const expandedPathsSet = ref<Set<string>>(new Set())
+
+// Load persisted state
+onMounted(() => {
+  if (props.persistKey) {
+    const saved = sessionStorage.getItem(`file-tree-${props.persistKey}`)
+    if (saved) {
+      try {
+        const paths = JSON.parse(saved) as string[]
+        expandedPathsSet.value = new Set(paths)
+      } catch (e) {
+        console.error('Failed to load file tree state:', e)
+      }
     }
-  } else {
-    emit('select', node)
   }
+})
+
+// Save state on change
+watch(expandedPathsSet, (newPaths) => {
+  if (props.persistKey) {
+    sessionStorage.setItem(
+      `file-tree-${props.persistKey}`,
+      JSON.stringify([...newPaths])
+    )
+  }
+}, { deep: true })
+
+// Filter nodes based on search query
+const filteredNodes = computed(() => {
+  if (!searchQuery.value) {
+    return props.files
+  }
+  return filterTree(props.files, searchQuery.value.toLowerCase())
+})
+
+// Recursive filter function
+const filterTree = (nodes: FileTreeNodeType[], query: string): FileTreeNodeType[] => {
+  const result: FileTreeNodeType[] = []
+
+  for (const node of nodes) {
+    const nameMatches = node.name.toLowerCase().includes(query)
+
+    if (node.isDirectory && node.children) {
+      const filteredChildren = filterTree(node.children, query)
+      if (filteredChildren.length > 0 || nameMatches) {
+        result.push({
+          ...node,
+          children: filteredChildren.length > 0 ? filteredChildren : node.children
+        })
+        // Auto-expand matching folders
+        if (filteredChildren.length > 0) {
+          expandedPathsSet.value.add(node.path)
+        }
+      }
+    } else if (nameMatches) {
+      result.push(node)
+    }
+  }
+
+  return result
 }
 
-const handleSelect = (node: FileTreeNode) => {
+// Event handlers
+const handleSelect = (node: FileTreeNodeType) => {
   emit('select', node)
+}
+
+const handleToggle = (path: string) => {
+  if (expandedPathsSet.value.has(path)) {
+    expandedPathsSet.value.delete(path)
+  } else {
+    expandedPathsSet.value.add(path)
+  }
+  // Trigger reactivity
+  expandedPathsSet.value = new Set(expandedPathsSet.value)
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped>
 .file-tree {
-  .tree-node {
-    .node-content {
-      display: flex;
-      align-items: center;
-      padding: 4px 8px;
-      cursor: pointer;
-      border-radius: 4px;
-      transition: background-color 0.2s;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
 
-      &:hover {
-        background-color: var(--el-fill-color-light);
-      }
+.file-tree__search {
+  padding: var(--spacing-sm);
+  border-bottom: 1px solid var(--border-light);
+}
 
-      &.is-active {
-        background-color: var(--el-color-primary-light-9);
-        color: var(--el-color-primary);
-      }
+.file-tree__search :deep(.el-input__wrapper) {
+  background: var(--bg-primary);
+  border-color: var(--border-default);
+}
 
-      .node-icon {
-        margin-right: 6px;
-        font-size: 16px;
-      }
+.file-tree__content {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-xs);
+}
 
-      .node-label {
-        font-size: 14px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
+.file-tree__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl);
+  color: var(--text-muted);
+}
 
-    .node-children {
-      margin-left: 16px;
-    }
-  }
+.file-tree__empty p {
+  margin-top: var(--spacing-sm);
+  font-size: var(--text-sm);
 }
 </style>

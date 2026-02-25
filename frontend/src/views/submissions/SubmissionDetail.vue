@@ -72,9 +72,10 @@
               <div class="panel-content">
                 <FileTree
                   v-if="submission.fileTree"
-                  :nodes="[submission.fileTree]"
+                  :files="[submission.fileTree]"
                   :selected-path="selectedFile?.path"
-                  :expanded-paths="expandedPaths"
+                  :persist-key="`submission-${submission.id}`"
+                  searchable
                   @select="handleFileSelect"
                 />
               </div>
@@ -150,7 +151,6 @@ const loading = ref(false)
 const submission = ref<SubmissionDetailDTO | null>(null)
 const selectedFile = ref<FileTreeNode | null>(null)
 const fileContent = ref<string | null>(null)
-const expandedPaths = ref(new Set<string>())
 const editorContainer = ref<HTMLElement | null>(null)
 const grade = ref<GradeDTO | null>(null)
 const gradeDialogVisible = ref(false)
@@ -301,10 +301,6 @@ const loadSubmission = async () => {
     const res = await getSubmissionDetail(id)
     if (res.success) {
       submission.value = res.data
-      // Auto-expand root directory
-      if (submission.value.fileTree) {
-        expandedPaths.value.add(submission.value.fileTree.path)
-      }
       // Load grade
       await loadGrade(id)
     } else {
