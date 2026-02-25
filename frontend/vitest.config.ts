@@ -17,7 +17,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: ['src/stores/theme.ts', 'src/composables/useTheme.ts', 'src/components/common/ThemeSwitcher.vue'],
+      include: ['src/stores/theme.ts', 'src/composables/useTheme.ts', 'src/components/common/ThemeSwitcher.vue', 'src/views/Login.vue'],
       exclude: ['src/__tests__/**'],
       thresholds: {
         branches: 80,
