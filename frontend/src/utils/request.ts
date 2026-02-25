@@ -58,7 +58,8 @@ request.interceptors.response.use(
       return Promise.reject(new Error(res.message || '请求失败'))
     }
 
-    return res
+    // Return the result data, cast to bypass axios type checking
+    return res as unknown as typeof response
   },
   (error: AxiosError<Result>) => {
     console.error('Request error:', error)

@@ -65,7 +65,7 @@ const props = withDefaults(defineProps<{
   errorTitle?: string
   showRetry?: boolean
   // Empty options
-  emptyIcon?: string
+  emptyIcon?: 'inbox' | 'document' | 'folder' | 'search' | 'user' | 'calendar' | 'list' | 'image'
   emptyTitle?: string
   emptyDescription?: string
 }>(), {

@@ -65,8 +65,12 @@ public class GradeServiceImpl extends ServiceImpl<GradeMapper, Grade> implements
 
         // 发送评分完成通知
         Lesson lesson = lessonMapper.selectById(submission.getLessonId());
-        List<Long> targetUserIds = new ArrayList<>();
+        if (lesson == null) {
+            log.warn("课程不存在，无法发送评分通知: lessonId={}", submission.getLessonId());
+            return convertToDTO(grade);
+        }
 
+        List<Long> targetUserIds = new ArrayList<>();
         if (submission.getGroupId() != null) {
             // 小组作业，通知所有组员
             targetUserIds = groupMemberMapper.selectApprovedUserIdsByGroupId(submission.getGroupId());

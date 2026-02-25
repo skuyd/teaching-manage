@@ -2,7 +2,6 @@ import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
 import type { MessageOptions } from 'element-plus'
 
 // Message duration constants
-const DURATION_SHORT = 2000
 const DURATION_DEFAULT = 3000
 const DURATION_LONG = 5000
 

@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -160,6 +161,7 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
             return Collections.emptyList();
         }
         return userMapper.selectBatchIds(studentIds).stream()
+                .filter(Objects::nonNull)
                 .map(UserDTO::fromEntity)
                 .collect(Collectors.toList());
     }

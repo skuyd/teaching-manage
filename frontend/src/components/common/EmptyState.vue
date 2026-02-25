@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import {
-  Inbox,
+  Box,
   Document,
   Folder,
   Search,
@@ -40,7 +40,7 @@ const props = withDefaults(defineProps<{
 
 const iconComponent = computed(() => {
   const icons = {
-    inbox: Inbox,
+    inbox: Box,
     document: Document,
     folder: Folder,
     search: Search,
@@ -49,7 +49,7 @@ const iconComponent = computed(() => {
     list: List,
     image: PictureFilled
   }
-  return icons[props.icon] || Inbox
+  return icons[props.icon] || Box
 })
 
 const iconSize = computed(() => {

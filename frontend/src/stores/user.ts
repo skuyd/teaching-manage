@@ -2,13 +2,16 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { login as loginApi, register as registerApi } from '@/api/auth'
 import { setToken, getToken, removeToken } from '@/utils/request'
-import type { LoginRequest, LoginResponse, RegisterRequest, UserRole } from '@/api/types'
+import type { LoginRequest, RegisterRequest, UserRole } from '@/api/types'
 
 export interface UserInfo {
+  id?: number
   username: string
   name: string
   role: UserRole
   token: string
+  email?: string
+  avatar?: string
 }
 
 const USER_INFO_KEY = 'userInfo'
@@ -40,6 +43,7 @@ export const useUserStore = defineStore('user', () => {
     const data = res.data
 
     const userInfo: UserInfo = {
+      id: data.id,
       username: data.username,
       name: data.name,
       role: data.role,

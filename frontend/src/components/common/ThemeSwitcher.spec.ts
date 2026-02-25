@@ -19,18 +19,18 @@ vi.mock('element-plus', () => ({
   }
 }))
 
-import { mount, flushPromises, VueWrapper } from '@vue/test-utils'
+import { mount, flushPromises } from '@vue/test-utils'
 import { setActivePinia, createPinia } from 'pinia'
 import { nextTick, defineComponent, h } from 'vue'
 import { ElMessage } from 'element-plus'
 import ThemeSwitcher from './ThemeSwitcher.vue'
-import { useThemeStore, type ThemeName, DEFAULT_THEME, THEME_CONFIG } from '@/stores/theme'
+import { useThemeStore, THEME_CONFIG } from '@/stores/theme'
 
 // 创建简化的 Element Plus 模拟组件
 const ElDropdown = defineComponent({
   name: 'ElDropdown',
   emits: ['command'],
-  setup(_, { slots, emit }) {
+  setup(_, { slots }) {
     return () => h('div', { class: 'el-dropdown' }, [
       slots.default?.(),
       slots.dropdown?.()
@@ -49,7 +49,7 @@ const ElDropdownItem = defineComponent({
   name: 'ElDropdownItem',
   props: ['command', 'disabled'],
   emits: ['click'],
-  setup(props, { slots, emit }) {
+  setup(props, { slots }) {
     return () => h('div', {
       class: 'el-dropdown-item',
       onClick: () => {

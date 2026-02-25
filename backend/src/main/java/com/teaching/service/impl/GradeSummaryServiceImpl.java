@@ -46,9 +46,10 @@ public class GradeSummaryServiceImpl implements GradeSummaryService {
         summary.setSubjectId(subjectId);
         summary.setTotalLessons(lessons.size());
 
-        // Get lesson summaries
+        // Get lesson summaries (filter out null values)
         List<LessonGradeSummaryDTO> lessonSummaries = lessons.stream()
                 .map(lesson -> getLessonGradeSummary(lesson.getId()))
+                .filter(Objects::nonNull)
                 .collect(Collectors.toList());
         summary.setLessonSummaries(lessonSummaries);
 
@@ -103,7 +104,9 @@ public class GradeSummaryServiceImpl implements GradeSummaryService {
         LessonGradeSummaryDTO summary = new LessonGradeSummaryDTO();
         summary.setLessonId(lesson.getId());
         summary.setLessonTitle(lesson.getTitle());
-        summary.setLessonTime(lesson.getLessonTime().format(DATE_FORMATTER));
+        if (lesson.getLessonTime() != null) {
+            summary.setLessonTime(lesson.getLessonTime().format(DATE_FORMATTER));
+        }
         if (lesson.getDeadline() != null) {
             summary.setDeadline(lesson.getDeadline().format(DATE_FORMATTER));
         }
@@ -243,7 +246,9 @@ public class GradeSummaryServiceImpl implements GradeSummaryService {
             StudentGradeSummaryDTO.LessonGradeDetail detail = new StudentGradeSummaryDTO.LessonGradeDetail();
             detail.setLessonId(lesson.getId());
             detail.setLessonTitle(lesson.getTitle());
-            detail.setLessonTime(lesson.getLessonTime().format(DATE_FORMATTER));
+            if (lesson.getLessonTime() != null) {
+                detail.setLessonTime(lesson.getLessonTime().format(DATE_FORMATTER));
+            }
             detail.setGrade(grade.getGrade());
             detail.setGradeDescription(grade.getGrade().getDescription());
             detail.setComment(grade.getComment());
@@ -277,6 +282,9 @@ public class GradeSummaryServiceImpl implements GradeSummaryService {
 
             // Create lesson sheets
             for (LessonGradeSummaryDTO lessonSummary : summary.getLessonSummaries()) {
+                if (lessonSummary == null || lessonSummary.getLessonTitle() == null) {
+                    continue;
+                }
                 String sheetName = sanitizeSheetName(lessonSummary.getLessonTitle());
                 Sheet lessonSheet = workbook.createSheet(sheetName);
                 createLessonSheet(workbook, lessonSheet, lessonSummary);
@@ -290,11 +298,15 @@ public class GradeSummaryServiceImpl implements GradeSummaryService {
     @Override
     public byte[] exportLessonGradesToExcel(Long lessonId) throws IOException {
         LessonGradeSummaryDTO summary = getLessonGradeSummary(lessonId);
+        if (summary == null) {
+            throw new IllegalArgumentException("课程不存在: " + lessonId);
+        }
 
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            Sheet sheet = workbook.createSheet(summary.getLessonTitle());
+            String sheetName = summary.getLessonTitle() != null ? sanitizeSheetName(summary.getLessonTitle()) : "成绩详情";
+            Sheet sheet = workbook.createSheet(sheetName);
             createLessonSheet(workbook, sheet, summary);
 
             workbook.write(out);
@@ -305,11 +317,15 @@ public class GradeSummaryServiceImpl implements GradeSummaryService {
     @Override
     public byte[] exportStudentGradesToExcel(Long studentId) throws IOException {
         StudentGradeSummaryDTO summary = getStudentGradeSummary(studentId);
+        if (summary == null) {
+            throw new IllegalArgumentException("学员不存在: " + studentId);
+        }
 
         try (Workbook workbook = new XSSFWorkbook();
              ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
-            Sheet sheet = workbook.createSheet(summary.getStudentName());
+            String sheetName = summary.getStudentName() != null ? sanitizeSheetName(summary.getStudentName()) : "学员成绩";
+            Sheet sheet = workbook.createSheet(sheetName);
             createStudentSheet(workbook, sheet, summary);
 
             workbook.write(out);

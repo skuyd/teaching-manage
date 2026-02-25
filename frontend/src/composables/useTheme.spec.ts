@@ -14,7 +14,7 @@ import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import { mount, flushPromises } from '@vue/test-utils'
 import { defineComponent, nextTick } from 'vue'
-import { useTheme, useThemeAutoInit, useThemeWatcher, type ThemeChangeCallback } from './useTheme'
+import { useTheme, useThemeAutoInit, useThemeWatcher } from './useTheme'
 import { useThemeStore, type ThemeName, DEFAULT_THEME } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
 

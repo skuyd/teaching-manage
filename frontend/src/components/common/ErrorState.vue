@@ -25,7 +25,7 @@ import {
   WarningFilled,
   InfoFilled,
   Refresh,
-  WifiOff,
+  Connection,
   Lock,
   QuestionFilled
 } from '@element-plus/icons-vue'
@@ -53,7 +53,7 @@ const iconComponent = computed(() => {
     error: CircleCloseFilled,
     warning: WarningFilled,
     info: InfoFilled,
-    network: WifiOff,
+    network: Connection,
     forbidden: Lock,
     notfound: QuestionFilled
   }

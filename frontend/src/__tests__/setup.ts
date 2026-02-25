@@ -101,7 +101,6 @@ const eventListeners: Map<string, Set<EventListener>> = new Map()
 
 const originalAddEventListener = window.addEventListener.bind(window)
 const originalRemoveEventListener = window.removeEventListener.bind(window)
-const originalDispatchEvent = window.dispatchEvent.bind(window)
 
 vi.spyOn(window, 'addEventListener').mockImplementation((
   type: string,

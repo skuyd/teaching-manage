@@ -199,7 +199,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, User, ArrowLeft } from '@element-plus/icons-vue'
-import { getLessonsBySubject, deleteLesson, getLessonDeleteStats, updateLessonTime, type LessonDTO } from '@/api/lesson'
+import { getLessonsBySubject, updateLessonTime, type LessonDTO } from '@/api/lesson'
 import { getSubjectById, getSubjectStudents, addStudentToSubject, removeStudentFromSubject, type SubjectDTO, type StudentDTO } from '@/api/subject'
 import { listStudents } from '@/api/user'
 import type { UserDTO } from '@/api/types'
@@ -453,52 +453,6 @@ const viewLesson = (lesson: LessonDTO) => {
   } else {
     // 学员只能查看课程信息（显示简单提示）
     ElMessage.info(`课程：${lesson.title}\n时间：${formatDateTime(lesson.lessonTime)}`)
-  }
-}
-
-const handleDelete = async (lesson: LessonDTO) => {
-  try {
-    // 先获取删除统计信息
-    const statsRes = await getLessonDeleteStats(lesson.id)
-    const stats = statsRes.data
-
-    // 构建确认消息
-    let message = `确定要删除课程「${lesson.title}」吗？`
-
-    if (stats.submissionCount > 0) {
-      message = `<div style="text-align: left; line-height: 1.8;">
-        <p style="color: #E6A23C; margin-bottom: 8px;">⚠️ 该课程包含以下关联数据，删除后将无法恢复：</p>
-        <ul style="margin: 0; padding-left: 20px; color: #606266;">
-          <li>作业提交：<strong>${stats.submissionCount}</strong> 份</li>
-          <li>评分记录：<strong>${stats.gradeCount}</strong> 条</li>
-          <li>代码评论：<strong>${stats.commentCount}</strong> 条</li>
-        </ul>
-        <p style="margin-top: 12px; color: #F56C6C;">确定要删除课程「${lesson.title}」及所有关联数据吗？</p>
-      </div>`
-    }
-
-    await ElMessageBox.confirm(
-      message,
-      '删除确认',
-      {
-        type: 'warning',
-        dangerouslyUseHTMLString: true,
-        confirmButtonText: '确定删除',
-        cancelButtonText: '取消',
-        confirmButtonClass: 'el-button--danger'
-      }
-    )
-
-    const res = await deleteLesson(lesson.id)
-    if (res.success) {
-      ElMessage.success('删除成功')
-      loadLessons()
-    }
-  } catch (error: any) {
-    if (error !== 'cancel' && error?.message !== 'cancel') {
-      ElMessage.error('删除失败')
-      console.error(error)
-    }
   }
 }
 

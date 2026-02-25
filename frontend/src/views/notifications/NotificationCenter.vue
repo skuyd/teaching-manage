@@ -85,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import MainLayout from '@/components/MainLayout.vue'
 import { ElMessage } from 'element-plus'
 import type { NotificationDTO, NotificationType } from '@/api/types'

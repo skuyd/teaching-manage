@@ -122,7 +122,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, nextTick, computed } from 'vue'
+import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import MainLayout from '@/components/MainLayout.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -135,6 +135,7 @@ import {
   gradeSubmission,
   type GradeDTO,
   type CreateGradeRequest,
+  type UpdateGradeRequest,
   GradeLevel
 } from '@/api/grade'
 import { useUserStore } from '@/stores/user'
@@ -338,15 +339,18 @@ const getGradeType = (gradeLevel: GradeLevel): string => {
   return typeMap[gradeLevel]
 }
 
-const handleGradeSubmit = async (data: CreateGradeRequest) => {
+const handleGradeSubmit = async (data: CreateGradeRequest | UpdateGradeRequest) => {
   try {
-    const res = await gradeSubmission(data)
-    if (res.success) {
-      ElMessage.success('评分成功')
-      gradeDialogVisible.value = false
-      grade.value = res.data
-    } else {
-      ElMessage.error(res.message || '评分失败')
+    // For new grades, data should include submissionId
+    if ('submissionId' in data) {
+      const res = await gradeSubmission(data as CreateGradeRequest)
+      if (res.success) {
+        ElMessage.success('评分成功')
+        gradeDialogVisible.value = false
+        grade.value = res.data
+      } else {
+        ElMessage.error(res.message || '评分失败')
+      }
     }
   } catch (error: any) {
     console.error('Failed to grade submission:', error)

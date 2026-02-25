@@ -22,6 +22,7 @@ export interface SubmissionDTO {
   submitTime: string
   isGroupSubmission: boolean
   graded: boolean
+  grade?: string
 }
 
 export interface SubmissionDetailDTO {

@@ -16,7 +16,7 @@
       <template #header>
         <div class="card-header">
           <span class="title">我的小组</span>
-          <el-tag type="success">{{ myGroup.isLeader ? '组长' : '成员' }}</el-tag>
+          <el-tag type="success">{{ isLeader ? '组长' : '成员' }}</el-tag>
         </div>
       </template>
       <div class="group-info">
