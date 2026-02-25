@@ -42,6 +42,7 @@ public class AuthController {
             String token = jwtUtils.generateToken(userDetails.getUsername());
 
             LoginResponse response = LoginResponse.builder()
+                    .id(userDetails.getId())
                     .token(token)
                     .username(userDetails.getUsername())
                     .name(userDetails.getName())

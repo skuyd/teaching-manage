@@ -61,7 +61,7 @@
             </div>
           </template>
           <div v-else class="empty-state">
-            <el-icon :size="48" color="#6B6B70"><BellFilled /></el-icon>
+            <el-icon :size="48"><BellFilled /></el-icon>
             <p>暂无通知</p>
           </div>
         </div>
@@ -77,7 +77,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Bell, Close, BellFilled } from '@element-plus/icons-vue'
@@ -90,13 +90,92 @@ import {
   deleteNotification
 } from '@/api/notification'
 
+// Props
+interface Props {
+  maxVisible?: number
+  pollIntervalActive?: number  // 活跃状态轮询间隔（毫秒）
+  pollIntervalIdle?: number    // 空闲状态轮询间隔（毫秒）
+  idleThreshold?: number       // 判定为空闲的时间（毫秒）
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  maxVisible: 10,
+  pollIntervalActive: 10000,   // 活跃时 10 秒
+  pollIntervalIdle: 30000,     // 空闲时 30 秒
+  idleThreshold: 60000         // 1 分钟无操作判定为空闲
+})
+
 const router = useRouter()
 
+// State
 const unreadCount = ref(0)
 const notifications = ref<NotificationDTO[]>([])
 const dropdownVisible = ref(false)
-let pollingTimer: number | null = null
 
+// Polling state
+let pollingTimer: number | null = null
+let lastActivityTime = Date.now()
+let isPageVisible = true
+let isUserActive = true
+
+// Activity tracking
+const updateActivity = () => {
+  lastActivityTime = Date.now()
+  if (!isUserActive) {
+    isUserActive = true
+    adjustPollingInterval()
+  }
+}
+
+const checkActivity = () => {
+  const now = Date.now()
+  const wasActive = isUserActive
+  isUserActive = (now - lastActivityTime) < props.idleThreshold
+
+  if (wasActive !== isUserActive) {
+    adjustPollingInterval()
+  }
+}
+
+// Visibility handling
+const handleVisibilityChange = () => {
+  isPageVisible = document.visibilityState === 'visible'
+
+  if (isPageVisible) {
+    // 页面重新可见时立即获取一次
+    fetchUnreadCount()
+    startPolling()
+  } else {
+    // 页面不可见时停止轮询
+    stopPolling()
+  }
+}
+
+// Polling management
+const adjustPollingInterval = () => {
+  stopPolling()
+  if (isPageVisible) {
+    const interval = isUserActive ? props.pollIntervalActive : props.pollIntervalIdle
+    pollingTimer = window.setInterval(() => {
+      checkActivity()
+      fetchUnreadCount()
+    }, interval)
+  }
+}
+
+const startPolling = () => {
+  fetchUnreadCount()
+  adjustPollingInterval()
+}
+
+const stopPolling = () => {
+  if (pollingTimer !== null) {
+    clearInterval(pollingTimer)
+    pollingTimer = null
+  }
+}
+
+// API calls
 const fetchUnreadCount = async () => {
   try {
     const res = await getUnreadCount()
@@ -112,13 +191,14 @@ const fetchNotifications = async () => {
   try {
     const res = await getUnreadNotifications()
     if (res.success) {
-      notifications.value = res.data.slice(0, 10) // 只显示最新10条
+      notifications.value = res.data.slice(0, props.maxVisible)
     }
   } catch (error) {
     console.error('Failed to fetch notifications:', error)
   }
 }
 
+// Event handlers
 const toggleDropdown = async () => {
   dropdownVisible.value = !dropdownVisible.value
   if (dropdownVisible.value) {
@@ -165,6 +245,7 @@ const goToNotificationCenter = () => {
   router.push('/notifications')
 }
 
+// Helpers
 const getTypeText = (type: NotificationType): string => {
   const typeMap: Record<NotificationType, string> = {
     LESSON_PUBLISHED: '课程',
@@ -192,26 +273,32 @@ const formatTime = (time: string): string => {
   return date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' })
 }
 
-const startPolling = () => {
-  fetchUnreadCount()
-  pollingTimer = window.setInterval(() => {
-    fetchUnreadCount()
-  }, 30000) // 30秒轮询
-}
-
-const stopPolling = () => {
-  if (pollingTimer !== null) {
-    clearInterval(pollingTimer)
-    pollingTimer = null
-  }
-}
-
+// Lifecycle
 onMounted(() => {
+  // Start polling
   startPolling()
+
+  // Add activity listeners
+  document.addEventListener('mousemove', updateActivity)
+  document.addEventListener('keydown', updateActivity)
+  document.addEventListener('click', updateActivity)
+  document.addEventListener('scroll', updateActivity)
+
+  // Add visibility listener
+  document.addEventListener('visibilitychange', handleVisibilityChange)
 })
 
 onUnmounted(() => {
   stopPolling()
+
+  // Remove activity listeners
+  document.removeEventListener('mousemove', updateActivity)
+  document.removeEventListener('keydown', updateActivity)
+  document.removeEventListener('click', updateActivity)
+  document.removeEventListener('scroll', updateActivity)
+
+  // Remove visibility listener
+  document.removeEventListener('visibilitychange', handleVisibilityChange)
 })
 </script>
 
@@ -222,41 +309,41 @@ onUnmounted(() => {
 
 .notification-badge {
   :deep(.el-badge__content) {
-    background-color: #FF5C00;
+    background-color: var(--color-danger);
     border: none;
   }
 }
 
 .bell-button {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid #2A2A2E;
-  color: #ADADB0;
-  transition: all 0.3s;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  transition: all var(--transition-normal);
 }
 
 .bell-button:hover {
-  background: rgba(255, 92, 0, 0.1);
-  border-color: #FF5C00;
-  color: #FF5C00;
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .notification-dropdown {
-  background: #111113;
-  color: #FFFFFF;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
 .dropdown-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #2A2A2E;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-default);
 }
 
 .dropdown-header .title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #FFFFFF;
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
 }
 
 .notification-list {
@@ -267,19 +354,23 @@ onUnmounted(() => {
 .notification-item {
   display: flex;
   align-items: flex-start;
-  gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid #2A2A2E;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-light);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background var(--transition-fast);
 }
 
 .notification-item:hover {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--bg-hover);
 }
 
 .notification-item.unread {
-  background: rgba(255, 92, 0, 0.05);
+  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+}
+
+.notification-item.unread:hover {
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
 }
 
 .notification-content {
@@ -290,55 +381,55 @@ onUnmounted(() => {
 .notification-title {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
 }
 
 .type-tag {
   display: inline-block;
-  padding: 2px 8px;
-  font-size: 11px;
-  border-radius: 4px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #ADADB0;
+  padding: 2px var(--spacing-sm);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
 .type-tag.type-LESSON_PUBLISHED {
-  background: rgba(52, 152, 219, 0.2);
-  color: #3498DB;
+  background: color-mix(in srgb, var(--color-info) 20%, transparent);
+  color: var(--color-info);
 }
 
 .type-tag.type-DEADLINE_REMINDER {
-  background: rgba(231, 76, 60, 0.2);
-  color: #E74C3C;
+  background: color-mix(in srgb, var(--color-danger) 20%, transparent);
+  color: var(--color-danger);
 }
 
 .type-tag.type-GRADE_COMPLETED {
-  background: rgba(46, 204, 113, 0.2);
-  color: #2ECC71;
+  background: color-mix(in srgb, var(--color-success) 20%, transparent);
+  color: var(--color-success);
 }
 
 .type-tag.type-GROUP_APPLICATION,
 .type-tag.type-GROUP_APPROVAL {
-  background: rgba(155, 89, 182, 0.2);
-  color: #9B59B6;
+  background: color-mix(in srgb, var(--color-warning) 20%, transparent);
+  color: var(--color-warning);
 }
 
 .title-text {
-  font-size: 14px;
-  font-weight: 500;
-  color: #FFFFFF;
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .notification-body {
-  font-size: 13px;
-  color: #ADADB0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
   line-height: 1.5;
-  margin-bottom: 4px;
+  margin-bottom: var(--spacing-xs);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -347,54 +438,54 @@ onUnmounted(() => {
 }
 
 .notification-time {
-  font-size: 12px;
-  color: #6B6B70;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
 }
 
 .delete-button {
-  color: #6B6B70;
-  padding: 4px;
+  color: var(--text-muted);
+  padding: var(--spacing-xs);
 }
 
 .delete-button:hover {
-  color: #E74C3C;
+  color: var(--color-danger);
 }
 
 .empty-state {
   text-align: center;
-  padding: 48px 24px;
-  color: #6B6B70;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  color: var(--text-muted);
 }
 
 .empty-state p {
-  margin-top: 16px;
-  font-size: 14px;
+  margin-top: var(--spacing-md);
+  font-size: var(--text-sm);
 }
 
 .dropdown-footer {
-  padding: 12px 16px;
+  padding: var(--spacing-sm) var(--spacing-md);
   text-align: center;
-  border-top: 1px solid #2A2A2E;
+  border-top: 1px solid var(--border-default);
 }
 
 .dropdown-footer .el-button {
-  color: #FF5C00;
+  color: var(--color-primary);
 }
 
 .dropdown-footer .el-button:hover {
-  color: #FF8A4C;
+  color: var(--color-primary-light);
 }
 </style>
 
 <style>
 .notification-popover {
-  background: #111113 !important;
-  border: 1px solid #2A2A2E !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
   padding: 0 !important;
 }
 
 .notification-popover .el-popper__arrow::before {
-  background: #111113 !important;
-  border: 1px solid #2A2A2E !important;
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-default) !important;
 }
 </style>
