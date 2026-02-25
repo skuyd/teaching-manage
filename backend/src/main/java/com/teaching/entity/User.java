@@ -22,4 +22,11 @@ public class User extends BaseEntity {
     private String email;
 
     private String avatar;
+
+    /**
+     * 用户主题偏好
+     * 可选值: tech-blue, chinese-red, nature-green
+     * 默认值: tech-blue
+     */
+    private String theme;
 }

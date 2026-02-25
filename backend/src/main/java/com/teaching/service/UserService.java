@@ -3,6 +3,7 @@ package com.teaching.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.teaching.dto.UpdateUserRequest;
+import com.teaching.dto.UpdateUserPreferencesRequest;
 import com.teaching.entity.User;
 
 import java.util.List;
@@ -28,4 +29,6 @@ public interface UserService extends IService<User> {
     void updateUserAvatar(Long id, String avatarUrl);
 
     List<User> listAllUsers(String keyword);
+
+    void updateUserPreferences(Long id, UpdateUserPreferencesRequest request);
 }

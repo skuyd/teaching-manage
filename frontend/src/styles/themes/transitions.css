@@ -1,0 +1,288 @@
+/**
+ * 主题切换过渡动画
+ *
+ * 为主题切换提供平滑的视觉过渡效果
+ */
+
+/* ========================================
+   全局过渡效果
+   ======================================== */
+
+/**
+ * 主题切换过渡类
+ * 在主题切换时添加到 body 元素
+ */
+body.theme-transitioning,
+body.theme-transitioning * {
+  /* 过渡所有颜色相关属性 */
+  transition:
+    background-color var(--transition-normal, 250ms ease),
+    color var(--transition-normal, 250ms ease),
+    border-color var(--transition-normal, 250ms ease),
+    box-shadow var(--transition-normal, 250ms ease),
+    fill var(--transition-normal, 250ms ease),
+    stroke var(--transition-normal, 250ms ease) !important;
+}
+
+/* ========================================
+   防止特定元素过渡
+   ======================================== */
+
+/**
+ * 某些元素不需要过渡动画
+ * - 图片
+ * - 视频
+ * - 输入框（可能导致用户输入卡顿）
+ * - 已有动画的元素
+ */
+body.theme-transitioning img,
+body.theme-transitioning video,
+body.theme-transitioning input,
+body.theme-transitioning textarea,
+body.theme-transitioning [class*="animate"],
+body.theme-transitioning [class*="transition"] {
+  transition: none !important;
+}
+
+/* ========================================
+   页面淡入淡出效果
+   ======================================== */
+
+/**
+ * 主题切换时的页面淡出效果
+ */
+@keyframes theme-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.95;
+  }
+}
+
+/**
+ * 主题切换时的页面淡入效果
+ */
+@keyframes theme-fade-in {
+  from {
+    opacity: 0.95;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/**
+ * 应用淡入淡出动画
+ */
+body.theme-transitioning {
+  animation: theme-fade-out 150ms ease-out forwards,
+             theme-fade-in 150ms ease-in 150ms forwards;
+}
+
+/* ========================================
+   特殊组件过渡
+   ======================================== */
+
+/**
+ * 卡片组件
+ * 主题切换时添加轻微缩放效果
+ */
+.theme-transitioning .el-card,
+.theme-transitioning .card {
+  transition:
+    background-color var(--transition-normal, 250ms ease),
+    border-color var(--transition-normal, 250ms ease),
+    box-shadow var(--transition-normal, 250ms ease),
+    transform var(--transition-fast, 150ms ease) !important;
+}
+
+/**
+ * 按钮组件
+ * 主题切换时保持悬停状态的过渡
+ */
+.theme-transitioning .el-button,
+.theme-transitioning button {
+  transition:
+    background-color var(--transition-normal, 250ms ease),
+    color var(--transition-normal, 250ms ease),
+    border-color var(--transition-normal, 250ms ease),
+    box-shadow var(--transition-normal, 250ms ease) !important;
+}
+
+/**
+ * 侧边栏菜单
+ * 渐变背景需要特殊处理
+ */
+.theme-transitioning .el-menu,
+.theme-transitioning aside {
+  transition:
+    background var(--transition-slow, 350ms ease),
+    background-color var(--transition-slow, 350ms ease) !important;
+}
+
+/**
+ * 表格组件
+ * 行悬停效果需要平滑过渡
+ */
+.theme-transitioning .el-table,
+.theme-transitioning table {
+  transition:
+    background-color var(--transition-normal, 250ms ease),
+    color var(--transition-normal, 250ms ease) !important;
+}
+
+.theme-transitioning .el-table__row,
+.theme-transitioning tr {
+  transition:
+    background-color var(--transition-fast, 150ms ease) !important;
+}
+
+/* ========================================
+   代码编辑器过渡
+   ======================================== */
+
+/**
+ * Monaco Editor
+ * 代码编辑器的背景色过渡
+ */
+.theme-transitioning .monaco-editor,
+.theme-transitioning .code-editor {
+  transition:
+    background-color var(--transition-normal, 250ms ease) !important;
+}
+
+/* ========================================
+   骨架屏和加载状态
+   ======================================== */
+
+/**
+ * 骨架屏加载动画
+ * 主题切换时不影响加载动画
+ */
+.theme-transitioning .skeleton,
+.theme-transitioning .el-skeleton {
+  transition: none !important;
+  animation: shimmer 1.5s infinite !important;
+}
+
+/* ========================================
+   浏览器兼容性优化
+   ======================================== */
+
+/**
+ * 使用 will-change 提示浏览器优化
+ * 仅在过渡期间启用
+ */
+body.theme-transitioning {
+  will-change: background-color, color;
+}
+
+body.theme-transitioning * {
+  will-change: background-color, color, border-color;
+}
+
+/**
+ * 过渡完成后移除 will-change
+ */
+body:not(.theme-transitioning) {
+  will-change: auto;
+}
+
+/* ========================================
+   性能优化
+   ======================================== */
+
+/**
+ * 使用 GPU 加速
+ * transform 和 opacity 使用硬件加速
+ */
+.theme-transitioning .el-card,
+.theme-transitioning .card {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/**
+ * 减少重绘区域
+ * contain 属性限制布局和绘制
+ */
+.theme-transitioning .el-card,
+.theme-transitioning .card,
+.theme-transitioning .el-button {
+  contain: layout style paint;
+}
+
+/* ========================================
+   深色主题特殊处理
+   ======================================== */
+
+/**
+ * 科技蓝主题（暗色）切换时的特殊过渡
+ * 需要更长的过渡时间以避免闪烁
+ */
+:root[data-theme="tech-blue"].theme-transitioning,
+:root[data-theme="tech-blue"].theme-transitioning * {
+  transition-duration: 350ms !important;
+}
+
+/* ========================================
+   护眼模式过渡
+   ======================================== */
+
+/**
+ * 自然绿主题切换时应用滤镜过渡
+ */
+:root[data-theme="nature-green"].theme-transitioning .reading-area,
+:root[data-theme="nature-green"].theme-transitioning .code-editor {
+  transition:
+    background-color var(--transition-normal, 250ms ease),
+    filter var(--transition-normal, 250ms ease) !important;
+}
+
+/* ========================================
+   无障碍访问
+   ======================================== */
+
+/**
+ * 尊重用户的运动偏好设置
+ * 如果用户偏好减少动画，禁用所有过渡
+ */
+@media (prefers-reduced-motion: reduce) {
+  body.theme-transitioning,
+  body.theme-transitioning * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ========================================
+   响应式设计
+   ======================================== */
+
+/**
+ * 移动设备上使用更快的过渡
+ * 避免性能问题
+ */
+@media (max-width: 768px) {
+  body.theme-transitioning,
+  body.theme-transitioning * {
+    transition-duration: 150ms !important;
+  }
+
+  body.theme-transitioning {
+    animation-duration: 100ms !important;
+  }
+}
+
+/**
+ * 低端设备禁用复杂过渡
+ */
+@media (prefers-reduced-motion: reduce), (max-width: 480px) {
+  .theme-transitioning .el-card,
+  .theme-transitioning .card {
+    transform: none !important;
+    will-change: auto !important;
+    contain: none !important;
+  }
+}

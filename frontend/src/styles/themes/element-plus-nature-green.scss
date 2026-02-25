@@ -1,0 +1,372 @@
+/**
+ * Element Plus 主题覆盖 - 自然绿主题
+ *
+ * 将自然绿主题的 CSS 变量映射到 Element Plus 组件
+ * 基于: theme-nature-green.css
+ */
+
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  // ========================================
+  // 主色调
+  // ========================================
+  $colors: (
+    'primary': (
+      'base': #10B981,
+    ),
+  ),
+
+  // ========================================
+  // 文本颜色
+  // ========================================
+  $text-color: (
+    'primary': #1F2937,
+    'regular': #4B5563,
+    'secondary': #6B7280,
+    'placeholder': #9CA3AF,
+    'disabled': #9CA3AF,
+  ),
+
+  // ========================================
+  // 边框颜色
+  // ========================================
+  $border-color: (
+    '': #D1D5DB,
+    'light': #E5E7EB,
+    'lighter': #F3F4F6,
+    'extra-light': #F9FAFB,
+    'dark': #10B981,
+    'darker': #065F46,
+  ),
+
+  // ========================================
+  // 背景颜色
+  // ========================================
+  $bg-color: (
+    '': #FFFFFF,
+    'page': #F0FDF4,
+    'overlay': rgba(0, 0, 0, 0.5),
+  ),
+
+  // ========================================
+  // 填充颜色
+  // ========================================
+  $fill-color: (
+    '': #F3F4F6,
+    'light': #F9FAFB,
+    'lighter': #FFFFFF,
+    'extra-light': #FAFAFA,
+    'dark': #E5E7EB,
+    'darker': #D1D5DB,
+    'blank': transparent,
+  ),
+
+  // ========================================
+  // 语义化颜色
+  // ========================================
+  $color-success: (
+    'base': #10B981,
+  ),
+  $color-warning: (
+    'base': #F59E0B,
+  ),
+  $color-danger: (
+    'base': #EF4444,
+  ),
+  $color-error: (
+    'base': #EF4444,
+  ),
+  $color-info: (
+    'base': #6B7280,
+  ),
+
+  // ========================================
+  // 字体
+  // ========================================
+  $font-family: (
+    '': "'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  ),
+  $font-size: (
+    'extra-small': 12px,
+    'small': 14px,
+    'base': 16px,
+    'medium': 18px,
+    'large': 20px,
+    'extra-large': 24px,
+  ),
+
+  // ========================================
+  // 圆角
+  // ========================================
+  $border-radius: (
+    'base': 8px,
+    'small': 4px,
+    'round': 20px,
+    'circle': 50%,
+  ),
+
+  // ========================================
+  // 阴影
+  // ========================================
+  $box-shadow: (
+    '': 0 2px 8px rgba(0, 0, 0, 0.08),
+    'light': 0 2px 4px rgba(0, 0, 0, 0.05),
+    'lighter': 0 1px 2px rgba(0, 0, 0, 0.03),
+    'dark': 0 8px 24px rgba(0, 0, 0, 0.12),
+  ),
+
+  // ========================================
+  // 组件尺寸
+  // ========================================
+  $component-size: (
+    'large': 40px,
+    'default': 32px,
+    'small': 24px,
+  ),
+
+  // ========================================
+  // 遮罩层
+  // ========================================
+  $overlay-color: (
+    '': rgba(0, 0, 0, 0.5),
+    'light': rgba(0, 0, 0, 0.3),
+    'lighter': rgba(0, 0, 0, 0.1),
+  ),
+
+  // ========================================
+  // 禁用状态
+  // ========================================
+  $disabled: (
+    'bg-color': #F3F4F6,
+    'text-color': #9CA3AF,
+    'border-color': #D1D5DB,
+  ),
+);
+
+// ========================================
+// 自定义组件样式覆盖
+// ========================================
+
+// 按钮组件 - 使用渐变背景
+.el-button--primary {
+  background: linear-gradient(90deg, #10B981, #065F46);
+  border: none;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
+
+  &:hover,
+  &:focus {
+    background: linear-gradient(90deg, #34D399, #10B981);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+  }
+
+  &:active {
+    background: linear-gradient(90deg, #065F46, #047857);
+  }
+}
+
+// 链接颜色
+.el-link {
+  --el-link-text-color: #10B981;
+  --el-link-hover-text-color: #065F46;
+}
+
+// 输入框
+.el-input__wrapper {
+  background-color: #F3F4F6;
+
+  &:hover {
+    box-shadow: 0 0 0 1px #10B981 inset;
+  }
+}
+
+// 卡片
+.el-card {
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+  &:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+}
+
+// 侧边栏菜单
+.el-menu {
+  background: linear-gradient(180deg, #065F46, #10B981);
+
+  .el-menu-item,
+  .el-sub-menu__title {
+    color: rgba(255, 255, 255, 0.9);
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.15);
+      color: #FFFFFF;
+    }
+
+    &.is-active {
+      background-color: rgba(245, 158, 11, 0.2);
+      color: #F59E0B;
+      border-right: 3px solid #F59E0B;
+    }
+  }
+}
+
+// 标签页
+.el-tabs__item {
+  &.is-active {
+    color: #10B981;
+    border-bottom-color: #10B981;
+  }
+
+  &:hover {
+    color: #34D399;
+  }
+}
+
+// 表格 - 护眼模式
+.el-table {
+  --el-table-border-color: #E5E7EB;
+  --el-table-header-bg-color: #ECFDF5;
+
+  th.el-table__cell {
+    background-color: #ECFDF5;
+    color: #1F2937;
+    font-weight: 600;
+  }
+
+  tr:hover > td {
+    background-color: #F0FDF4;
+  }
+}
+
+// 分页
+.el-pagination {
+  .el-pager li.is-active {
+    background-color: #10B981;
+    color: #FFFFFF;
+  }
+
+  .el-pager li:hover {
+    color: #10B981;
+  }
+}
+
+// 徽章
+.el-badge__content {
+  background-color: #10B981;
+  border-color: #10B981;
+}
+
+// 通知
+.el-notification {
+  border-left: 4px solid #10B981;
+}
+
+// 消息框
+.el-message-box {
+  border-top: 3px solid #10B981;
+}
+
+// 开关
+.el-switch.is-checked .el-switch__core {
+  background-color: #10B981;
+  border-color: #10B981;
+}
+
+// 滑块
+.el-slider__button {
+  border-color: #10B981;
+}
+
+.el-slider__bar {
+  background-color: #10B981;
+}
+
+// 进度条
+.el-progress-bar__inner {
+  background-color: #10B981;
+}
+
+// 标签
+.el-tag {
+  &--success {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
+    color: #10B981;
+  }
+
+  &--warning {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.3);
+    color: #F59E0B;
+  }
+}
+
+// 护眼模式 - 代码编辑器区域
+.code-editor,
+.monaco-editor {
+  background-color: #F3F4F6;
+  filter: brightness(0.95) contrast(0.9);
+}
+
+// 护眼模式 - 阅读区域
+.reading-area,
+.article-content,
+.text-content {
+  background-color: #ECFDF5;
+  filter: brightness(0.95) contrast(0.9);
+}
+
+// 时间选择器
+.el-date-picker {
+  .el-picker-panel__icon-btn:hover {
+    color: #10B981;
+  }
+}
+
+.el-date-table td.today .el-date-table-cell__text {
+  color: #10B981;
+}
+
+.el-date-table td.selected .el-date-table-cell__text {
+  background-color: #10B981;
+}
+
+// 下拉选择
+.el-select-dropdown__item.selected {
+  color: #10B981;
+  font-weight: 600;
+}
+
+// 步骤条
+.el-step__head.is-finish {
+  color: #10B981;
+  border-color: #10B981;
+}
+
+.el-step__title.is-finish {
+  color: #10B981;
+}
+
+// 树形控件
+.el-tree-node__content:hover {
+  background-color: #F0FDF4;
+}
+
+.el-tree-node.is-current > .el-tree-node__content {
+  background-color: #ECFDF5;
+  color: #10B981;
+}
+
+// 面包屑
+.el-breadcrumb__item:last-child .el-breadcrumb__inner {
+  color: #10B981;
+}
+
+// 抽屉
+.el-drawer {
+  background-color: #FFFFFF;
+}
+
+.el-drawer__header {
+  color: #1F2937;
+  border-bottom: 1px solid #E5E7EB;
+}

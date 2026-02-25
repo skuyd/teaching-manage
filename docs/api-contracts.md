@@ -133,6 +133,48 @@
 
 **权限**: ADMIN, TEACHER
 
+### GET /me/preferences
+获取当前用户偏好设置
+
+**权限**: 已认证
+
+**响应:**
+```json
+{
+  "code": 200,
+  "data": {
+    "theme": "tech-blue"
+  }
+}
+```
+
+### PATCH /me/preferences
+更新当前用户偏好设置
+
+**权限**: 已认证
+
+**请求体:**
+```json
+{
+  "theme": "chinese-red"
+}
+```
+
+**可选主题值:**
+- `chinese-red` - 中国红
+- `tech-blue` - 科技蓝（默认）
+- `nature-green` - 自然绿
+
+**响应:**
+```json
+{
+  "code": 200,
+  "data": {
+    "theme": "chinese-red"
+  }
+}
+```
+
 ### GET /export
 导出用户列表 (Excel)
 

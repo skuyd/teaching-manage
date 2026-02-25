@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.teaching.common.ResultCode;
 import com.teaching.dto.UpdateUserRequest;
+import com.teaching.dto.UpdateUserPreferencesRequest;
 import com.teaching.entity.User;
 import com.teaching.enums.UserRole;
 import com.teaching.exception.BusinessException;
@@ -109,5 +110,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         wrapper.orderByDesc(User::getCreateTime);
         return userMapper.selectList(wrapper);
+    }
+
+    @Override
+    public void updateUserPreferences(Long id, UpdateUserPreferencesRequest request) {
+        User user = getUserById(id);
+        request.updateEntity(user);
+        userMapper.updateById(user);
     }
 }

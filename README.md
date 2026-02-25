@@ -4,6 +4,12 @@
 
 ## 功能特性
 
+### 主题系统
+- 三种主题：中国红、科技蓝（默认）、自然绿
+- 一键切换，250ms 平滑过渡动画
+- 本地持久化 + 后端同步
+- Element Plus 组件深度集成
+
 ### 用户管理
 - 三种角色：管理员、教员、学员
 - JWT 认证（24小时有效期）
@@ -103,6 +109,7 @@
 - **UI 组件库**：Element Plus
 - **状态管理**：Pinia
 - **代码编辑器**：Monaco Editor
+- **主题系统**：CSS Variables + SCSS
 
 ## 快速开始
 
@@ -170,8 +177,12 @@ teaching-manage/
 │   ├── src/
 │   │   ├── api/               # API 接口
 │   │   ├── components/        # 公共组件
+│   │   │   └── common/        # 通用组件（ThemeSwitcher 等）
+│   │   ├── composables/       # 组合式函数（useTheme 等）
 │   │   ├── router/            # 路由配置
-│   │   ├── stores/            # Pinia 状态
+│   │   ├── stores/            # Pinia 状态（theme、user 等）
+│   │   ├── styles/            # 样式文件
+│   │   │   └── themes/        # 主题 CSS 变量
 │   │   └── views/             # 页面视图
 │   └── vite.config.ts         # Vite 配置
 ├── data/                       # SQLite 数据库
@@ -196,6 +207,13 @@ teaching-manage/
 | POST | /api/users | 创建用户 | 管理员 |
 | PUT | /api/users/{id} | 更新用户 | 管理员 |
 | DELETE | /api/users/{id} | 删除用户 | 管理员 |
+
+### 用户偏好
+
+| 方法 | 路径 | 描述 | 权限 |
+|------|------|------|------|
+| GET | /api/users/me/preferences | 获取用户偏好 | 已认证 |
+| PATCH | /api/users/me/preferences | 更新用户偏好 | 已认证 |
 
 ### 学科管理
 

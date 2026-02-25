@@ -7,7 +7,9 @@
     "build": "vue-tsc && vite build",
     "preview": "vite preview",
     "test": "vitest",
+    "test:run": "vitest run",
     "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
     "lint": "eslint src --ext .vue,.js,.ts,.jsx,.tsx",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@playwright/test": "^1.42.0",
     "@vitejs/plugin-vue": "^4.5.2",
+    "@vitest/coverage-v8": "^1.6.1",
     "@vue/test-utils": "^2.4.3",
     "jsdom": "^23.0.1",
     "sass": "^1.69.5",

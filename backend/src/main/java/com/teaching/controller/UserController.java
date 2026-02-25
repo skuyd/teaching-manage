@@ -6,7 +6,9 @@ import com.teaching.dto.CreateUserRequest;
 import com.teaching.dto.PageRequest;
 import com.teaching.dto.PageResponse;
 import com.teaching.dto.UpdateUserRequest;
+import com.teaching.dto.UpdateUserPreferencesRequest;
 import com.teaching.dto.UserDTO;
+import com.teaching.dto.UserPreferencesDTO;
 import com.teaching.entity.User;
 import com.teaching.security.UserDetailsImpl;
 import com.teaching.dto.UserImportResultDTO;
@@ -140,6 +142,39 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Result.error(500, "头像上传失败"));
         }
+    }
+
+    /**
+     * 获取当前用户偏好设置
+     *
+     * @param userDetails 当前用户信息
+     * @return 用户偏好设置
+     */
+    @GetMapping("/me/preferences")
+    public ResponseEntity<Result<UserPreferencesDTO>> getUserPreferences(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        User user = userService.getUserById(userDetails.getId());
+        UserPreferencesDTO preferences = UserPreferencesDTO.fromEntity(user);
+        log.info("获取用户偏好: userId={}, theme={}", userDetails.getId(), preferences.getTheme());
+        return ResponseEntity.ok(Result.success(preferences));
+    }
+
+    /**
+     * 更新当前用户偏好设置
+     *
+     * @param userDetails 当前用户信息
+     * @param request 偏好设置更新请求
+     * @return 更新结果
+     */
+    @PatchMapping("/me/preferences")
+    public ResponseEntity<Result<UserPreferencesDTO>> updateUserPreferences(
+            @AuthenticationPrincipal UserDetailsImpl userDetails,
+            @Valid @RequestBody UpdateUserPreferencesRequest request) {
+        userService.updateUserPreferences(userDetails.getId(), request);
+        User user = userService.getUserById(userDetails.getId());
+        UserPreferencesDTO preferences = UserPreferencesDTO.fromEntity(user);
+        log.info("更新用户偏好: userId={}, theme={}", userDetails.getId(), preferences.getTheme());
+        return ResponseEntity.ok(Result.success(preferences));
     }
 
     @GetMapping("/export")

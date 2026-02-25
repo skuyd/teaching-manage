@@ -1,0 +1,130 @@
+/**
+ * 科技蓝主题（Tech Blue）- 默认主题
+ * 现代、科技、专业风格
+ *
+ * 基于: _bmad-output/planning-artifacts/ux-design-specification.md
+ * 章节: 1.2 主题色彩规范 - 科技蓝主题
+ */
+
+:root[data-theme="tech-blue"] {
+  /* ========================================
+     主色调 - 渐变
+     ======================================== */
+  --color-primary-start: #1E3A8A;      /* 深蓝 */
+  --color-primary-mid: #3B82F6;        /* 科技蓝 */
+  --color-primary-end: #60A5FA;        /* 亮蓝 */
+  --color-primary: #3B82F6;            /* 主色 */
+
+  /* 主色调变体 */
+  --color-primary-dark: #1E3A8A;
+  --color-primary-light: #60A5FA;
+  --color-primary-lighter: #93C5FD;
+  --color-primary-lightest: #DBEAFE;
+
+  /* ========================================
+     强调色
+     ======================================== */
+  --color-accent: #10B981;             /* 科技绿 */
+  --color-accent-muted: #10B98199;     /* 半透明绿 */
+
+  /* ========================================
+     背景色
+     ======================================== */
+  --bg-gradient-primary: linear-gradient(135deg, #1E3A8A, #3B82F6, #60A5FA);
+  --bg-primary: #0F172A;               /* 深色背景 */
+  --bg-secondary: #1E293B;
+  --bg-card: #1E293B;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  /* 特殊背景 */
+  --bg-sidebar: linear-gradient(180deg, #1E3A8A, #0F172A);
+  --bg-topbar: #1E293B;
+  --bg-input: #334155;
+
+  /* ========================================
+     文字色
+     ======================================== */
+  --text-primary: #F1F5F9;             /* 主要文字 */
+  --text-secondary: #CBD5E1;           /* 次要文字 */
+  --text-tertiary: #94A3B8;            /* 三级文字 */
+  --text-muted: #64748B;               /* 辅助文字 */
+  --text-on-primary: #FFFFFF;          /* 主色上的文字 */
+  --text-on-accent: #FFFFFF;           /* 强调色上的文字 */
+
+  /* ========================================
+     边框色
+     ======================================== */
+  --border-default: #334155;
+  --border-light: #475569;
+  --border-lighter: #64748B;
+  --border-accent: #10B981;            /* 强调边框 */
+  --border-primary: #3B82F6;           /* 主色边框 */
+
+  /* ========================================
+     按钮渐变
+     ======================================== */
+  --btn-gradient-primary: linear-gradient(90deg, #3B82F6, #1E3A8A);
+  --btn-shadow-primary: rgba(59, 130, 246, 0.25);
+  --btn-hover-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+
+  /* ========================================
+     状态颜色（覆盖语义色）
+     ======================================== */
+  --color-link: #60A5FA;
+  --color-link-hover: #93C5FD;
+
+  /* ========================================
+     特殊效果
+     ======================================== */
+  --glassmorphism-bg: rgba(30, 41, 59, 0.8);
+  --glassmorphism-border: rgba(16, 185, 129, 0.2);
+  --glassmorphism-blur: blur(10px);
+
+  /* ========================================
+     代码编辑器（Monaco）配色
+     ======================================== */
+  --monaco-bg: #1E293B;
+  --monaco-line-number: #64748B;
+  --monaco-selection-bg: #334155;
+}
+
+/* ========================================
+   科技蓝主题特定样式
+   ======================================== */
+:root[data-theme="tech-blue"] body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root[data-theme="tech-blue"] .theme-gradient-bg {
+  background: var(--bg-gradient-primary);
+}
+
+:root[data-theme="tech-blue"] .theme-btn-primary {
+  background: var(--btn-gradient-primary);
+  box-shadow: 0 2px 8px var(--btn-shadow-primary);
+}
+
+:root[data-theme="tech-blue"] .theme-btn-primary:hover {
+  box-shadow: var(--btn-hover-shadow);
+}
+
+:root[data-theme="tech-blue"] .theme-card-glass {
+  background: var(--glassmorphism-bg);
+  border: 1px solid var(--glassmorphism-border);
+  backdrop-filter: var(--glassmorphism-blur);
+}
+
+/* 代码高亮 - 科技蓝暗色主题 */
+:root[data-theme="tech-blue"] .code-keyword {
+  color: #60A5FA;
+}
+
+:root[data-theme="tech-blue"] .code-string {
+  color: #10B981;
+}
+
+:root[data-theme="tech-blue"] .code-comment {
+  color: #64748B;
+  font-style: italic;
+}

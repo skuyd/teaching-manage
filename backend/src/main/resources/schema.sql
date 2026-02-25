@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS t_user (
     name VARCHAR(50) NOT NULL,
     email VARCHAR(100) DEFAULT '',
     avatar VARCHAR(200) DEFAULT '',
+    theme VARCHAR(20) NOT NULL DEFAULT 'tech-blue',
     version INT NOT NULL DEFAULT 0,
     del_flag TINYINT NOT NULL DEFAULT 0,
     create_by VARCHAR(64) NOT NULL DEFAULT '',

@@ -1,0 +1,140 @@
+/**
+ * 自然绿主题（Nature Green）
+ * 清新、护眼、自然风格
+ *
+ * 基于: _bmad-output/planning-artifacts/ux-design-specification.md
+ * 章节: 1.2 主题色彩规范 - 自然绿主题
+ */
+
+:root[data-theme="nature-green"] {
+  /* ========================================
+     主色调 - 渐变
+     ======================================== */
+  --color-primary-start: #065F46;      /* 深绿 */
+  --color-primary-mid: #10B981;        /* 翠绿 */
+  --color-primary-end: #34D399;        /* 亮绿 */
+  --color-primary: #10B981;            /* 主色 */
+
+  /* 主色调变体 */
+  --color-primary-dark: #065F46;
+  --color-primary-light: #34D399;
+  --color-primary-lighter: #6EE7B7;
+  --color-primary-lightest: #D1FAE5;
+
+  /* ========================================
+     强调色
+     ======================================== */
+  --color-accent: #F59E0B;             /* 暖橙 */
+  --color-accent-muted: #F59E0B99;     /* 半透明橙 */
+
+  /* ========================================
+     背景色
+     ======================================== */
+  --bg-gradient-primary: linear-gradient(135deg, #065F46, #10B981, #34D399);
+  --bg-primary: #F0FDF4;               /* 淡绿背景 */
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* 特殊背景 */
+  --bg-sidebar: linear-gradient(180deg, #065F46, #10B981);
+  --bg-topbar: #FFFFFF;
+  --bg-input: #F3F4F6;
+
+  /* ========================================
+     文字色
+     ======================================== */
+  --text-primary: #1F2937;             /* 主要文字 */
+  --text-secondary: #4B5563;           /* 次要文字 */
+  --text-tertiary: #6B7280;            /* 三级文字 */
+  --text-muted: #9CA3AF;               /* 辅助文字 */
+  --text-on-primary: #FFFFFF;          /* 主色上的文字 */
+  --text-on-accent: #FFFFFF;           /* 强调色上的文字 */
+
+  /* ========================================
+     边框色
+     ======================================== */
+  --border-default: #D1D5DB;
+  --border-light: #E5E7EB;
+  --border-lighter: #F3F4F6;
+  --border-accent: #F59E0B;            /* 强调边框 */
+  --border-primary: #10B981;           /* 主色边框 */
+
+  /* ========================================
+     按钮渐变
+     ======================================== */
+  --btn-gradient-primary: linear-gradient(90deg, #10B981, #065F46);
+  --btn-shadow-primary: rgba(16, 185, 129, 0.25);
+  --btn-hover-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+
+  /* ========================================
+     状态颜色（覆盖语义色）
+     ======================================== */
+  --color-link: #10B981;
+  --color-link-hover: #065F46;
+
+  /* ========================================
+     特殊效果
+     ======================================== */
+  --glassmorphism-bg: rgba(255, 255, 255, 0.9);
+  --glassmorphism-border: rgba(245, 158, 11, 0.2);
+  --glassmorphism-blur: blur(10px);
+
+  /* ========================================
+     护眼模式专用
+     ======================================== */
+  --eye-care-filter: brightness(0.95) contrast(0.9);
+  --reading-bg: #ECFDF5;               /* 阅读区背景 */
+  --code-bg: #F3F4F6;                  /* 代码区背景 */
+}
+
+/* ========================================
+   自然绿主题特定样式
+   ======================================== */
+:root[data-theme="nature-green"] body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root[data-theme="nature-green"] .theme-gradient-bg {
+  background: var(--bg-gradient-primary);
+}
+
+:root[data-theme="nature-green"] .theme-btn-primary {
+  background: var(--btn-gradient-primary);
+  box-shadow: 0 2px 8px var(--btn-shadow-primary);
+}
+
+:root[data-theme="nature-green"] .theme-btn-primary:hover {
+  box-shadow: var(--btn-hover-shadow);
+}
+
+:root[data-theme="nature-green"] .theme-card-glass {
+  background: var(--glassmorphism-bg);
+  border: 1px solid var(--glassmorphism-border);
+  backdrop-filter: var(--glassmorphism-blur);
+}
+
+/* 护眼模式 - 降低对比度和亮度 */
+:root[data-theme="nature-green"] .reading-area {
+  background-color: var(--reading-bg);
+  filter: var(--eye-care-filter);
+}
+
+:root[data-theme="nature-green"] .code-editor {
+  background-color: var(--code-bg);
+}
+
+/* 代码高亮 - 自然绿护眼主题 */
+:root[data-theme="nature-green"] .code-keyword {
+  color: #065F46;
+}
+
+:root[data-theme="nature-green"] .code-string {
+  color: #F59E0B;
+}
+
+:root[data-theme="nature-green"] .code-comment {
+  color: #6B7280;
+  font-style: italic;
+}

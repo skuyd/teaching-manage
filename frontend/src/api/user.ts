@@ -17,6 +17,14 @@ export interface UpdateUserRequest {
   password?: string
 }
 
+export interface UserPreferences {
+  theme: string
+}
+
+export interface UpdateUserPreferencesRequest {
+  theme?: string
+}
+
 export function listUsers(
   page: number,
   size: number,
@@ -80,4 +88,20 @@ export function importUsers(file: File): Promise<Result<UserImportResult>> {
   return request.post('/users/import', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   })
+}
+
+/**
+ * 获取当前用户偏好设置
+ */
+export function getUserPreferences(): Promise<Result<UserPreferences>> {
+  return request.get('/users/me/preferences')
+}
+
+/**
+ * 更新当前用户偏好设置
+ */
+export function updateUserPreferences(
+  data: UpdateUserPreferencesRequest
+): Promise<Result<UserPreferences>> {
+  return request.patch('/users/me/preferences', data)
 }

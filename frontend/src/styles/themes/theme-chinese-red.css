@@ -1,0 +1,109 @@
+/**
+ * 中国红主题（Chinese Red）
+ * 温暖、喜庆、传统风格
+ *
+ * 基于: _bmad-output/planning-artifacts/ux-design-specification.md
+ * 章节: 1.2 主题色彩规范 - 中国红主题
+ */
+
+:root[data-theme="chinese-red"] {
+  /* ========================================
+     主色调 - 渐变
+     ======================================== */
+  --color-primary-start: #8B0000;      /* 深红 */
+  --color-primary-mid: #C41E3A;        /* 胭脂红 */
+  --color-primary-end: #DC143C;        /* 猩红 */
+  --color-primary: #C41E3A;            /* 主色 */
+
+  /* 主色调变体 */
+  --color-primary-dark: #8B0000;
+  --color-primary-light: #DC143C;
+  --color-primary-lighter: #E57585;
+  --color-primary-lightest: #F5C5CB;
+
+  /* ========================================
+     强调色
+     ======================================== */
+  --color-accent: #FFD700;             /* 金色 */
+  --color-accent-muted: #FFD70099;     /* 半透明金 */
+
+  /* ========================================
+     背景色
+     ======================================== */
+  --bg-gradient-primary: linear-gradient(135deg, #8B0000, #C41E3A, #DC143C);
+  --bg-primary: #FFF9F5;               /* 暖白 */
+  --bg-secondary: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  /* 特殊背景 */
+  --bg-sidebar: linear-gradient(180deg, #8B0000, #C41E3A);
+  --bg-topbar: #FFFFFF;
+  --bg-input: #F5F5F5;
+
+  /* ========================================
+     文字色
+     ======================================== */
+  --text-primary: #303133;             /* 主要文字 */
+  --text-secondary: #606266;           /* 次要文字 */
+  --text-tertiary: #909399;            /* 三级文字 */
+  --text-muted: #C0C4CC;               /* 辅助文字 */
+  --text-on-primary: #FFFFFF;          /* 主色上的文字 */
+  --text-on-accent: #303133;           /* 强调色上的文字 */
+
+  /* ========================================
+     边框色
+     ======================================== */
+  --border-default: #DCDFE6;
+  --border-light: #E4E7ED;
+  --border-lighter: #EBEEF5;
+  --border-accent: #FFD700;            /* 强调边框 */
+  --border-primary: #C41E3A;           /* 主色边框 */
+
+  /* ========================================
+     按钮渐变
+     ======================================== */
+  --btn-gradient-primary: linear-gradient(90deg, #C41E3A, #8B0000);
+  --btn-shadow-primary: rgba(196, 30, 58, 0.25);
+  --btn-hover-shadow: 0 4px 16px rgba(196, 30, 58, 0.35);
+
+  /* ========================================
+     状态颜色（覆盖语义色）
+     ======================================== */
+  --color-link: #C41E3A;
+  --color-link-hover: #8B0000;
+
+  /* ========================================
+     特殊效果
+     ======================================== */
+  --glassmorphism-bg: rgba(255, 255, 255, 0.9);
+  --glassmorphism-border: rgba(255, 215, 0, 0.2);
+  --glassmorphism-blur: blur(10px);
+}
+
+/* ========================================
+   中国红主题特定样式
+   ======================================== */
+:root[data-theme="chinese-red"] body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:root[data-theme="chinese-red"] .theme-gradient-bg {
+  background: var(--bg-gradient-primary);
+}
+
+:root[data-theme="chinese-red"] .theme-btn-primary {
+  background: var(--btn-gradient-primary);
+  box-shadow: 0 2px 8px var(--btn-shadow-primary);
+}
+
+:root[data-theme="chinese-red"] .theme-btn-primary:hover {
+  box-shadow: var(--btn-hover-shadow);
+}
+
+:root[data-theme="chinese-red"] .theme-card-glass {
+  background: var(--glassmorphism-bg);
+  border: 1px solid var(--glassmorphism-border);
+  backdrop-filter: var(--glassmorphism-blur);
+}
