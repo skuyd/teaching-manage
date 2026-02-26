@@ -462,81 +462,6 @@ const handleLogin = async () => {
   color: #9CA3AF;
 }
 
-/* ========================================
-   Dark Theme (Tech Blue) Adjustments
-   ======================================== */
-:root[data-theme="tech-blue"] .login-card {
-  background: #0D2137;
-}
-
-:root[data-theme="tech-blue"] .brand-panel {
-  background: linear-gradient(180deg, #0A1628 0%, #0F2A42 100%);
-}
-
-:root[data-theme="tech-blue"] .brand-title {
-  color: #FFFFFF;
-}
-
-:root[data-theme="tech-blue"] .brand-subtitle {
-  color: #6B9CC3;
-}
-
-:root[data-theme="tech-blue"] .brand-welcome {
-  color: #00B4FF;
-}
-
-:root[data-theme="tech-blue"] .decor-circle {
-  background: #00B4FF;
-}
-
-:root[data-theme="tech-blue"] .form-panel {
-  background: #0D2137;
-}
-
-:root[data-theme="tech-blue"] .form-title {
-  color: #FFFFFF;
-}
-
-:root[data-theme="tech-blue"] .form-subtitle {
-  color: #6B9CC3;
-}
-
-:root[data-theme="tech-blue"] .input-label {
-  color: #6B9CC3;
-}
-
-:root[data-theme="tech-blue"] .role-hint {
-  color: #4A7A9C;
-}
-
-:root[data-theme="tech-blue"] .divider {
-  background: #1E3A5F;
-}
-
-:root[data-theme="tech-blue"] .help-text {
-  color: #6B9CC3;
-}
-
-:root[data-theme="tech-blue"] :deep(.el-input__wrapper) {
-  background: #0A1628 !important;
-  box-shadow: 0 0 0 1px #1E3A5F inset !important;
-}
-
-:root[data-theme="tech-blue"] :deep(.el-input__wrapper:hover) {
-  box-shadow: 0 0 0 1px #00B4FF inset !important;
-}
-
-:root[data-theme="tech-blue"] :deep(.el-input__wrapper.is-focus) {
-  box-shadow: 0 0 0 2px #00B4FF inset !important;
-}
-
-:root[data-theme="tech-blue"] :deep(.el-input__inner) {
-  color: #FFFFFF;
-}
-
-:root[data-theme="tech-blue"] :deep(.el-input__inner::placeholder) {
-  color: #4A7A9C;
-}
 
 /* ========================================
    Responsive Design
@@ -593,6 +518,97 @@ const handleLogin = async () => {
 
   .form-panel {
     padding: 32px 20px;
+  }
+}
+</style>
+
+<!-- 非 scoped 样式用于科技蓝主题的全局覆盖 -->
+<style lang="scss">
+/* ========================================
+   Dark Theme (Tech Blue) - Login Page
+   ======================================== */
+:root[data-theme="tech-blue"] {
+  .login-card {
+    background: #0D2137;
+  }
+
+  .brand-panel {
+    background: linear-gradient(180deg, #0A1628 0%, #0F2A42 100%);
+  }
+
+  .brand-title {
+    color: #FFFFFF;
+  }
+
+  .brand-subtitle {
+    color: #6B9CC3;
+  }
+
+  .brand-welcome {
+    color: #00B4FF;
+  }
+
+  .decor-circle {
+    background: #00B4FF;
+  }
+
+  .form-panel {
+    background: #0D2137;
+  }
+
+  .form-title {
+    color: #FFFFFF;
+  }
+
+  .form-subtitle {
+    color: #6B9CC3;
+  }
+
+  .input-label {
+    color: #6B9CC3;
+  }
+
+  .role-hint {
+    color: #4A7A9C;
+  }
+
+  .divider {
+    background: #1E3A5F;
+  }
+
+  .help-text {
+    color: #6B9CC3;
+  }
+
+  /* 登录表单输入框 - 确保文字可见 */
+  .login-form {
+    .el-input__wrapper {
+      background: #0A1628 !important;
+      box-shadow: 0 0 0 1px #1E3A5F inset !important;
+
+      &:hover {
+        box-shadow: 0 0 0 1px #00B4FF inset !important;
+      }
+
+      &.is-focus {
+        box-shadow: 0 0 0 2px #00B4FF inset !important;
+      }
+    }
+
+    .el-input__inner {
+      color: #FFFFFF !important;
+      -webkit-text-fill-color: #FFFFFF !important;
+
+      &::placeholder {
+        color: #4A7A9C !important;
+        -webkit-text-fill-color: #4A7A9C !important;
+      }
+    }
+
+    /* 输入框前缀图标颜色 */
+    .el-input__prefix {
+      color: #6B9CC3;
+    }
   }
 }
 </style>
