@@ -21,6 +21,7 @@
           v-model="form.content"
           placeholder="请输入课程内容，支持Markdown格式..."
           :height="250"
+          minimal
         />
       </el-form-item>
 
@@ -39,6 +40,7 @@
           v-model="form.homeworkDesc"
           placeholder="请输入作业要求，支持Markdown格式..."
           :height="250"
+          minimal
         />
       </el-form-item>
 

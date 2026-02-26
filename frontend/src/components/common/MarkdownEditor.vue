@@ -17,6 +17,7 @@ interface Props {
   uploadUrl?: string
   minHeight?: number
   mode?: 'wysiwyg' | 'ir' | 'sv'
+  minimal?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,8 +27,46 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   uploadUrl: '/api/files/image',
   minHeight: 200,
-  mode: 'ir'
+  mode: 'ir',
+  minimal: false
 })
+
+// 完整工具栏
+const fullToolbar = [
+  'headings',
+  'bold',
+  'italic',
+  'strike',
+  '|',
+  'list',
+  'ordered-list',
+  'check',
+  '|',
+  'quote',
+  'code',
+  'inline-code',
+  '|',
+  'link',
+  'upload',
+  'table',
+  '|',
+  'undo',
+  'redo',
+  '|',
+  'preview',
+  'fullscreen',
+  {
+    name: 'more',
+    toolbar: ['export', 'outline', 'br', 'both', 'edit-mode']
+  }
+]
+
+// 简化工具栏：仅代码/预览模式切换
+const minimalToolbar = [
+  'edit-mode',
+  'preview',
+  'fullscreen'
+]
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
@@ -59,34 +98,7 @@ const initEditor = () => {
     cache: {
       enable: false
     },
-    toolbar: [
-      'headings',
-      'bold',
-      'italic',
-      'strike',
-      '|',
-      'list',
-      'ordered-list',
-      'check',
-      '|',
-      'quote',
-      'code',
-      'inline-code',
-      '|',
-      'link',
-      'upload',
-      'table',
-      '|',
-      'undo',
-      'redo',
-      '|',
-      'preview',
-      'fullscreen',
-      {
-        name: 'more',
-        toolbar: ['export', 'outline', 'br', 'both', 'edit-mode']
-      }
-    ],
+    toolbar: props.minimal ? minimalToolbar : fullToolbar,
     upload: {
       url: props.uploadUrl,
       fieldName: 'file',
