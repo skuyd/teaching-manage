@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
     <div class="subject-list">
       <div class="header">
         <h2>学科管理</h2>
@@ -72,7 +71,6 @@
         @success="handleFormSuccess"
       />
     </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
@@ -82,7 +80,6 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 import { Plus, Search } from '@element-plus/icons-vue'
 import { listSubjects, deleteSubject, getSubjectDeleteStats, type SubjectDTO } from '@/api/subject'
 import SubjectForm from './SubjectForm.vue'
-import MainLayout from '@/components/MainLayout.vue'
 
 const router = useRouter()
 

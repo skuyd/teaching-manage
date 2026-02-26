@@ -1,6 +1,5 @@
 <template>
-  <MainLayout>
-    <div class="subject-detail">
+  <div class="subject-detail">
       <div class="header">
         <div class="header-left">
           <el-button text @click="goBack" class="back-btn">
@@ -191,7 +190,6 @@
         </template>
       </el-dialog>
     </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
@@ -204,7 +202,6 @@ import { getSubjectById, getSubjectStudents, addStudentToSubject, removeStudentF
 import { listStudents } from '@/api/user'
 import type { UserDTO } from '@/api/types'
 import LessonForm from './LessonForm.vue'
-import MainLayout from '@/components/MainLayout.vue'
 import { useUserStore } from '@/stores/user'
 
 const route = useRoute()

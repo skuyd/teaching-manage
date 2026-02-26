@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
     <div class="student-calendar">
       <div class="header">
         <h2>课程日历</h2>
@@ -46,32 +45,23 @@
           @lesson-click="handleLessonClick"
         />
       </el-card>
-
-      <!-- 课程详情弹窗 -->
-      <LessonDetailDialog
-        v-model="detailDialogVisible"
-        :lesson="selectedLesson"
-        :show-submit-button="true"
-      />
     </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { getMyLessons, type LessonDTO } from '@/api/lesson'
 import { getMySubjects, type SubjectDTO } from '@/api/subject'
-import MainLayout from '@/components/MainLayout.vue'
 import LessonCalendar from '@/components/LessonCalendar.vue'
-import LessonDetailDialog from '@/components/LessonDetailDialog.vue'
+
+const router = useRouter()
 
 const loading = ref(false)
 const lessons = ref<LessonDTO[]>([])
 const subjects = ref<SubjectDTO[]>([])
 const selectedSubjectId = ref<number | null>(null)
-const selectedLesson = ref<LessonDTO | null>(null)
-const detailDialogVisible = ref(false)
 
 const subjectColors = [
   '#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399',
@@ -118,8 +108,7 @@ const loadLessons = async () => {
 }
 
 const handleLessonClick = (lesson: LessonDTO) => {
-  selectedLesson.value = lesson
-  detailDialogVisible.value = true
+  router.push(`/student/lesson/${lesson.id}`)
 }
 
 onMounted(() => {

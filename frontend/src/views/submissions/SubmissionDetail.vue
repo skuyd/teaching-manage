@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
   <div class="submission-detail">
     <el-page-header @back="handleBack">
       <template #content>
@@ -119,12 +118,10 @@
       />
     </el-dialog>
   </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
-import MainLayout from '@/components/MainLayout.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { Folder, Document, Download } from '@element-plus/icons-vue'

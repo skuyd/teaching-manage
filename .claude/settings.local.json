@@ -129,7 +129,8 @@
       "Bash(npm --prefix D:/projects/teaching-manage/frontend test -- --run --reporter=verbose src/composables/useTheme.spec.ts)",
       "Bash(npm --prefix D:/projects/teaching-manage/frontend run build)",
       "Bash(npm --prefix D:/projects/teaching-manage/backend/../backend run)",
-      "Bash(mvn:*)"
+      "Bash(mvn:*)",
+      "Bash(ls:*)"
     ]
   }
 }

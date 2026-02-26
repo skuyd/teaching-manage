@@ -1,6 +1,5 @@
 <template>
-  <MainLayout>
-    <div class="profile-page">
+  <div class="profile-page">
       <div class="header">
         <h2>个人设置</h2>
       </div>
@@ -78,7 +77,6 @@
         @success="handlePasswordSuccess"
       />
     </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
@@ -91,7 +89,6 @@ import { getCurrentUser, updateCurrentUser, uploadAvatar } from '@/api/user'
 import type { UserDTO, UserRole } from '@/api/types'
 import { useUserStore } from '@/stores/user'
 import PasswordDialog from './PasswordDialog.vue'
-import MainLayout from '@/components/MainLayout.vue'
 
 const router = useRouter()
 const userStore = useUserStore()

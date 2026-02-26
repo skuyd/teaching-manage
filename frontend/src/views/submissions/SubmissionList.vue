@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
   <div class="submission-list dark-page">
     <el-page-header @back="handleBack" class="dark-page-header">
       <template #content>
@@ -228,12 +227,10 @@
       </template>
     </el-dialog>
   </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import MainLayout from '@/components/MainLayout.vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, genFileId } from 'element-plus'
 import { useUserStore } from '@/stores/user'

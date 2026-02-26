@@ -1,6 +1,5 @@
 <template>
-  <MainLayout>
-    <div class="user-list">
+  <div class="user-list">
       <div class="header">
         <h2>用户管理</h2>
         <div class="header-actions">
@@ -146,7 +145,6 @@
         </template>
       </el-dialog>
     </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
@@ -157,7 +155,6 @@ import { Plus, Search, Download, Upload, Document, UploadFilled } from '@element
 import { listUsers, deleteUser, exportUsers, downloadTemplate, importUsers } from '@/api/user'
 import type { UserDTO, UserRole, UserImportResult } from '@/api/types'
 import UserForm from './UserForm.vue'
-import MainLayout from '@/components/MainLayout.vue'
 
 const loading = ref(false)
 const users = ref<UserDTO[]>([])

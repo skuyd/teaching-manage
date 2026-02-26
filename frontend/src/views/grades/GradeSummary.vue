@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
   <div class="grade-summary dark-page">
     <el-card class="dark-card">
       <template #header>
@@ -177,13 +176,11 @@
       </div>
     </el-card>
   </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
-import MainLayout from '@/components/MainLayout.vue'
 import { Download } from '@element-plus/icons-vue'
 import {
   getLessonGradeSummary,

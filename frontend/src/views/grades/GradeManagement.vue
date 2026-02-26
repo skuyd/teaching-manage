@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
   <div class="grade-management dark-page">
     <el-card class="dark-card">
       <template #header>
@@ -101,12 +100,10 @@
       />
     </el-dialog>
   </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
-import MainLayout from '@/components/MainLayout.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   getGradesByLesson,

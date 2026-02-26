@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
+import AppLayout from '@/layouts/AppLayout.vue'
 
 export const routes: RouteRecordRaw[] = [
   {
@@ -9,82 +10,88 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    name: 'Dashboard',
-    component: () => import('@/views/Dashboard.vue'),
+    component: AppLayout,
     meta: { requiresAuth: true },
-    alias: '/dashboard'
-  },
-  {
-    path: '/subjects',
-    name: 'Subjects',
-    component: () => import('@/views/subjects/SubjectList.vue'),
-    meta: { requiresAuth: true, roles: ['ADMIN', 'TEACHER'] }
-  },
-  {
-    path: '/subjects/:id',
-    name: 'SubjectDetail',
-    component: () => import('@/views/subjects/SubjectDetail.vue'),
-    meta: { requiresAuth: true, roles: ['ADMIN', 'TEACHER', 'STUDENT'] }
-  },
-  {
-    path: '/subjects/:id/groups',
-    name: 'GroupManagement',
-    component: () => import('@/views/groups/GroupManagement.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/submissions',
-    name: 'SubmissionList',
-    component: () => import('@/views/submissions/SubmissionList.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/submissions/board',
-    name: 'SubmissionBoard',
-    component: () => import('@/views/submissions/SubmissionBoard.vue'),
-    meta: { requiresAuth: true, roles: ['ADMIN', 'TEACHER'] }
-  },
-  {
-    path: '/submissions/:id',
-    name: 'SubmissionDetail',
-    component: () => import('@/views/submissions/SubmissionDetail.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/grades',
-    name: 'GradeManagement',
-    component: () => import('@/views/grades/GradeManagement.vue'),
-    meta: { requiresAuth: true, roles: ['ADMIN', 'TEACHER'] }
-  },
-  {
-    path: '/grade-summary',
-    name: 'GradeSummary',
-    component: () => import('@/views/grades/GradeSummary.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/notifications',
-    name: 'NotificationCenter',
-    component: () => import('@/views/notifications/NotificationCenter.vue'),
-    meta: { requiresAuth: true }
-  },
-  {
-    path: '/student/calendar',
-    name: 'StudentCalendar',
-    component: () => import('@/views/student/StudentCalendar.vue'),
-    meta: { requiresAuth: true, roles: ['STUDENT'] }
-  },
-  {
-    path: '/admin/users',
-    name: 'UserManagement',
-    component: () => import('@/views/users/UserList.vue'),
-    meta: { requiresAuth: true, roles: ['ADMIN'] }
-  },
-  {
-    path: '/profile',
-    name: 'Profile',
-    component: () => import('@/views/profile/Profile.vue'),
-    meta: { requiresAuth: true }
+    children: [
+      {
+        path: '',
+        name: 'Dashboard',
+        component: () => import('@/views/Dashboard.vue'),
+        alias: 'dashboard'
+      },
+      {
+        path: 'subjects',
+        name: 'Subjects',
+        component: () => import('@/views/subjects/SubjectList.vue'),
+        meta: { roles: ['ADMIN', 'TEACHER'] }
+      },
+      {
+        path: 'subjects/:id',
+        name: 'SubjectDetail',
+        component: () => import('@/views/subjects/SubjectDetail.vue'),
+        meta: { roles: ['ADMIN', 'TEACHER', 'STUDENT'] }
+      },
+      {
+        path: 'subjects/:id/groups',
+        name: 'GroupManagement',
+        component: () => import('@/views/groups/GroupManagement.vue')
+      },
+      {
+        path: 'submissions',
+        name: 'SubmissionList',
+        component: () => import('@/views/submissions/SubmissionList.vue')
+      },
+      {
+        path: 'submissions/board',
+        name: 'SubmissionBoard',
+        component: () => import('@/views/submissions/SubmissionBoard.vue'),
+        meta: { roles: ['ADMIN', 'TEACHER'] }
+      },
+      {
+        path: 'submissions/:id',
+        name: 'SubmissionDetail',
+        component: () => import('@/views/submissions/SubmissionDetail.vue')
+      },
+      {
+        path: 'grades',
+        name: 'GradeManagement',
+        component: () => import('@/views/grades/GradeManagement.vue'),
+        meta: { roles: ['ADMIN', 'TEACHER'] }
+      },
+      {
+        path: 'grade-summary',
+        name: 'GradeSummary',
+        component: () => import('@/views/grades/GradeSummary.vue')
+      },
+      {
+        path: 'notifications',
+        name: 'NotificationCenter',
+        component: () => import('@/views/notifications/NotificationCenter.vue')
+      },
+      {
+        path: 'student/calendar',
+        name: 'StudentCalendar',
+        component: () => import('@/views/student/StudentCalendar.vue'),
+        meta: { roles: ['STUDENT'] }
+      },
+      {
+        path: 'student/lesson/:id',
+        name: 'StudentLessonDetail',
+        component: () => import('@/views/student/LessonDetail.vue'),
+        meta: { roles: ['STUDENT'] }
+      },
+      {
+        path: 'admin/users',
+        name: 'UserManagement',
+        component: () => import('@/views/users/UserList.vue'),
+        meta: { roles: ['ADMIN'] }
+      },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('@/views/profile/Profile.vue')
+      }
+    ]
   },
   {
     path: '/:pathMatch(.*)*',
@@ -101,7 +108,9 @@ const router = createRouter({
 // 路由守卫
 router.beforeEach((to, _from, next) => {
   const token = localStorage.getItem('token')
-  const requiresAuth = to.meta.requiresAuth !== false
+
+  // 检查是否需要认证（继承父路由的 meta）
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth !== false)
 
   if (requiresAuth && !token) {
     next({ name: 'Login' })

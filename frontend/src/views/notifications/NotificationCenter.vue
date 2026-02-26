@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
   <div class="notification-center">
     <div class="header">
       <h2>通知中心</h2>
@@ -81,12 +80,10 @@
       </el-tab-pane>
     </el-tabs>
   </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import MainLayout from '@/components/MainLayout.vue'
 import { ElMessage } from 'element-plus'
 import type { NotificationDTO, NotificationType } from '@/api/types'
 import {

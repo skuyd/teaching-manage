@@ -1,5 +1,4 @@
 <template>
-  <MainLayout>
   <div class="submission-board dark-page">
     <div class="header dark-header">
       <h2>提交状态看板</h2>
@@ -130,14 +129,12 @@
 
     <el-empty v-if="!selectedLessonId" description="请选择学科和课程查看提交状态" :image-size="120" class="empty-hint" />
   </div>
-  </MainLayout>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import MainLayout from '@/components/MainLayout.vue'
 import { listSubjects, getSubjectStudents, type SubjectDTO, type StudentDTO } from '@/api/subject'
 import { getLessonsBySubject, type LessonDTO, SubmitType } from '@/api/lesson'
 import { getSubmissionsByLesson, type SubmissionDTO } from '@/api/submission'
