@@ -152,9 +152,13 @@ onMounted(async () => {
     const res = await getLessons()
     if (res.success && res.data) {
       lessons.value = res.data
+      // 默认选择第一个课程并加载评分数据
+      if (lessons.value.length > 0) {
+        selectedLessonId.value = lessons.value[0].id
+        loadGrades()
+      }
     }
   } catch (error) {
-    console.error('Failed to load lessons:', error)
     ElMessage.error('加载课程列表失败')
   }
 })

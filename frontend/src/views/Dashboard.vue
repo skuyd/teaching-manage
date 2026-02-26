@@ -138,6 +138,7 @@
                 icon="User"
                 color="danger"
                 :loading="statsLoading"
+                :onClick="() => router.push('/admin/users')"
               />
               <StatCard
                 title="总学科数"
@@ -145,6 +146,7 @@
                 icon="Reading"
                 color="primary"
                 :loading="statsLoading"
+                :onClick="() => router.push('/subjects')"
               />
               <StatCard
                 title="总课程数"
@@ -152,6 +154,7 @@
                 icon="Document"
                 color="warning"
                 :loading="statsLoading"
+                :onClick="() => router.push('/subjects')"
               />
               <StatCard
                 title="总提交数"
@@ -159,6 +162,7 @@
                 icon="Folder"
                 color="success"
                 :loading="statsLoading"
+                :onClick="() => router.push('/submissions')"
               />
             </template>
 
@@ -170,6 +174,7 @@
                 icon="Reading"
                 color="primary"
                 :loading="statsLoading"
+                :onClick="() => router.push('/subjects')"
               />
               <StatCard
                 title="待评分作业"
@@ -179,6 +184,7 @@
                 trend="up"
                 :trendValue="pendingTrendText"
                 :loading="statsLoading"
+                :onClick="() => router.push('/submissions/board')"
               />
               <StatCard
                 title="已评分作业"
@@ -186,6 +192,7 @@
                 icon="CircleCheck"
                 color="success"
                 :loading="statsLoading"
+                :onClick="() => router.push('/grades')"
               />
             </template>
 
@@ -197,6 +204,7 @@
                 icon="Reading"
                 color="primary"
                 :loading="statsLoading"
+                :onClick="() => router.push('/student/calendar')"
               />
               <StatCard
                 title="已提交作业"
@@ -204,6 +212,7 @@
                 icon="Upload"
                 color="success"
                 :loading="statsLoading"
+                :onClick="() => router.push('/submissions')"
               />
               <StatCard
                 title="已评分作业"
@@ -211,6 +220,7 @@
                 icon="Medal"
                 color="warning"
                 :loading="statsLoading"
+                :onClick="() => router.push('/grade-summary')"
               />
               <StatCard
                 title="平均成绩"
@@ -218,6 +228,7 @@
                 icon="TrendCharts"
                 color="info"
                 :loading="statsLoading"
+                :onClick="() => router.push('/grade-summary')"
               />
             </template>
           </div>

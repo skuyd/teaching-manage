@@ -301,7 +301,15 @@ const handleSubjectChange = async () => {
     try {
       const res = await getLessonsBySubject(selectedSubjectId.value)
       if (res.success) {
-        lessons.value = res.data
+        // 按课程创建时间倒序排列
+        lessons.value = res.data.sort((a, b) =>
+          new Date(b.createTime).getTime() - new Date(a.createTime).getTime()
+        )
+        // 默认选择第一个课程并加载提交数据
+        if (lessons.value.length > 0) {
+          selectedLessonId.value = lessons.value[0].id
+          await handleLessonChange()
+        }
       }
     } catch (error) {
       console.error('Failed to load lessons:', error)
@@ -429,6 +437,11 @@ const loadSubjects = async () => {
       if (res.success) {
         subjects.value = res.data.list
       }
+    }
+    // 默认选择第一个学科并加载课程
+    if (subjects.value.length > 0) {
+      selectedSubjectId.value = subjects.value[0].id
+      await handleSubjectChange()
     }
   } catch (error) {
     console.error('Failed to load subjects:', error)

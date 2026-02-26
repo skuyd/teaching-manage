@@ -212,7 +212,14 @@ const handleSubjectChange = async () => {
       ])
 
       if (lessonsRes.success) {
-        lessons.value = lessonsRes.data
+        // 按课程创建时间倒序排列
+        lessons.value = lessonsRes.data.sort((a, b) =>
+          new Date(b.createTime).getTime() - new Date(a.createTime).getTime()
+        )
+        // 默认选择第一个课程
+        if (lessons.value.length > 0) {
+          selectedLessonId.value = lessons.value[0].id
+        }
       }
       if (studentsRes.success) {
         students.value = studentsRes.data
@@ -279,6 +286,11 @@ onMounted(async () => {
     const res = await listSubjects(1, 100)
     if (res.success) {
       subjects.value = res.data.list
+      // 默认选择第一个学科并加载课程
+      if (subjects.value.length > 0) {
+        selectedSubjectId.value = subjects.value[0].id
+        await handleSubjectChange()
+      }
     }
   } catch (error) {
     console.error('Failed to load subjects:', error)

@@ -194,6 +194,7 @@ import {
   type StudentGradeSummaryDTO
 } from '@/api/gradeSummary'
 import { getLessons, type LessonDTO } from '@/api/lesson'
+import { listStudents } from '@/api/user'
 import { useUserStore } from '@/stores/user'
 
 /**
@@ -237,6 +238,20 @@ const totalGrades = computed(() => {
 })
 
 /**
+ * Load students list
+ */
+const loadStudents = async () => {
+  try {
+    const res = await listStudents()
+    if (res.success && res.data) {
+      students.value = res.data
+    }
+  } catch (error) {
+    console.error('Failed to load students:', error)
+  }
+}
+
+/**
  * Load lessons on mount
  */
 onMounted(async () => {
@@ -254,18 +269,44 @@ onMounted(async () => {
   if (userStore.user?.role === 'STUDENT') {
     viewType.value = 'student'
     selectedStudentId.value = userStore.user.id
-    loadStudentSummary()
+    await loadStudentSummary()
+  } else {
+    // For teacher/admin, default to student view and load student list
+    viewType.value = 'student'
+    await loadStudents()
+    // Select first student by default
+    if (students.value.length > 0) {
+      selectedStudentId.value = students.value[0].id
+      loadStudentSummary()
+    }
   }
 })
 
 /**
  * Handle view type change
  */
-const handleViewTypeChange = () => {
+const handleViewTypeChange = async () => {
   lessonSummary.value = null
   studentSummary.value = null
   selectedLessonId.value = undefined
   selectedStudentId.value = undefined
+
+  // Auto-load and select first item based on view type
+  if (viewType.value === 'lesson') {
+    if (lessons.value.length > 0) {
+      selectedLessonId.value = lessons.value[0].id
+      await loadLessonSummary()
+    }
+  } else {
+    // Load students if not already loaded
+    if (students.value.length === 0) {
+      await loadStudents()
+    }
+    if (students.value.length > 0) {
+      selectedStudentId.value = students.value[0].id
+      await loadStudentSummary()
+    }
+  }
 }
 
 /**
