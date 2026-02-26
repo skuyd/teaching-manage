@@ -1,0 +1,155 @@
+# Sprint Status - Teaching Manage 系统完善
+# Generated: 2026-02-23
+# Source: _bmad-output/planning-artifacts/epics.md
+
+metadata:
+  project: Teaching Manage 系统完善
+  generated_at: '2026-02-23'
+  source_epics:
+    - path: '_bmad-output/planning-artifacts/epics.md'
+  total_epics: 3
+  total_stories: 14
+
+# Epic 1: 核心路径修复
+epic-1-core-path-fixes:
+  name: 核心路径修复
+  description: 修复阻断性问题，让三种角色（管理员/教员/学员）的核心流程可用
+  frs_covered: [FR8, FR14, FR31]
+  nfrs_covered: [NFR20, NFR21]
+  status: in-progress
+  stories:
+    1-1-fix-dashboard-404:
+      name: 修复 Dashboard 404 错误
+      status: backlog
+      priority: P0
+      assigned_to: null
+      notes: 检查 Vue Router 配置、组件路径、API 端点
+    1-2-fix-subject-detail:
+      name: 修复学科详情页显示
+      status: backlog
+      priority: P0
+      assigned_to: null
+      notes: 检查 SubjectDetail.vue、API 响应处理
+    1-3-fix-grade-500:
+      name: 修复评分功能 500 错误
+      status: done
+      priority: P0
+      assigned_to: null
+      completed_at: '2026-02-23'
+      notes: 已修复 - Axios 响应拦截器解构模式修正
+
+# Epic 2: UI 一致性改造
+epic-2-ui-consistency:
+  name: UI 一致性改造
+  description: 统一全局视觉体验，提升用户感知质量
+  frs_covered: [FR44, FR45, FR46, FR47]
+  arch_covered: [ARCH-2, ARCH-3]
+  status: backlog
+  stories:
+    2-1-global-css-variables:
+      name: 实现全局 CSS 变量主题
+      status: backlog
+      priority: P1
+      assigned_to: null
+      notes: 创建 styles/variables.scss、更新现有页面
+    2-2-loading-states:
+      name: 标准化加载状态指示
+      status: backlog
+      priority: P1
+      assigned_to: null
+      notes: 所有异步操作显示 loading 状态
+    2-3-error-notification:
+      name: 实现统一错误提示组件
+      status: backlog
+      priority: P1
+      assigned_to: null
+      notes: 增强 GlobalExceptionHandler（后端）、ErrorBoundary（前端）
+    2-4-form-validation:
+      name: 统一表单验证反馈
+      status: backlog
+      priority: P1
+      assigned_to: null
+      notes: 内联验证错误、首个错误字段聚焦
+
+# Epic 3: 功能完整性验证
+epic-3-feature-verification:
+  name: 功能完整性验证
+  description: 端到端验证所有已实现功能，确保生产就绪
+  frs_covered: [FR1-FR7, FR9-FR13, FR15-FR30, FR32-FR43]
+  nfrs_covered: [NFR1-NFR26]
+  status: backlog
+  stories:
+    3-1-verify-auth:
+      name: 验证用户认证流程
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR1, FR2, FR3, FR4]
+      notes: 登录、个人信息、密码修改
+    3-2-verify-subject-management:
+      name: 验证管理员学科管理
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR9, FR10, FR11, FR12]
+      notes: 学科 CRUD、学员分配
+    3-3-verify-lesson-management:
+      name: 验证课程管理功能
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR15, FR16, FR17, FR18, FR19]
+      notes: 课程创建、编辑、删除、日历视图
+    3-4-verify-submission:
+      name: 验证作业提交流程
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR20, FR21, FR22, FR23, FR24]
+      notes: 上传、重新提交、文件树、代码高亮
+    3-5-verify-grading:
+      name: 验证评分评论功能
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR25, FR26, FR27, FR28, FR29, FR30]
+      notes: 行级评论、评分等级、评语
+    3-6-verify-group-collaboration:
+      name: 验证小组协作功能
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR32, FR33, FR34, FR35, FR36, FR37]
+      notes: 创建小组、申请、审批、解散
+    3-7-verify-notification:
+      name: 验证通知系统
+      status: backlog
+      priority: P2
+      assigned_to: null
+      frs: [FR38, FR39, FR40, FR41, FR42, FR43]
+      notes: 各类通知发送、列表、已读标记
+      
+
+# Retrospective entries for completed items
+retrospective:
+  - story_id: 1-3-fix-grade-500
+    completed_at: '2026-02-23'
+    summary: 修复 Axios 响应拦截器解构模式，解决评分 500 错误
+    learnings:
+      - Axios 拦截器中 response.data 已经是后端返回的数据，不需要再解构
+      - 前端 API 调用处应直接使用返回值，无需再取 .data
+
+# Summary statistics
+summary:
+  total_stories: 14
+  by_status:
+    backlog: 12
+    ready-for-dev: 0
+    in-progress: 0
+    review: 0
+    done: 1
+  by_priority:
+    P0: 3
+    P1: 4
+    P2: 7
+  completion_rate: 7.1%

@@ -39,7 +39,7 @@ logs/
 .env.local
 
 _bmad
-_bmad-output
+#_bmad-output
 .agent
 .claude
 .opencode
