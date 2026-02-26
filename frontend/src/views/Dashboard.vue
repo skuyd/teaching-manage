@@ -85,7 +85,7 @@
         </div>
 
         <div class="topbar-right">
-          <ThemeSwitcher variant="dropdown" />
+          <ThemeSwitcher mode="dropdown" />
           <NotificationBell />
           <el-dropdown trigger="click" @command="handleCommand">
             <div class="user-dropdown-trigger">
@@ -259,15 +259,11 @@ import {
   Expand, Fold, Setting, ArrowDown, SwitchButton, Search
 } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
-import { useThemeAutoInit } from '@/composables/useTheme'
 import NotificationBell from '@/components/NotificationBell.vue'
 import ThemeSwitcher from '@/components/common/ThemeSwitcher.vue'
 import StatCard from '@/components/common/StatCard.vue'
 import { getAdminStats, getTeacherStats, getStudentStats } from '@/api/dashboard'
 import type { AdminStats, TeacherStats, StudentStats } from '@/api/dashboard'
-
-// 自动初始化主题
-useThemeAutoInit()
 
 const router = useRouter()
 const route = useRoute()

@@ -3,11 +3,11 @@ import { ref, computed, watch } from 'vue'
 
 /**
  * 主题名称类型
- * - chinese-red: 中国红主题（温暖、喜庆、传统）
- * - tech-blue: 科技蓝主题（现代、科技、专业）- 默认主题
- * - nature-green: 自然绿主题（清新、护眼、自然）
+ * - tech-blue: 科技蓝主题（深色、专业、科技感）- 默认主题
+ * - sky-blue: 天蓝色主题（浅色、清新、现代）
+ * - nature-green: 自然绿主题（浅色、护眼、自然）
  */
-export type ThemeName = 'chinese-red' | 'tech-blue' | 'nature-green'
+export type ThemeName = 'tech-blue' | 'sky-blue' | 'nature-green'
 
 /**
  * 主题元数据
@@ -24,26 +24,26 @@ export interface ThemeMetadata {
  * 主题配置
  */
 export const THEME_CONFIG: Record<ThemeName, ThemeMetadata> = {
-  'chinese-red': {
-    name: 'chinese-red',
-    displayName: '中国红',
-    description: '温暖喜庆的传统风格，适合节日和庆典氛围',
-    icon: '🏮',
-    primaryColor: '#C41E3A'
-  },
   'tech-blue': {
     name: 'tech-blue',
     displayName: '科技蓝',
-    description: '现代专业的科技风格，适合长时间工作使用',
+    description: '深色专业的科技风格，适合长时间工作使用',
     icon: '💻',
-    primaryColor: '#3B82F6'
+    primaryColor: '#00B4FF'
+  },
+  'sky-blue': {
+    name: 'sky-blue',
+    displayName: '天蓝色',
+    description: '清新明亮的浅色风格，智能高效协作',
+    icon: '☁️',
+    primaryColor: '#29B6F6'
   },
   'nature-green': {
     name: 'nature-green',
     displayName: '自然绿',
     description: '清新护眼的自然风格，减轻视觉疲劳',
     icon: '🌿',
-    primaryColor: '#10B981'
+    primaryColor: '#9CA986'
   }
 }
 
@@ -55,7 +55,7 @@ export const DEFAULT_THEME: ThemeName = 'tech-blue'
 /**
  * 所有可用主题列表（用于循环切换）
  */
-export const THEME_NAMES: ThemeName[] = ['tech-blue', 'chinese-red', 'nature-green']
+export const THEME_NAMES: ThemeName[] = ['tech-blue', 'sky-blue', 'nature-green']
 
 /**
  * localStorage 存储键
@@ -64,10 +64,25 @@ const THEME_STORAGE_KEY = 'user-theme-preference'
 
 /**
  * 从 localStorage 获取主题
+ * 包含旧主题名称迁移逻辑
  */
 function getStoredTheme(): ThemeName | null {
   const stored = localStorage.getItem(THEME_STORAGE_KEY)
-  if (stored && isValidTheme(stored)) {
+  if (!stored) {
+    return null
+  }
+
+  // 迁移旧主题名称
+  if (stored === 'chinese-red') {
+    const migratedTheme: ThemeName = 'sky-blue'
+    setStoredTheme(migratedTheme)
+    if (import.meta.env.DEV) {
+      console.log(`[ThemeStore] Migrated theme: chinese-red -> sky-blue`)
+    }
+    return migratedTheme
+  }
+
+  if (isValidTheme(stored)) {
     return stored as ThemeName
   }
   return null
@@ -120,7 +135,7 @@ export const useThemeStore = defineStore('theme', () => {
   // ========================================
   const themeMetadata = computed(() => THEME_CONFIG[currentTheme.value])
 
-  const isChineseRed = computed(() => currentTheme.value === 'chinese-red')
+  const isSkyBlue = computed(() => currentTheme.value === 'sky-blue')
   const isTechBlue = computed(() => currentTheme.value === 'tech-blue')
   const isNatureGreen = computed(() => currentTheme.value === 'nature-green')
 
@@ -276,7 +291,7 @@ export const useThemeStore = defineStore('theme', () => {
 
     // Getters
     themeMetadata,
-    isChineseRed,
+    isSkyBlue,
     isTechBlue,
     isNatureGreen,
     availableThemes,

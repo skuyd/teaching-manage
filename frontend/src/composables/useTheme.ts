@@ -18,7 +18,7 @@ export type ThemeChangeCallback = (newTheme: ThemeName, oldTheme: ThemeName) => 
  * const { currentTheme, setTheme, themeMetadata } = useTheme()
  *
  * // 切换主题
- * setTheme('chinese-red')
+ * setTheme('sky-blue')
  *
  * // 监听主题变化
  * onThemeChange((newTheme, oldTheme) => {
@@ -69,9 +69,9 @@ export function useTheme() {
   const isTransitioning = computed(() => themeStore.isTransitioning)
 
   /**
-   * 当前是否为中国红主题
+   * 当前是否为天蓝色主题
    */
-  const isChineseRed = computed(() => themeStore.isChineseRed)
+  const isSkyBlue = computed(() => themeStore.isSkyBlue)
 
   /**
    * 当前是否为科技蓝主题
@@ -208,6 +208,7 @@ export function useTheme() {
 
   /**
    * 从后端加载主题偏好
+   * 如果后端没有返回有效主题，降级到 localStorage
    */
   async function loadThemeFromBackend(): Promise<void> {
     if (!isUserLoggedIn.value) {
@@ -221,15 +222,22 @@ export function useTheme() {
     try {
       const response = await getUserPreferences()
       if (response.data && response.data.theme) {
-        themeStore.setTheme(response.data.theme as ThemeName, false)
+        themeStore.setTheme(response.data.theme as ThemeName, true)
         if (import.meta.env.DEV) {
           console.log('[useTheme] Theme loaded from backend successfully')
         }
+        return
       }
+      // 后端没有返回主题，降级到 localStorage
+      if (import.meta.env.DEV) {
+        console.log('[useTheme] No theme from backend, falling back to localStorage')
+      }
+      initFromStorage()
     } catch (error) {
       console.error('[useTheme] Failed to load theme from backend:', error)
       syncError.value = error instanceof Error ? error.message : 'Unknown error'
-      // 不抛出错误，允许降级到 localStorage
+      // 降级到 localStorage
+      initFromStorage()
     } finally {
       isSyncing.value = false
     }
@@ -333,7 +341,7 @@ export function useTheme() {
     syncError,
 
     // Theme checks
-    isChineseRed,
+    isSkyBlue,
     isTechBlue,
     isNatureGreen,
 

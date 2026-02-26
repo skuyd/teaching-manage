@@ -7,7 +7,7 @@
  * - autoInitTheme 自动初始化
  * - onThemeChange 事件监听
  * - 与 store 的集成
- * - 后端同步相关方法
+ * - 后端同步相关方法 (部分 API mock 测试已跳过)
  */
 
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
@@ -17,7 +17,6 @@ import { defineComponent, nextTick } from 'vue'
 import { useTheme, useThemeAutoInit, useThemeWatcher } from './useTheme'
 import { useThemeStore, type ThemeName, DEFAULT_THEME } from '@/stores/theme'
 import { useUserStore } from '@/stores/user'
-// Don't import getUserPreferences and updateUserPreferences here - they're mocked
 
 // Mock user store
 vi.mock('@/stores/user', () => ({
@@ -25,10 +24,6 @@ vi.mock('@/stores/user', () => ({
     isLoggedIn: false
   }))
 }))
-
-// Create mock functions that can be referenced and configured
-const mockGetUserPreferences = vi.fn()
-const mockUpdateUserPreferences = vi.fn()
 
 // Mock request utility
 vi.mock('@/utils/request', () => ({
@@ -51,15 +46,15 @@ vi.mock('@/utils/request', () => ({
   removeToken: vi.fn()
 }))
 
-// Mock user API - return the mock functions directly, not wrapper functions
-vi.mock('@/api/user', async () => {
-  return {
-    getUserPreferences: mockGetUserPreferences,
-    updateUserPreferences: mockUpdateUserPreferences
-  }
-})
+// Import API functions (will be mocked using vi.fn in tests)
+import * as userApi from '@/api/user'
 
 describe('useTheme Composable', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let getUserPreferencesSpy: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let updateUserPreferencesSpy: any
+
   beforeEach(() => {
     setActivePinia(createPinia())
     localStorage.clear()
@@ -70,24 +65,20 @@ describe('useTheme Composable', () => {
       isLoggedIn: false
     } as any)
 
-    // 清除并配置 API mocks
-    mockGetUserPreferences.mockClear()
-    mockUpdateUserPreferences.mockClear()
-
-    // 配置 API mocks 的默认实现
-    mockGetUserPreferences.mockResolvedValue({
+    // 创建 API spies
+    getUserPreferencesSpy = vi.spyOn(userApi, 'getUserPreferences').mockResolvedValue({
       code: 200,
       success: true,
       data: { theme: 'tech-blue' },
       message: 'Success'
-    })
+    } as any)
 
-    mockUpdateUserPreferences.mockResolvedValue({
+    updateUserPreferencesSpy = vi.spyOn(userApi, 'updateUserPreferences').mockResolvedValue({
       code: 200,
       success: true,
       data: { theme: 'tech-blue' },
       message: 'Success'
-    })
+    } as any)
 
     vi.spyOn(console, 'log').mockImplementation(() => {})
     vi.spyOn(console, 'warn').mockImplementation(() => {})
@@ -160,12 +151,12 @@ describe('useTheme Composable', () => {
     })
 
     describe('theme check computed', () => {
-      it('should reflect isChineseRed correctly', async () => {
+      it('should reflect isSkyBlue correctly', async () => {
         const { result } = withSetup(() => useTheme())
 
-        await result.setTheme('chinese-red')
+        await result.setTheme('sky-blue')
 
-        expect(result.isChineseRed.value).toBe(true)
+        expect(result.isSkyBlue.value).toBe(true)
         expect(result.isTechBlue.value).toBe(false)
         expect(result.isNatureGreen.value).toBe(false)
       })
@@ -194,9 +185,9 @@ describe('useTheme Composable', () => {
     it('should change theme', async () => {
       const { result } = withSetup(() => useTheme())
 
-      await result.setTheme('chinese-red')
+      await result.setTheme('sky-blue')
 
-      expect(result.currentTheme.value).toBe('chinese-red')
+      expect(result.currentTheme.value).toBe('sky-blue')
     })
 
     it('should persist by default', async () => {
@@ -210,18 +201,18 @@ describe('useTheme Composable', () => {
     it('should not persist when persist=false', async () => {
       const { result } = withSetup(() => useTheme())
 
-      await result.setTheme('chinese-red', { persist: false })
+      await result.setTheme('sky-blue', { persist: false })
 
       // setTheme 是调用 store 的方法，persist 选项会传递给 store
       // 由于 store.setTheme 的第二个参数默认为 true，
       // 我们需要检查 store 是否正确调用
-      expect(result.currentTheme.value).toBe('chinese-red')
+      expect(result.currentTheme.value).toBe('sky-blue')
     })
 
     it('should use transition when enabled', async () => {
       const { result } = withSetup(() => useTheme())
 
-      const promise = result.setTheme('chinese-red', { transition: true })
+      const promise = result.setTheme('sky-blue', { transition: true })
 
       // 过渡开始后应该是 true
       expect(result.isTransitioning.value).toBe(true)
@@ -235,10 +226,10 @@ describe('useTheme Composable', () => {
       const { result } = withSetup(() => useTheme())
 
       // 设置主题并尝试同步
-      await result.setTheme('chinese-red', { sync: true })
+      await result.setTheme('sky-blue', { sync: true })
 
       // 主题应该被设置，但同步不会发生（因为用户未登录）
-      expect(result.currentTheme.value).toBe('chinese-red')
+      expect(result.currentTheme.value).toBe('sky-blue')
     })
 
     it('should sync when user is logged in', async () => {
@@ -248,10 +239,10 @@ describe('useTheme Composable', () => {
 
       const { result } = withSetup(() => useTheme())
 
-      await result.setTheme('chinese-red', { sync: true })
+      await result.setTheme('sky-blue', { sync: true })
 
       // 应该成功同步并调用 updateUserPreferences
-      expect(mockUpdateUserPreferences).toHaveBeenCalledWith({ theme: 'chinese-red' })
+      expect(updateUserPreferencesSpy).toHaveBeenCalledWith({ theme: 'sky-blue' })
     })
 
     it('should throw error on failure', async () => {
@@ -263,7 +254,7 @@ describe('useTheme Composable', () => {
         throw new Error('Test error')
       })
 
-      await expect(result.setTheme('chinese-red')).rejects.toThrow('Test error')
+      await expect(result.setTheme('sky-blue')).rejects.toThrow('Test error')
     })
   })
 
@@ -278,7 +269,7 @@ describe('useTheme Composable', () => {
       expect(result.currentTheme.value).toBe('tech-blue')
 
       await result.cycleTheme()
-      expect(result.currentTheme.value).toBe('chinese-red')
+      expect(result.currentTheme.value).toBe('sky-blue')
 
       await result.cycleTheme()
       expect(result.currentTheme.value).toBe('nature-green')
@@ -308,8 +299,8 @@ describe('useTheme Composable', () => {
 
       await result.cycleTheme({ sync: true })
 
-      // 应该成功同步 - cycleTheme 会切换到下一个主题 (chinese-red)
-      expect(mockUpdateUserPreferences).toHaveBeenCalledWith({ theme: 'chinese-red' })
+      // 应该成功同步 - cycleTheme 会切换到下一个主题 (sky-blue)
+      expect(updateUserPreferencesSpy).toHaveBeenCalledWith({ theme: 'sky-blue' })
     })
 
     it('should throw error on failure', async () => {
@@ -359,12 +350,12 @@ describe('useTheme Composable', () => {
 
   describe('initFromStorage', () => {
     it('should load theme from localStorage', () => {
-      localStorage.setItem('user-theme-preference', 'chinese-red')
+      localStorage.setItem('user-theme-preference', 'sky-blue')
 
       const { result } = withSetup(() => useTheme())
       result.initFromStorage()
 
-      expect(result.currentTheme.value).toBe('chinese-red')
+      expect(result.currentTheme.value).toBe('sky-blue')
     })
 
     it('should use default when localStorage is empty', () => {
@@ -400,7 +391,7 @@ describe('useTheme Composable', () => {
       await result.autoInitTheme()
 
       // 应该调用 getUserPreferences 从后端加载主题
-      expect(mockGetUserPreferences).toHaveBeenCalled()
+      expect(getUserPreferencesSpy).toHaveBeenCalled()
     })
 
     it('should gracefully handle backend load error (no throw)', async () => {
@@ -411,7 +402,7 @@ describe('useTheme Composable', () => {
       const { result } = withSetup(() => useTheme())
 
       // 模拟 getUserPreferences 抛出错误
-      mockGetUserPreferences.mockRejectedValueOnce(new Error('Backend error'))
+      getUserPreferencesSpy.mockRejectedValueOnce(new Error('Backend error'))
 
       // 不应抛出错误 - loadThemeFromBackend 内部捕获错误
       await expect(result.autoInitTheme()).resolves.toBeUndefined()
@@ -480,10 +471,24 @@ describe('useTheme Composable', () => {
       const { result } = withSetup(() => useTheme())
 
       // 模拟 updateUserPreferences 抛出错误
-      mockUpdateUserPreferences.mockRejectedValueOnce(new Error('Sync failed'))
+      updateUserPreferencesSpy.mockRejectedValueOnce(new Error('Sync failed'))
 
       await expect(result.syncThemeToBackend()).rejects.toThrow('Sync failed')
       expect(result.syncError.value).toBe('Sync failed')
+    })
+
+    it('should handle non-Error objects in syncError', async () => {
+      vi.mocked(useUserStore).mockReturnValue({
+        isLoggedIn: true
+      } as any)
+
+      const { result } = withSetup(() => useTheme())
+
+      // 模拟 updateUserPreferences 抛出非 Error 对象
+      updateUserPreferencesSpy.mockRejectedValueOnce('String error message')
+
+      await expect(result.syncThemeToBackend()).rejects.toBe('String error message')
+      expect(result.syncError.value).toBe('Unknown error')
     })
   })
 
@@ -510,11 +515,26 @@ describe('useTheme Composable', () => {
       const { result } = withSetup(() => useTheme())
 
       // 模拟 getUserPreferences 抛出错误
-      mockGetUserPreferences.mockRejectedValueOnce(new Error('Load failed'))
+      getUserPreferencesSpy.mockRejectedValueOnce(new Error('Load failed'))
 
       // 不应该抛出错误
       await expect(result.loadThemeFromBackend()).resolves.toBeUndefined()
       expect(result.syncError.value).toBe('Load failed')
+    })
+
+    it('should handle non-Error objects in loadThemeFromBackend', async () => {
+      vi.mocked(useUserStore).mockReturnValue({
+        isLoggedIn: true
+      } as any)
+
+      const { result } = withSetup(() => useTheme())
+
+      // 模拟 getUserPreferences 抛出非 Error 对象 (如网络请求返回的字符串)
+      getUserPreferencesSpy.mockRejectedValueOnce({ code: 500, message: 'Server error' })
+
+      // 不应该抛出错误 - loadThemeFromBackend 内部捕获
+      await expect(result.loadThemeFromBackend()).resolves.toBeUndefined()
+      expect(result.syncError.value).toBe('Unknown error')
     })
   })
 
@@ -529,10 +549,10 @@ describe('useTheme Composable', () => {
 
       result.onThemeChange(callback)
 
-      await result.setTheme('chinese-red')
+      await result.setTheme('sky-blue')
       await nextTick()
 
-      expect(callback).toHaveBeenCalledWith('chinese-red', 'tech-blue')
+      expect(callback).toHaveBeenCalledWith('sky-blue', 'tech-blue')
     })
 
     it('should return cleanup function', async () => {
@@ -545,7 +565,7 @@ describe('useTheme Composable', () => {
       cleanup()
 
       // 更改主题
-      await result.setTheme('chinese-red')
+      await result.setTheme('sky-blue')
       await nextTick()
 
       // 回调不应被调用
@@ -562,10 +582,10 @@ describe('useTheme Composable', () => {
       it('should return metadata for valid theme', () => {
         const { result } = withSetup(() => useTheme())
 
-        const metadata = result.getThemeMetadata('chinese-red')
+        const metadata = result.getThemeMetadata('sky-blue')
 
         expect(metadata).toBeDefined()
-        expect(metadata?.displayName).toBe('中国红')
+        expect(metadata?.displayName).toBe('天蓝色')
       })
 
       it('should return undefined for invalid theme', () => {
@@ -587,7 +607,7 @@ describe('useTheme Composable', () => {
       it('should return false for non-current theme', () => {
         const { result } = withSetup(() => useTheme())
 
-        expect(result.isCurrentTheme('chinese-red')).toBe(false)
+        expect(result.isCurrentTheme('sky-blue')).toBe(false)
       })
     })
 
@@ -595,13 +615,13 @@ describe('useTheme Composable', () => {
       it('should return primary color for current theme', () => {
         const { result } = withSetup(() => useTheme())
 
-        expect(result.getPrimaryColor()).toBe('#3B82F6')
+        expect(result.getPrimaryColor()).toBe('#00B4FF')
       })
 
       it('should return primary color for specified theme', () => {
         const { result } = withSetup(() => useTheme())
 
-        expect(result.getPrimaryColor('chinese-red')).toBe('#C41E3A')
+        expect(result.getPrimaryColor('sky-blue')).toBe('#29B6F6')
       })
 
       it('should return fallback color for invalid theme', () => {
@@ -693,10 +713,10 @@ describe('useThemeWatcher', () => {
 
     // 更改主题
     const store = useThemeStore()
-    store.setTheme('chinese-red')
+    store.setTheme('sky-blue')
     await nextTick()
 
-    expect(callback).toHaveBeenCalledWith('chinese-red', 'tech-blue')
+    expect(callback).toHaveBeenCalledWith('sky-blue', 'tech-blue')
 
     wrapper.unmount()
   })
@@ -720,7 +740,7 @@ describe('useThemeWatcher', () => {
 
     // 更改主题
     const store = useThemeStore()
-    store.setTheme('chinese-red')
+    store.setTheme('sky-blue')
     await nextTick()
 
     // 回调不应被调用

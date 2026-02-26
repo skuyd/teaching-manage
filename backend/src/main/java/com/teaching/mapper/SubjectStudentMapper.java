@@ -20,6 +20,10 @@ public interface SubjectStudentMapper extends BaseMapper<SubjectStudent> {
             "WHERE subject_id = #{subjectId} AND del_flag = 0")
     List<Long> selectStudentIdsBySubjectId(Long subjectId);
 
+    @Select("SELECT subject_id FROM t_subject_student " +
+            "WHERE student_id = #{studentId} AND del_flag = 0")
+    List<Long> selectSubjectIdsByStudentId(Long studentId);
+
     /**
      * 根据学科ID统计学员数量
      */

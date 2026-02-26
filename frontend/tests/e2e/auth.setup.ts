@@ -31,8 +31,8 @@ setup('authenticate as teacher', async ({ page }) => {
   // Wait for successful navigation to dashboard
   await page.waitForURL('/', { timeout: 30000 })
 
-  // Verify we are logged in
-  await expect(page.locator('.welcome')).toContainText('欢迎')
+  // Verify we are logged in by checking welcome title
+  await expect(page.locator('.welcome-title')).toContainText('欢迎', { timeout: 15000 })
 
   // Save authentication state
   await page.context().storageState({ path: path.join(authDir, 'teacher.json') })
@@ -51,8 +51,8 @@ setup('authenticate as student', async ({ page }) => {
   // Wait for successful navigation to dashboard
   await page.waitForURL('/', { timeout: 30000 })
 
-  // Verify we are logged in
-  await expect(page.locator('.welcome')).toContainText('欢迎')
+  // Verify we are logged in by checking welcome title
+  await expect(page.locator('.welcome-title')).toContainText('欢迎', { timeout: 15000 })
 
   // Save authentication state
   await page.context().storageState({ path: path.join(authDir, 'student.json') })
@@ -71,8 +71,8 @@ setup('authenticate as admin', async ({ page }) => {
   // Wait for successful navigation to dashboard
   await page.waitForURL('/', { timeout: 30000 })
 
-  // Verify we are logged in
-  await expect(page.locator('.welcome')).toContainText('欢迎')
+  // Verify we are logged in by checking welcome title
+  await expect(page.locator('.welcome-title')).toContainText('欢迎', { timeout: 15000 })
 
   // Save authentication state
   await page.context().storageState({ path: path.join(authDir, 'admin.json') })

@@ -69,6 +69,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/student/calendar',
+    name: 'StudentCalendar',
+    component: () => import('@/views/student/StudentCalendar.vue'),
+    meta: { requiresAuth: true, roles: ['STUDENT'] }
+  },
+  {
     path: '/admin/users',
     name: 'UserManagement',
     component: () => import('@/views/users/UserList.vue'),

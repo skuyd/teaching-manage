@@ -142,11 +142,23 @@ class SubjectServiceTest {
     @Test
     @DisplayName("删除学科")
     void deleteSubject_shouldDeleteSubject() {
-        when(subjectMapper.deleteById(1L)).thenReturn(1);
+        Subject subject = new Subject();
+        subject.setId(1L);
+        subject.setName("测试学科");
+
+        when(subjectMapper.selectById(1L)).thenReturn(subject);
+        when(codeCommentMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(gradeMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(submissionMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(lessonMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(groupMemberMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(groupMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(subjectStudentMapper.physicalDeleteBySubjectId(1L)).thenReturn(0);
+        when(subjectMapper.physicalDeleteById(1L)).thenReturn(1);
 
         subjectService.deleteSubject(1L);
 
-        verify(subjectMapper).deleteById(1L);
+        verify(subjectMapper).physicalDeleteById(1L);
     }
 
     @Test

@@ -136,3 +136,10 @@ export function getLessons(): Promise<Result<LessonDTO[]>> {
 export function updateLessonTime(id: number, lessonTime: string): Promise<Result<LessonDTO>> {
   return request.put(`/lessons/${id}/time`, { lessonTime })
 }
+
+/**
+ * 获取当前学生所有已报名学科的课程
+ */
+export function getMyLessons(): Promise<Result<LessonDTO[]>> {
+  return request.get('/lessons/my')
+}

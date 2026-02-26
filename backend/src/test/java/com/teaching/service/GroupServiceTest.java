@@ -105,15 +105,22 @@ class GroupServiceTest {
         Group group = new Group();
         group.setId(1L);
         group.setSubjectId(1L);
+        group.setName("测试小组");
+        group.setLeaderId(1L);
 
         Subject subject = new Subject();
         subject.setMaxMembers(5);
+
+        com.teaching.entity.User applicant = new com.teaching.entity.User();
+        applicant.setId(10L);
+        applicant.setName("申请者");
 
         when(groupMapper.selectById(1L)).thenReturn(group);
         when(subjectMapper.selectById(1L)).thenReturn(subject);
         when(groupMemberMapper.selectByGroupIdAndUserId(1L, 10L)).thenReturn(null);
         when(groupMemberMapper.countApprovedByGroupId(1L)).thenReturn(3L);
         when(groupMemberMapper.insert(any(GroupMember.class))).thenReturn(1);
+        when(userMapper.selectById(10L)).thenReturn(applicant);
 
         groupService.joinGroup(1L, 10L);
 

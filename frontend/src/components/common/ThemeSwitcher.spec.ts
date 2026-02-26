@@ -236,15 +236,15 @@ describe('ThemeSwitcher', () => {
       const store = useThemeStore()
 
       const buttons = wrapper.findAll('.el-button')
-      // 找到中国红按钮（不是当前主题）
-      const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+      // 找到天蓝色按钮（不是当前主题）
+      const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-      if (chineseRedButton) {
-        await chineseRedButton.trigger('click')
+      if (skyBlueButton) {
+        await skyBlueButton.trigger('click')
         await flushPromises()
       }
 
-      expect(store.currentTheme).toBe('chinese-red')
+      expect(store.currentTheme).toBe('sky-blue')
     })
 
     it('should emit change event on button click', async () => {
@@ -289,7 +289,7 @@ describe('ThemeSwitcher', () => {
       await wrapper.find('.el-button').trigger('click')
       await flushPromises()
 
-      expect(store.currentTheme).toBe('chinese-red')
+      expect(store.currentTheme).toBe('sky-blue')
     })
 
     it('should complete full cycle', async () => {
@@ -297,9 +297,9 @@ describe('ThemeSwitcher', () => {
       const store = useThemeStore()
       const button = wrapper.find('.el-button')
 
-      await button.trigger('click') // -> chinese-red
+      await button.trigger('click') // -> sky-blue
       await flushPromises()
-      expect(store.currentTheme).toBe('chinese-red')
+      expect(store.currentTheme).toBe('sky-blue')
 
       await button.trigger('click') // -> nature-green
       await flushPromises()
@@ -340,7 +340,7 @@ describe('ThemeSwitcher', () => {
       const wrapper = mountComponent({ mode: 'cards' })
 
       // 检查是否包含主题信息
-      expect(wrapper.text()).toContain('中国红')
+      expect(wrapper.text()).toContain('天蓝色')
       expect(wrapper.text()).toContain('科技蓝')
       expect(wrapper.text()).toContain('自然绿')
     })
@@ -416,10 +416,10 @@ describe('ThemeSwitcher', () => {
         const wrapper = mountComponent({ mode: 'buttons', enableTransition: false })
 
         const buttons = wrapper.findAll('.el-button')
-        const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+        const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-        if (chineseRedButton) {
-          await chineseRedButton.trigger('click')
+        if (skyBlueButton) {
+          await skyBlueButton.trigger('click')
           await flushPromises()
         }
 
@@ -430,10 +430,10 @@ describe('ThemeSwitcher', () => {
         const wrapper = mountComponent({ mode: 'buttons', showMessage: false, enableTransition: false })
 
         const buttons = wrapper.findAll('.el-button')
-        const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+        const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-        if (chineseRedButton) {
-          await chineseRedButton.trigger('click')
+        if (skyBlueButton) {
+          await skyBlueButton.trigger('click')
           await flushPromises()
         }
 
@@ -447,10 +447,10 @@ describe('ThemeSwitcher', () => {
         const store = useThemeStore()
 
         const buttons = wrapper.findAll('.el-button')
-        const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+        const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-        if (chineseRedButton) {
-          chineseRedButton.trigger('click')
+        if (skyBlueButton) {
+          skyBlueButton.trigger('click')
           await nextTick()
 
           // 过渡期间 isTransitioning 应该为 true
@@ -465,10 +465,10 @@ describe('ThemeSwitcher', () => {
         const store = useThemeStore()
 
         const buttons = wrapper.findAll('.el-button')
-        const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+        const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-        if (chineseRedButton) {
-          await chineseRedButton.trigger('click')
+        if (skyBlueButton) {
+          await skyBlueButton.trigger('click')
           await nextTick()
 
           // 不使用过渡时，isTransitioning 应该保持 false
@@ -487,15 +487,15 @@ describe('ThemeSwitcher', () => {
       const wrapper = mountComponent({ mode: 'buttons', enableTransition: false })
 
       const buttons = wrapper.findAll('.el-button')
-      const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+      const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-      if (chineseRedButton) {
-        await chineseRedButton.trigger('click')
+      if (skyBlueButton) {
+        await skyBlueButton.trigger('click')
         await flushPromises()
       }
 
       expect(wrapper.emitted('change')).toBeTruthy()
-      expect(wrapper.emitted('change')![0]).toEqual(['chinese-red'])
+      expect(wrapper.emitted('change')![0]).toEqual(['sky-blue'])
     })
 
     it('should emit change on cycle (toggle mode)', async () => {
@@ -505,8 +505,8 @@ describe('ThemeSwitcher', () => {
       await flushPromises()
 
       expect(wrapper.emitted('change')).toBeTruthy()
-      // 从 tech-blue 循环到 chinese-red
-      expect(wrapper.emitted('change')![0]).toEqual(['chinese-red'])
+      // 从 tech-blue 循环到 sky-blue
+      expect(wrapper.emitted('change')![0]).toEqual(['sky-blue'])
     })
   })
 
@@ -525,10 +525,10 @@ describe('ThemeSwitcher', () => {
       })
 
       const buttons = wrapper.findAll('.el-button')
-      const chineseRedButton = buttons.find(b => b.text().includes(THEME_CONFIG['chinese-red'].icon))
+      const skyBlueButton = buttons.find(b => b.text().includes(THEME_CONFIG['sky-blue'].icon))
 
-      if (chineseRedButton) {
-        await chineseRedButton.trigger('click')
+      if (skyBlueButton) {
+        await skyBlueButton.trigger('click')
         await flushPromises()
       }
 
@@ -568,7 +568,7 @@ describe('ThemeSwitcher', () => {
       await flushPromises()
 
       // 应该最终稳定在某个主题
-      expect(['tech-blue', 'chinese-red', 'nature-green']).toContain(store.currentTheme)
+      expect(['tech-blue', 'sky-blue', 'nature-green']).toContain(store.currentTheme)
     })
 
     it('should not break when clicking same card multiple times', async () => {

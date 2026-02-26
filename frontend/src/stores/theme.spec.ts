@@ -73,26 +73,26 @@ describe('Theme Store', () => {
 
         expect(store.themeMetadata).toEqual(THEME_CONFIG['tech-blue'])
         expect(store.themeMetadata.displayName).toBe('科技蓝')
-        expect(store.themeMetadata.primaryColor).toBe('#3B82F6')
+        expect(store.themeMetadata.primaryColor).toBe('#00B4FF')
       })
 
       it('should update when theme changes', () => {
         const store = useThemeStore()
 
-        store.setTheme('chinese-red')
+        store.setTheme('sky-blue')
 
-        expect(store.themeMetadata).toEqual(THEME_CONFIG['chinese-red'])
-        expect(store.themeMetadata.displayName).toBe('中国红')
+        expect(store.themeMetadata).toEqual(THEME_CONFIG['sky-blue'])
+        expect(store.themeMetadata.displayName).toBe('天蓝色')
       })
     })
 
     describe('theme check computed properties', () => {
-      it('should return true for isChineseRed when theme is chinese-red', () => {
+      it('should return true for isSkyBlue when theme is sky-blue', () => {
         const store = useThemeStore()
 
-        store.setTheme('chinese-red')
+        store.setTheme('sky-blue')
 
-        expect(store.isChineseRed).toBe(true)
+        expect(store.isSkyBlue).toBe(true)
         expect(store.isTechBlue).toBe(false)
         expect(store.isNatureGreen).toBe(false)
       })
@@ -103,7 +103,7 @@ describe('Theme Store', () => {
         store.setTheme('tech-blue')
 
         expect(store.isTechBlue).toBe(true)
-        expect(store.isChineseRed).toBe(false)
+        expect(store.isSkyBlue).toBe(false)
         expect(store.isNatureGreen).toBe(false)
       })
 
@@ -113,7 +113,7 @@ describe('Theme Store', () => {
         store.setTheme('nature-green')
 
         expect(store.isNatureGreen).toBe(true)
-        expect(store.isChineseRed).toBe(false)
+        expect(store.isSkyBlue).toBe(false)
         expect(store.isTechBlue).toBe(false)
       })
     })
@@ -130,7 +130,7 @@ describe('Theme Store', () => {
 
         const themeNames = store.availableThemes.map(t => t.name)
 
-        expect(themeNames).toContain('chinese-red')
+        expect(themeNames).toContain('sky-blue')
         expect(themeNames).toContain('tech-blue')
         expect(themeNames).toContain('nature-green')
       })
@@ -158,9 +158,9 @@ describe('Theme Store', () => {
       it('should change currentTheme', () => {
         const store = useThemeStore()
 
-        store.setTheme('chinese-red')
+        store.setTheme('sky-blue')
 
-        expect(store.currentTheme).toBe('chinese-red')
+        expect(store.currentTheme).toBe('sky-blue')
       })
 
       it('should apply theme to DOM', () => {
@@ -174,15 +174,15 @@ describe('Theme Store', () => {
       it('should persist to localStorage by default', () => {
         const store = useThemeStore()
 
-        store.setTheme('chinese-red')
+        store.setTheme('sky-blue')
 
-        expect(localStorage.setItem).toHaveBeenCalledWith('user-theme-preference', 'chinese-red')
+        expect(localStorage.setItem).toHaveBeenCalledWith('user-theme-preference', 'sky-blue')
       })
 
       it('should not persist when persist=false', () => {
         const store = useThemeStore()
 
-        store.setTheme('chinese-red', false)
+        store.setTheme('sky-blue', false)
 
         expect(localStorage.setItem).not.toHaveBeenCalled()
       })
@@ -200,27 +200,27 @@ describe('Theme Store', () => {
       it('should log theme change', () => {
         const store = useThemeStore()
 
-        store.setTheme('chinese-red')
+        store.setTheme('sky-blue')
 
         expect(console.log).toHaveBeenCalledWith(
-          expect.stringContaining('chinese-red')
+          expect.stringContaining('sky-blue')
         )
       })
     })
 
     describe('cycleTheme', () => {
-      it('should cycle from tech-blue to chinese-red', () => {
+      it('should cycle from tech-blue to sky-blue', () => {
         const store = useThemeStore()
         store.setTheme('tech-blue')
 
         store.cycleTheme()
 
-        expect(store.currentTheme).toBe('chinese-red')
+        expect(store.currentTheme).toBe('sky-blue')
       })
 
-      it('should cycle from chinese-red to nature-green', () => {
+      it('should cycle from sky-blue to nature-green', () => {
         const store = useThemeStore()
-        store.setTheme('chinese-red')
+        store.setTheme('sky-blue')
 
         store.cycleTheme()
 
@@ -242,7 +242,7 @@ describe('Theme Store', () => {
 
         const initialTheme = store.currentTheme
 
-        store.cycleTheme() // -> chinese-red
+        store.cycleTheme() // -> sky-blue
         store.cycleTheme() // -> nature-green
         store.cycleTheme() // -> tech-blue
 
@@ -278,12 +278,12 @@ describe('Theme Store', () => {
       })
 
       it('should apply theme to DOM on init', () => {
-        localStorage.setItem('user-theme-preference', 'chinese-red')
+        localStorage.setItem('user-theme-preference', 'sky-blue')
         const store = useThemeStore()
 
         store.initFromStorage()
 
-        expect(document.documentElement.getAttribute('data-theme')).toBe('chinese-red')
+        expect(document.documentElement.getAttribute('data-theme')).toBe('sky-blue')
       })
     })
 
@@ -320,7 +320,7 @@ describe('Theme Store', () => {
       it('should set isTransitioning to true during transition', async () => {
         const store = useThemeStore()
 
-        const promise = store.setThemeWithTransition('chinese-red')
+        const promise = store.setThemeWithTransition('sky-blue')
 
         expect(store.isTransitioning).toBe(true)
 
@@ -332,7 +332,7 @@ describe('Theme Store', () => {
       it('should add theme-transitioning class to body', async () => {
         const store = useThemeStore()
 
-        const promise = store.setThemeWithTransition('chinese-red')
+        const promise = store.setThemeWithTransition('sky-blue')
 
         // 由于是异步，我们需要等待一小段时间
         await new Promise(resolve => setTimeout(resolve, 60))
@@ -344,7 +344,7 @@ describe('Theme Store', () => {
       it('should remove theme-transitioning class after transition', async () => {
         const store = useThemeStore()
 
-        await store.setThemeWithTransition('chinese-red')
+        await store.setThemeWithTransition('sky-blue')
 
         // 过渡完成后类应该被移除
         expect(document.body.classList.contains('theme-transitioning')).toBe(false)
@@ -394,7 +394,7 @@ describe('Theme Store', () => {
       const eventHandler = vi.fn()
       window.addEventListener('theme-changed', eventHandler)
 
-      store.setTheme('chinese-red')
+      store.setTheme('sky-blue')
 
       // 等待 Vue 响应式更新
       await new Promise(resolve => setTimeout(resolve, 0))
@@ -409,14 +409,14 @@ describe('Theme Store', () => {
         eventDetail = (e as CustomEvent).detail
       })
 
-      store.setTheme('chinese-red')
+      store.setTheme('sky-blue')
 
       // 等待 Vue 响应式更新
       await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(eventDetail).not.toBeNull()
       expect(eventDetail!.from).toBe('tech-blue')
-      expect(eventDetail!.to).toBe('chinese-red')
+      expect(eventDetail!.to).toBe('sky-blue')
     })
 
     it('should not dispatch event when setting same theme', async () => {
@@ -424,14 +424,14 @@ describe('Theme Store', () => {
       const eventHandler = vi.fn()
 
       // 先设置一次主题以触发初始事件
-      store.setTheme('chinese-red')
+      store.setTheme('sky-blue')
       await new Promise(resolve => setTimeout(resolve, 0))
 
       // 添加监听器
       window.addEventListener('theme-changed', eventHandler)
 
       // 设置相同主题
-      store.setTheme('chinese-red')
+      store.setTheme('sky-blue')
       await new Promise(resolve => setTimeout(resolve, 0))
 
       // 由于主题没有变化，不应触发事件
@@ -448,12 +448,12 @@ describe('Theme Store', () => {
       expect(Object.keys(THEME_CONFIG)).toHaveLength(3)
     })
 
-    it('should have chinese-red with correct properties', () => {
-      const theme = THEME_CONFIG['chinese-red']
+    it('should have sky-blue with correct properties', () => {
+      const theme = THEME_CONFIG['sky-blue']
 
-      expect(theme.name).toBe('chinese-red')
-      expect(theme.displayName).toBe('中国红')
-      expect(theme.primaryColor).toBe('#C41E3A')
+      expect(theme.name).toBe('sky-blue')
+      expect(theme.displayName).toBe('天蓝色')
+      expect(theme.primaryColor).toBe('#29B6F6')
       expect(theme.icon).toBeDefined()
       expect(theme.description).toBeDefined()
     })
@@ -463,7 +463,7 @@ describe('Theme Store', () => {
 
       expect(theme.name).toBe('tech-blue')
       expect(theme.displayName).toBe('科技蓝')
-      expect(theme.primaryColor).toBe('#3B82F6')
+      expect(theme.primaryColor).toBe('#00B4FF')
       expect(theme.icon).toBeDefined()
       expect(theme.description).toBeDefined()
     })
@@ -473,7 +473,7 @@ describe('Theme Store', () => {
 
       expect(theme.name).toBe('nature-green')
       expect(theme.displayName).toBe('自然绿')
-      expect(theme.primaryColor).toBe('#10B981')
+      expect(theme.primaryColor).toBe('#9CA986')
       expect(theme.icon).toBeDefined()
       expect(theme.description).toBeDefined()
     })
@@ -487,7 +487,7 @@ describe('Theme Store', () => {
     it('should handle rapid theme changes', async () => {
       const store = useThemeStore()
 
-      store.setTheme('chinese-red')
+      store.setTheme('sky-blue')
       store.setTheme('nature-green')
       store.setTheme('tech-blue')
 
@@ -518,14 +518,14 @@ describe('Theme Store', () => {
 
       // 启动多个过渡
       const promises = [
-        store.setThemeWithTransition('chinese-red'),
+        store.setThemeWithTransition('sky-blue'),
         store.setThemeWithTransition('nature-green')
       ]
 
       await Promise.all(promises)
 
       // 最终状态应该是最后一个设置的主题
-      expect(['chinese-red', 'nature-green']).toContain(store.currentTheme)
+      expect(['sky-blue', 'nature-green']).toContain(store.currentTheme)
     })
   })
 })

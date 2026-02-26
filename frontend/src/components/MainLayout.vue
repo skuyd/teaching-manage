@@ -10,14 +10,15 @@
       <el-menu
         :default-active="activeMenu"
         class="sidebar-menu"
-        background-color="#111113"
-        text-color="#ADADB0"
-        active-text-color="#FF5C00"
         @select="handleMenuSelect"
       >
         <el-menu-item index="/dashboard">
           <el-icon><House /></el-icon>
           <span>仪表板</span>
+        </el-menu-item>
+        <el-menu-item index="/student/calendar" v-if="userStore.isStudent">
+          <el-icon><Calendar /></el-icon>
+          <span>课程日历</span>
         </el-menu-item>
         <el-menu-item index="/subjects" v-if="userStore.isTeacher || userStore.isAdmin">
           <el-icon><Reading /></el-icon>
@@ -54,12 +55,13 @@
       <div class="navbar">
         <el-button
           class="menu-toggle"
-          type="text"
+          link
           @click="sidebarVisible = !sidebarVisible"
         >
           <el-icon size="24"><Expand /></el-icon>
         </el-button>
         <div class="user-info">
+          <ThemeSwitcher mode="dropdown" :show-message="false" />
           <NotificationBell />
           <span class="welcome">欢迎, {{ userStore.user?.name }}</span>
           <el-tag :type="roleTagType" class="role-tag">{{ roleText }}</el-tag>
@@ -98,10 +100,11 @@ import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import {
   House, User, Reading, Document, EditPen, DataAnalysis,
-  Expand, Setting, ArrowDown, SwitchButton, Grid
+  Expand, Setting, ArrowDown, SwitchButton, Grid, Calendar
 } from '@element-plus/icons-vue'
 import { useUserStore } from '@/stores/user'
 import NotificationBell from '@/components/NotificationBell.vue'
+import ThemeSwitcher from '@/components/common/ThemeSwitcher.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -165,12 +168,12 @@ const handleCommand = (command: string) => {
 .layout-container {
   display: flex;
   height: 100vh;
-  background: #0A0A0B;
+  background: var(--bg-primary);
 }
 
 .sidebar {
   width: 260px;
-  background: #111113;
+  background: var(--bg-sidebar);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -179,23 +182,40 @@ const handleCommand = (command: string) => {
 .logo {
   padding: 24px;
   text-align: center;
-  border-bottom: 1px solid #2A2A2E;
+  border-bottom: 1px solid var(--border-default);
+  background: var(--sidebar-logo-bg);
 }
 
 .logo h2 {
-  color: #FFFFFF;
+  color: var(--text-on-primary);
   font-size: 20px;
   font-weight: 600;
-  background: linear-gradient(135deg, #FF5C00 0%, #FF8A4C 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
   margin: 0;
 }
 
 .sidebar-menu {
   flex: 1;
   border-right: none;
+}
+
+:deep(.el-menu) {
+  background: transparent !important;
+  border-right: none !important;
+}
+
+:deep(.el-menu-item) {
+  color: var(--sidebar-text) !important;
+}
+
+:deep(.el-menu-item:hover),
+:deep(.el-menu-item:focus) {
+  background: rgba(255, 255, 255, 0.15) !important;
+  color: var(--sidebar-text-active) !important;
+}
+
+:deep(.el-menu-item.is-active) {
+  background: var(--sidebar-item-active-bg) !important;
+  color: var(--sidebar-text-active) !important;
 }
 
 .main-content {
@@ -207,12 +227,12 @@ const handleCommand = (command: string) => {
 
 .navbar {
   height: 60px;
-  background: #111113;
+  background: var(--bg-topbar);
   display: flex;
   align-items: center;
   justify-content: flex-end;
   padding: 0 24px;
-  border-bottom: 1px solid #2A2A2E;
+  border-bottom: 1px solid var(--border-default);
   flex-shrink: 0;
 }
 
@@ -223,7 +243,7 @@ const handleCommand = (command: string) => {
 }
 
 .welcome {
-  color: #FFFFFF;
+  color: var(--text-primary);
   font-size: 14px;
 }
 
@@ -239,6 +259,7 @@ const handleCommand = (command: string) => {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+  background: var(--bg-primary);
 }
 
 /* 响应式布局 */
@@ -248,7 +269,7 @@ const handleCommand = (command: string) => {
 
 .menu-toggle {
   display: none;
-  color: #FFFFFF;
+  color: var(--text-primary);
   margin-right: auto;
 }
 
@@ -277,7 +298,7 @@ const handleCommand = (command: string) => {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
+    background: var(--bg-overlay);
     z-index: 999;
   }
 

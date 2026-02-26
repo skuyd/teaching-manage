@@ -297,4 +297,63 @@ public class FileService {
         // 返回访问URL
         return "/uploads/avatars/" + filename;
     }
+
+    /**
+     * 上传图片（用于Markdown编辑器）
+     *
+     * @param file 图片文件
+     * @return 图片信息（包含URL和原始文件名）
+     */
+    public ImageUploadResult uploadImage(MultipartFile file) throws IOException {
+        if (file == null || file.isEmpty()) {
+            throw new IllegalArgumentException("文件不能为空");
+        }
+
+        // 验证文件类型
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
+            throw new IllegalArgumentException("只允许上传图片文件");
+        }
+
+        // 验证文件大小（最大10MB）
+        if (file.getSize() > 10 * 1024 * 1024) {
+            throw new IllegalArgumentException("文件大小不能超过10MB");
+        }
+
+        // 获取文件扩展名
+        String originalFilename = file.getOriginalFilename();
+        String extension = "";
+        if (originalFilename != null && originalFilename.contains(".")) {
+            extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+        }
+
+        // 按月份组织图片目录
+        String monthFolder = java.time.LocalDate.now().format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM"));
+
+        // 生成唯一文件名
+        String filename = "img_" + System.currentTimeMillis() + "_" + java.util.UUID.randomUUID().toString().substring(0, 8) + extension;
+
+        // 创建图片目录
+        Path imageDir = Paths.get(baseUploadDir, "images", monthFolder);
+        if (!Files.exists(imageDir)) {
+            Files.createDirectories(imageDir);
+        }
+
+        // 保存文件
+        Path filePath = imageDir.resolve(filename);
+        try (InputStream is = file.getInputStream()) {
+            Files.copy(is, filePath, REPLACE_EXISTING);
+        }
+
+        log.info("图片上传成功: originalName={}, path={}", originalFilename, filePath);
+
+        // 返回图片信息
+        String url = "/uploads/images/" + monthFolder + "/" + filename;
+        return new ImageUploadResult(url, originalFilename, file.getSize());
+    }
+
+    /**
+     * 图片上传结果
+     */
+    public record ImageUploadResult(String url, String originalName, long size) {}
 }

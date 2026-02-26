@@ -188,4 +188,12 @@ public class SubjectServiceImpl extends ServiceImpl<SubjectMapper, Subject> impl
                 .groupCount(groupCount)
                 .build();
     }
+
+    @Override
+    public List<Subject> getSubjectsByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return subjectMapper.selectBatchIds(ids);
+    }
 }

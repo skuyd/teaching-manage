@@ -29,13 +29,33 @@ class LessonServiceTest {
     @Mock
     private LessonMapper lessonMapper;
 
-    @InjectMocks
+    @Mock
+    private com.teaching.mapper.SubjectMapper subjectMapper;
+
+    @Mock
+    private com.teaching.mapper.SubjectStudentMapper subjectStudentMapper;
+
+    @Mock
+    private NotificationService notificationService;
+
+    @Mock
+    private com.teaching.mapper.SubmissionMapper submissionMapper;
+
+    @Mock
+    private com.teaching.mapper.GradeMapper gradeMapper;
+
+    @Mock
+    private com.teaching.mapper.CodeCommentMapper codeCommentMapper;
+
     private LessonServiceImpl lessonService;
 
     private Lesson testLesson;
 
     @BeforeEach
     void setUp() {
+        lessonService = new LessonServiceImpl(lessonMapper, subjectMapper, subjectStudentMapper,
+                notificationService, submissionMapper, gradeMapper, codeCommentMapper);
+
         testLesson = new Lesson();
         testLesson.setId(1L);
         testLesson.setSubjectId(1L);
@@ -58,7 +78,13 @@ class LessonServiceTest {
         request.setSubmitType(SubmitType.PERSONAL);
         request.setAllowLate(false);
 
+        com.teaching.entity.Subject subject = new com.teaching.entity.Subject();
+        subject.setId(1L);
+        subject.setName("Java基础");
+
         when(lessonMapper.insert(any(Lesson.class))).thenReturn(1);
+        when(subjectMapper.selectById(1L)).thenReturn(subject);
+        when(subjectStudentMapper.selectStudentIdsBySubjectId(1L)).thenReturn(List.of(2L, 3L));
 
         Lesson result = lessonService.createLesson(request);
 
@@ -114,11 +140,15 @@ class LessonServiceTest {
     @Test
     @DisplayName("删除课程成功")
     void deleteLesson_shouldSuccess() {
-        when(lessonMapper.deleteById(1L)).thenReturn(1);
+        when(lessonMapper.selectById(1L)).thenReturn(testLesson);
+        when(codeCommentMapper.physicalDeleteByLessonId(1L)).thenReturn(0);
+        when(gradeMapper.physicalDeleteByLessonId(1L)).thenReturn(0);
+        when(submissionMapper.physicalDeleteByLessonId(1L)).thenReturn(0);
+        when(lessonMapper.physicalDeleteById(1L)).thenReturn(1);
 
         lessonService.deleteLesson(1L);
 
-        verify(lessonMapper, times(1)).deleteById(1L);
+        verify(lessonMapper, times(1)).physicalDeleteById(1L);
     }
 
     @Test

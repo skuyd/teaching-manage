@@ -10,14 +10,14 @@
  * 6. Accessibility - ARIA labels, keyboard navigation
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, type Mock } from 'vitest'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
 import { mount, flushPromises, VueWrapper } from '@vue/test-utils'
 import { createPinia, setActivePinia } from 'pinia'
 import { nextTick, defineComponent } from 'vue'
 import { ElMessage } from 'element-plus'
 import ElementPlus from 'element-plus'
 import Login from './Login.vue'
-import { useThemeStore, DEFAULT_THEME, type ThemeName } from '@/stores/theme'
+import { useThemeStore } from '@/stores/theme'
 
 // ========================================
 // Mocks
@@ -845,10 +845,10 @@ describe('Login.vue', () => {
       expect(wrapper.find('.login-button').exists()).toBe(true)
     })
 
-    it('should have correct structure for chinese-red theme', () => {
-      // Set theme to chinese-red
+    it('should have correct structure for sky-blue theme', () => {
+      // Set theme to sky-blue
       const themeStore = useThemeStore()
-      themeStore.setTheme('chinese-red')
+      themeStore.setTheme('sky-blue')
 
       wrapper = mountLogin()
 

@@ -2,8 +2,9 @@
   <el-dialog
     :model-value="modelValue"
     :title="isEdit ? '编辑课程' : '新增课程'"
-    width="700px"
+    width="900px"
     @close="handleClose"
+    destroy-on-close
   >
     <el-form
       ref="formRef"
@@ -16,11 +17,10 @@
       </el-form-item>
 
       <el-form-item label="课程内容" prop="content">
-        <el-input
+        <MarkdownEditor
           v-model="form.content"
-          type="textarea"
-          :rows="5"
-          placeholder="支持Markdown格式"
+          placeholder="请输入课程内容，支持Markdown格式..."
+          :height="250"
         />
       </el-form-item>
 
@@ -35,11 +35,10 @@
       </el-form-item>
 
       <el-form-item label="作业要求" prop="homeworkDesc">
-        <el-input
+        <MarkdownEditor
           v-model="form.homeworkDesc"
-          type="textarea"
-          :rows="5"
-          placeholder="支持Markdown格式"
+          placeholder="请输入作业要求，支持Markdown格式..."
+          :height="250"
         />
       </el-form-item>
 
@@ -80,6 +79,7 @@ import { ref, reactive, computed, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import { createLesson, updateLesson, type LessonDTO, SubmitType } from '@/api/lesson'
+import { MarkdownEditor } from '@/components/common'
 
 const props = defineProps<{
   modelValue: boolean

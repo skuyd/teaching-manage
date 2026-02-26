@@ -4,16 +4,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.teaching.common.Result;
 import com.teaching.dto.*;
 import com.teaching.entity.Lesson;
+import com.teaching.entity.Subject;
+import com.teaching.security.UserDetailsImpl;
 import com.teaching.service.LessonService;
+import com.teaching.service.SubjectService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 课程管理Controller
@@ -25,6 +31,7 @@ import java.util.List;
 public class LessonController {
 
     private final LessonService lessonService;
+    private final SubjectService subjectService;
 
     /**
      * 分页查询课程列表
@@ -69,6 +76,36 @@ public class LessonController {
         List<LessonDTO> lessonDTOs = lessons.stream()
                 .map(LessonDTO::fromEntity)
                 .toList();
+        return Result.success(lessonDTOs);
+    }
+
+    /**
+     * 获取当前学生所有已报名学科的课程
+     *
+     * @param userDetails 当前用户信息
+     * @return 课程列表（包含学科名称）
+     */
+    @GetMapping("/my")
+    public Result<List<LessonDTO>> getMyLessons(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        List<Lesson> lessons = lessonService.getLessonsByStudentId(userDetails.getId());
+
+        // 获取学科ID列表并查询学科名称
+        List<Long> subjectIds = lessons.stream()
+                .map(Lesson::getSubjectId)
+                .distinct()
+                .toList();
+
+        Map<Long, String> subjectNameMap = subjectService.getSubjectsByIds(subjectIds).stream()
+                .collect(Collectors.toMap(Subject::getId, Subject::getName));
+
+        List<LessonDTO> lessonDTOs = lessons.stream()
+                .map(lesson -> {
+                    LessonDTO dto = LessonDTO.fromEntity(lesson);
+                    dto.setSubjectName(subjectNameMap.get(lesson.getSubjectId()));
+                    return dto;
+                })
+                .toList();
+
         return Result.success(lessonDTOs);
     }
 
@@ -153,7 +190,7 @@ public class LessonController {
      * @return 删除结果
      */
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'TEACHER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public Result<Void> deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);
         log.info("删除课程: id={}", id);

@@ -173,4 +173,21 @@ public class LessonServiceImpl extends ServiceImpl<LessonMapper, Lesson> impleme
                 .commentCount(commentCount)
                 .build();
     }
+
+    @Override
+    public List<Lesson> getLessonsByStudentId(Long studentId) {
+        // 获取学生所属的所有学科ID
+        List<Long> subjectIds = subjectStudentMapper.selectSubjectIdsByStudentId(studentId);
+
+        if (subjectIds.isEmpty()) {
+            return List.of();
+        }
+
+        // 获取这些学科的所有课程
+        LambdaQueryWrapper<Lesson> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(Lesson::getSubjectId, subjectIds)
+               .orderByAsc(Lesson::getLessonTime);
+
+        return lessonMapper.selectList(wrapper);
+    }
 }

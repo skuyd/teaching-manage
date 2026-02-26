@@ -25,7 +25,7 @@
           <span class="title">通知中心</span>
           <el-button
             v-if="notifications.length > 0"
-            type="text"
+            link
             size="small"
             @click="handleMarkAllRead"
           >
@@ -53,7 +53,7 @@
                 <div class="notification-time">{{ formatTime(notification.createTime) }}</div>
               </div>
               <el-button
-                type="text"
+                link
                 :icon="Close"
                 class="delete-button"
                 @click.stop="handleDelete(notification.id)"
@@ -67,7 +67,7 @@
         </div>
 
         <div class="dropdown-footer">
-          <el-button type="text" @click="goToNotificationCenter">
+          <el-button link @click="goToNotificationCenter">
             查看全部通知 →
           </el-button>
         </div>

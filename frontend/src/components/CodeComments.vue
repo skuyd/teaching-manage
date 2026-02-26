@@ -31,7 +31,7 @@
             </div>
             <div class="comment-actions" v-if="canEdit(comment)">
               <el-button
-                type="text"
+                link
                 size="small"
                 @click="handleEdit(comment)"
               >
@@ -42,7 +42,7 @@
                 @confirm="handleDelete(comment.id)"
               >
                 <template #reference>
-                  <el-button type="text" size="small" style="color: var(--el-color-danger)">
+                  <el-button link size="small" style="color: var(--el-color-danger)">
                     删除
                   </el-button>
                 </template>

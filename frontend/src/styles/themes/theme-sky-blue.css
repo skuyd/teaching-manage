@@ -1,86 +1,86 @@
 /**
- * 自然绿主题（Nature Green）- 浅色主题
- * 清新、护眼、自然风格
+ * 天蓝色主题（Sky Blue）- 浅色主题
+ * 清新、明亮、现代风格
  *
  * 基于: UI/teaching-manage-prototypes.pen
  */
 
-:root[data-theme="nature-green"] {
+:root[data-theme="sky-blue"] {
   /* ========================================
      主色调
      ======================================== */
-  --color-primary: #9CA986;
-  --color-primary-dark: #7A8A68;
-  --color-primary-darker: #5A6A48;
-  --color-primary-light: #B4C4A0;
-  --color-primary-lighter: #C8D6B8;
-  --color-primary-lightest: #E8EFE2;
+  --color-primary: #29B6F6;
+  --color-primary-dark: #0288D1;
+  --color-primary-darker: #01579B;
+  --color-primary-light: #4FC3F7;
+  --color-primary-lighter: #81D4FA;
+  --color-primary-lightest: #E1F5FE;
 
   /* ========================================
      背景色
      ======================================== */
-  --bg-gradient-primary: linear-gradient(180deg, #9CA986 0%, #7A8A68 100%);
-  --bg-primary: #F5F7F5;
+  --bg-gradient-primary: linear-gradient(180deg, #29B6F6 0%, #0288D1 100%);
+  --bg-primary: #F5FAFD;
   --bg-secondary: #FFFFFF;
-  --bg-tertiary: #E8EFE2;
+  --bg-tertiary: #E1F5FE;
   --bg-card: #FFFFFF;
   --bg-overlay: rgba(0, 0, 0, 0.5);
 
   /* 特殊背景 */
-  --bg-sidebar: #9CA986;
+  --bg-sidebar: #29B6F6;
   --bg-topbar: #FFFFFF;
-  --bg-input: #F5F7F5;
-  --bg-brand: #E8EFE2;
+  --bg-input: #F5FAFD;
+  --bg-brand: #E1F5FE;
 
   /* ========================================
      文字色
      ======================================== */
-  --text-primary: #303133;
-  --text-secondary: #606266;
-  --text-tertiary: #909399;
-  --text-muted: #A8ABB2;
+  --text-primary: #01579B;
+  --text-secondary: #0288D1;
+  --text-tertiary: #4FC3F7;
+  --text-muted: #90CAF9;
   --text-on-primary: #FFFFFF;
   --text-on-accent: #FFFFFF;
 
   /* ========================================
      边框色
      ======================================== */
-  --border-default: #C8D6B8;
-  --border-light: #E8EFE2;
-  --border-lighter: #F5F7F5;
-  --border-accent: #9CA986;
-  --border-primary: #9CA986;
+  --border-default: #B3E5FC;
+  --border-light: #E1F5FE;
+  --border-lighter: #F5FAFD;
+  --border-accent: #29B6F6;
+  --border-primary: #29B6F6;
 
   /* ========================================
      按钮
      ======================================== */
-  --btn-gradient-primary: linear-gradient(90deg, #9CA986, #7A8A68);
-  --btn-shadow-primary: rgba(156, 169, 134, 0.25);
-  --btn-hover-shadow: 0 4px 16px rgba(156, 169, 134, 0.35);
+  --btn-gradient-primary: linear-gradient(90deg, #29B6F6, #0288D1);
+  --btn-shadow-primary: rgba(41, 182, 246, 0.25);
+  --btn-hover-shadow: 0 4px 16px rgba(41, 182, 246, 0.35);
 
   /* ========================================
      状态颜色
      ======================================== */
-  --color-link: #7A8A68;
-  --color-link-hover: #5A6A48;
-  --color-success: #67C23A;
-  --color-warning: #E6A23C;
-  --color-danger: #F56C6C;
+  --color-link: #0288D1;
+  --color-link-hover: #01579B;
+  --color-success: #4CAF50;
+  --color-warning: #FF9800;
+  --color-danger: #F44336;
 
   /* ========================================
      侧边栏
      ======================================== */
-  --sidebar-bg: #9CA986;
+  --sidebar-bg: #29B6F6;
   --sidebar-text: rgba(255, 255, 255, 0.8);
   --sidebar-text-active: #FFFFFF;
   --sidebar-item-active-bg: rgba(255, 255, 255, 0.2);
-  --sidebar-logo-bg: #7A8A68;
+  --sidebar-logo-bg: #0288D1;
 
   /* ========================================
      特殊效果
      ======================================== */
   --glassmorphism-bg: rgba(255, 255, 255, 0.9);
-  --glassmorphism-border: rgba(156, 169, 134, 0.2);
+  --glassmorphism-border: rgba(41, 182, 246, 0.2);
   --glassmorphism-blur: blur(10px);
 
   /* ========================================
@@ -106,93 +106,93 @@
 }
 
 /* ========================================
-   自然绿主题特定样式
+   天蓝色主题特定样式
    ======================================== */
-:root[data-theme="nature-green"] body {
+:root[data-theme="sky-blue"] body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
 }
 
-:root[data-theme="nature-green"] .theme-gradient-bg {
+:root[data-theme="sky-blue"] .theme-gradient-bg {
   background: var(--bg-gradient-primary);
 }
 
-:root[data-theme="nature-green"] .theme-btn-primary {
+:root[data-theme="sky-blue"] .theme-btn-primary {
   background: var(--btn-gradient-primary);
   box-shadow: 0 2px 8px var(--btn-shadow-primary);
 }
 
-:root[data-theme="nature-green"] .theme-btn-primary:hover {
+:root[data-theme="sky-blue"] .theme-btn-primary:hover {
   box-shadow: var(--btn-hover-shadow);
 }
 
-:root[data-theme="nature-green"] .theme-card-glass {
+:root[data-theme="sky-blue"] .theme-card-glass {
   background: var(--glassmorphism-bg);
   border: 1px solid var(--glassmorphism-border);
   backdrop-filter: var(--glassmorphism-blur);
 }
 
 /* Element Plus 覆盖 */
-:root[data-theme="nature-green"] .el-menu {
+:root[data-theme="sky-blue"] .el-menu {
   background-color: transparent !important;
   border-right: none !important;
 }
 
-:root[data-theme="nature-green"] .el-menu-item {
+:root[data-theme="sky-blue"] .el-menu-item {
   color: var(--sidebar-text) !important;
 }
 
-:root[data-theme="nature-green"] .el-menu-item:hover,
-:root[data-theme="nature-green"] .el-menu-item:focus {
+:root[data-theme="sky-blue"] .el-menu-item:hover,
+:root[data-theme="sky-blue"] .el-menu-item:focus {
   background-color: rgba(255, 255, 255, 0.15) !important;
   color: var(--sidebar-text-active) !important;
 }
 
-:root[data-theme="nature-green"] .el-menu-item.is-active {
+:root[data-theme="sky-blue"] .el-menu-item.is-active {
   background-color: var(--sidebar-item-active-bg) !important;
   color: var(--sidebar-text-active) !important;
 }
 
-:root[data-theme="nature-green"] .el-card {
+:root[data-theme="sky-blue"] .el-card {
   background-color: var(--bg-card);
   border-color: var(--border-default);
 }
 
-:root[data-theme="nature-green"] .el-table {
+:root[data-theme="sky-blue"] .el-table {
   background-color: var(--bg-card);
   color: var(--text-primary);
 }
 
-:root[data-theme="nature-green"] .el-table th.el-table__cell {
+:root[data-theme="sky-blue"] .el-table th.el-table__cell {
   background-color: var(--bg-tertiary);
   color: var(--text-primary);
 }
 
-:root[data-theme="nature-green"] .el-table tr {
+:root[data-theme="sky-blue"] .el-table tr {
   background-color: var(--bg-card);
 }
 
-:root[data-theme="nature-green"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+:root[data-theme="sky-blue"] .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
   background-color: var(--bg-primary);
 }
 
-:root[data-theme="nature-green"] .el-input__wrapper {
+:root[data-theme="sky-blue"] .el-input__wrapper {
   background-color: var(--bg-input);
   box-shadow: 0 0 0 1px var(--border-default) inset;
 }
 
-:root[data-theme="nature-green"] .el-input__inner {
+:root[data-theme="sky-blue"] .el-input__inner {
   color: var(--text-primary);
 }
 
-:root[data-theme="nature-green"] .el-input__inner::placeholder {
+:root[data-theme="sky-blue"] .el-input__inner::placeholder {
   color: var(--text-muted);
 }
 
 /* ========================================
    焦点指示器 - 无障碍支持
    ======================================== */
-:root[data-theme="nature-green"] *:focus-visible {
+:root[data-theme="sky-blue"] *:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }

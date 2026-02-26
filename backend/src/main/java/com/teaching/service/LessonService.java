@@ -84,4 +84,12 @@ public interface LessonService extends IService<Lesson> {
      * @return 删除统计信息
      */
     LessonDeleteStatsDTO getDeleteStats(Long id);
+
+    /**
+     * 根据学生ID获取其所有已报名学科的课程
+     *
+     * @param studentId 学生ID
+     * @return 课程列表
+     */
+    List<Lesson> getLessonsByStudentId(Long studentId);
 }

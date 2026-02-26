@@ -32,10 +32,10 @@
               <h3 class="notification-title">{{ notification.title }}</h3>
               <p class="notification-content">{{ notification.content }}</p>
               <div class="notification-actions">
-                <el-button type="text" @click="handleMarkAsRead(notification.id)">
+                <el-button link @click="handleMarkAsRead(notification.id)">
                   标记已读
                 </el-button>
-                <el-button type="text" @click="handleDelete(notification.id)">
+                <el-button link @click="handleDelete(notification.id)">
                   删除
                 </el-button>
               </div>
@@ -65,12 +65,12 @@
               <div class="notification-actions">
                 <el-button
                   v-if="!notification.isRead"
-                  type="text"
+                  link
                   @click="handleMarkAsRead(notification.id)"
                 >
                   标记已读
                 </el-button>
-                <el-button type="text" @click="handleDelete(notification.id)">
+                <el-button link @click="handleDelete(notification.id)">
                   删除
                 </el-button>
               </div>

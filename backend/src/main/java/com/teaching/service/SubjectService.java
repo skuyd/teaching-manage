@@ -39,4 +39,12 @@ public interface SubjectService extends IService<Subject> {
      * @return 删除统计信息
      */
     SubjectDeleteStatsDTO getDeleteStats(Long id);
+
+    /**
+     * 根据学科ID列表获取学科列表
+     *
+     * @param ids 学科ID列表
+     * @return 学科列表
+     */
+    List<Subject> getSubjectsByIds(List<Long> ids);
 }
