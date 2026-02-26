@@ -73,6 +73,10 @@ npm run test:e2e            # E2E 测试
 - [数据模型](./data-models.md) - 数据库 Schema 和实体关系
 - [开发指南](./development-guide.md) - 本地开发环境搭建
 
+### 技术规范
+
+- [课程 Markdown 编辑与预览系统](./tech-specs/tech-spec-lesson-markdown-editor-preview.md) - Vditor 编辑器集成、学员日历页面
+
 ### 已有文档
 
 - [CLAUDE.md](../CLAUDE.md) - Claude Code 工作指南
